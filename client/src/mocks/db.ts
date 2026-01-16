@@ -1,0 +1,73 @@
+import type { Course } from "../types/courses";
+
+export const mockProfessors = [
+  { id: 1, name: "Prof. Marko Marković" },
+  { id: 2, name: "Prof. Jelena Janković" },
+  { id: 3, name: "Prof. Ana Petrović" },
+  { id: 4, name: "Prof. Jeva Sćekić"},
+  { id: 5, name: "Prof. Ksenija Doroslovački"},
+  { id: 6, name: "Prof. Ranko Knežević"},
+];
+
+export const mockCourses: Course[] = [
+  {
+    id: 1,
+    professorId: 3,
+    professorName: "Prof. Ana Petrović",
+    name: "Osnove programiranja",
+    description: "Uvod u Python i osnovne koncepte programiranja.",
+    materialPath: null,
+    createdAt: new Date().toISOString(),
+    status: "ACTIVE",
+  },
+  {
+    id: 2,
+    professorId: 2,
+    professorName: "Prof. Jelena Janković",
+    name: "Baze podataka",
+    description: "Relacione baze, SQL i ORM tehnike.",
+    materialPath: null,
+    createdAt: new Date().toISOString(),
+    status: "ACTIVE",
+  },
+  {
+    id: 3,
+    professorId: 1,
+    professorName: "Prof. Marko Marković",
+    name: "Računarske mreže",
+    description: "Osnove mreža, modeli i praktične vežbe.",
+    materialPath: null,
+    createdAt: new Date().toISOString(),
+    status: "PENDING",
+  },
+  {
+    id: 4,
+    professorId: 5,
+    professorName: "Prof. Jeva Sćekić",
+    name: "Fizika",
+    description: "Osnovni zakoni fizike.",
+    materialPath: null,
+    createdAt: new Date().toISOString(),
+    status: "PENDING",
+  },
+  {
+    id: 5,
+    professorId: 6,
+    professorName: "Prof. Ksenija Doroslovacki",
+    name: "Algebra",
+    description: "Teorija algebarskih jednacina.",
+    materialPath: null,
+    createdAt: new Date().toISOString(),
+    status: "PENDING",
+  },
+  {
+    id: 6,
+    professorId: 4,
+    professorName: "Prof. Ranko Knežević",
+    name: "Matematika 1",
+    description: "Uvod u geometriju.",
+    materialPath: null,
+    createdAt: new Date().toISOString(),
+    status: "PENDING",
+  },
+];

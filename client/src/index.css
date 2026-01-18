@@ -1,0 +1,17 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  padding: 2rem;
+  background: #fff;
+  color: #222;
+  min-height: 100vh;
+}
+
+a { color: #646cff; text-decoration: none; }
+button { cursor: pointer; }

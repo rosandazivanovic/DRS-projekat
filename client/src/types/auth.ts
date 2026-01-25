@@ -6,6 +6,10 @@ export type User = {
   firstName: string;
   lastName: string;
   role: Role;
-  balance?: number;
   profileImage?: string;
+  birthDate?: string;
+  gender?: string;
+  country?: string;
+  street?: string;
+  number?: string;
 };

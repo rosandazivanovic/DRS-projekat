@@ -1,22 +1,32 @@
-from .db import db
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
+from sqlalchemy.orm import relationship, declarative_base
 from datetime import datetime
 
-class User(db.Model):
+Base = declarative_base()
+
+
+class User(Base):
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(60), nullable=False)
-    last_name = db.Column(db.String(60), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    birth_date = db.Column(db.String(20), nullable=False)
-    gender = db.Column(db.String(10), nullable=False)
-    country = db.Column(db.String(60), nullable=False)
-    street = db.Column(db.String(120), nullable=False)
-    number = db.Column(db.String(20), nullable=False)
-    role = db.Column(db.String(20), nullable=False, default="STUDENT")
-    password_hash = db.Column(db.String(255), nullable=False)
-    profile_image = db.Column(db.String(255), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    id = Column(Integer, primary_key=True)
+    first_name = Column(String(60), nullable=False)
+    last_name = Column(String(60), nullable=False)
+    email = Column(String(120), unique=True, nullable=False, index=True)
+    birth_date = Column(String(20), nullable=True)
+    gender = Column(String(10), nullable=True)
+    country = Column(String(60), nullable=True)
+    street = Column(String(120), nullable=True)
+    number = Column(String(20), nullable=True)
+    role = Column(String(20), nullable=False, default="STUDENT")
+    password_hash = Column(String(255), nullable=False)
+    profile_image = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    # Relationships
+    course_requests = relationship("CourseRequest", back_populates="professor", cascade="all, delete-orphan")
+    courses = relationship("Course", back_populates="professor", cascade="all, delete-orphan")
+    enrollments = relationship("CourseEnrollment", back_populates="student", cascade="all, delete-orphan")
+    submissions = relationship("TaskSubmission", back_populates="student", cascade="all, delete-orphan")
 
     def to_dict(self):
         return {
@@ -24,28 +34,30 @@ class User(db.Model):
             "firstName": self.first_name,
             "lastName": self.last_name,
             "email": self.email,
-            "birthDate": self.birth_date,
-            "gender": self.gender,
-            "country": self.country,
-            "street": self.street,
-            "number": self.number,
+            "birthDate": self.birth_date or "",
+            "gender": self.gender or "",
+            "country": self.country or "",
+            "street": self.street or "",
+            "number": self.number or "",
             "role": self.role,
             "profileImage": self.profile_image,
         }
 
 
-class CourseRequest(db.Model):
+class CourseRequest(Base):
     __tablename__ = "course_requests"
 
-    id = db.Column(db.Integer, primary_key=True)
-    professor_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    name = db.Column(db.String(120), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    status = db.Column(db.String(20), nullable=False, default="PENDING")
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    id = Column(Integer, primary_key=True)
+    professor_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    name = Column(String(120), nullable=False)
+    description = Column(Text, nullable=False)
+    status = Column(String(20), nullable=False, default="PENDING")
+    rejection_reason = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
-    professor = db.relationship("User", backref="course_requests")
+    # Relationships
+    professor = relationship("User", back_populates="course_requests")
 
     def to_dict(self):
         return {
@@ -55,21 +67,25 @@ class CourseRequest(db.Model):
             "name": self.name,
             "description": self.description,
             "status": self.status,
+            "rejectionReason": self.rejection_reason,
             "createdAt": self.created_at.isoformat(),
         }
 
 
-class Course(db.Model):
+class Course(Base):
     __tablename__ = "courses"
 
-    id = db.Column(db.Integer, primary_key=True)
-    professor_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    name = db.Column(db.String(120), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    material_path = db.Column(db.String(255), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    id = Column(Integer, primary_key=True)
+    professor_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    name = Column(String(120), nullable=False)
+    description = Column(Text, nullable=False)
+    material_path = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    professor = db.relationship("User", backref="courses")
+    # Relationships
+    professor = relationship("User", back_populates="courses")
+    enrollments = relationship("CourseEnrollment", back_populates="course", cascade="all, delete-orphan")
+    tasks = relationship("Task", back_populates="course", cascade="all, delete-orphan")
 
     def to_dict(self):
         return {
@@ -83,16 +99,17 @@ class Course(db.Model):
         }
 
 
-class CourseEnrollment(db.Model):
+class CourseEnrollment(Base):
     __tablename__ = "course_enrollments"
 
-    id = db.Column(db.Integer, primary_key=True)
-    course_id = db.Column(db.Integer, db.ForeignKey("courses.id"), nullable=False)
-    student_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    enrolled_at = db.Column(db.DateTime, default=datetime.utcnow)
+    id = Column(Integer, primary_key=True)
+    course_id = Column(Integer, ForeignKey("courses.id", ondelete="CASCADE"), nullable=False)
+    student_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    enrolled_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    course = db.relationship("Course", backref="enrollments")
-    student = db.relationship("User", backref="enrollments")
+    # Relationships
+    course = relationship("Course", back_populates="enrollments")
+    student = relationship("User", back_populates="enrollments")
 
     def to_dict(self):
         return {
@@ -105,17 +122,19 @@ class CourseEnrollment(db.Model):
         }
 
 
-class Task(db.Model):
+class Task(Base):
     __tablename__ = "tasks"
 
-    id = db.Column(db.Integer, primary_key=True)
-    course_id = db.Column(db.Integer, db.ForeignKey("courses.id"), nullable=False)
-    title = db.Column(db.String(120), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    deadline = db.Column(db.DateTime, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    id = Column(Integer, primary_key=True)
+    course_id = Column(Integer, ForeignKey("courses.id", ondelete="CASCADE"), nullable=False)
+    title = Column(String(120), nullable=False)
+    description = Column(Text, nullable=False)
+    deadline = Column(DateTime, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    course = db.relationship("Course", backref="tasks")
+    # Relationships
+    course = relationship("Course", back_populates="tasks")
+    submissions = relationship("TaskSubmission", back_populates="task", cascade="all, delete-orphan")
 
     def to_dict(self):
         return {
@@ -129,20 +148,20 @@ class Task(db.Model):
         }
 
 
-class TaskSubmission(db.Model):
+class TaskSubmission(Base):
     __tablename__ = "task_submissions"
 
-    id = db.Column(db.Integer, primary_key=True)
-    task_id = db.Column(db.Integer, db.ForeignKey("tasks.id"), nullable=False)
-    student_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    file_path = db.Column(db.String(255), nullable=False)
-    grade = db.Column(db.Integer, nullable=True)
-    comment = db.Column(db.Text, nullable=True)
-    submitted_at = db.Column(db.DateTime, default=datetime.utcnow)
-    graded_at = db.Column(db.DateTime, nullable=True)
+    id = Column(Integer, primary_key=True)
+    task_id = Column(Integer, ForeignKey("tasks.id", ondelete="CASCADE"), nullable=False)
+    student_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    file_path = Column(Text, nullable=False)
+    grade = Column(Integer, nullable=True)
+    comment = Column(Text, nullable=True)
+    submitted_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    graded_at = Column(DateTime, nullable=True)
 
-    task = db.relationship("Task", backref="submissions")
-    student = db.relationship("User", backref="submissions")
+    task = relationship("Task", back_populates="submissions")
+    student = relationship("User", back_populates="submissions")
 
     def to_dict(self):
         return {

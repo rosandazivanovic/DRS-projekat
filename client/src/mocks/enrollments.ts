@@ -23,7 +23,6 @@ export async function createEnrollment(courseId: number): Promise<Enrollment> {
   };
   enrollments = [p, ...enrollments];
 
-  // simulate processing
   await new Promise((r) => setTimeout(r, 1200));
 
   return p;

@@ -1,6 +1,6 @@
 type Props = {
-  value: number;                 
-  onChange: (v: number) => void; 
+  value: number;
+  onChange: (v: number) => void;
   disabled?: boolean;
 };
 
@@ -21,6 +21,7 @@ export function StarRating({ value, onChange, disabled }: Props) {
             lineHeight: 1,
             padding: 0,
             opacity: disabled ? 0.6 : 1,
+            color: n <= value ? "#b99a7f" : "#cfc7be",
           }}
           aria-label={`Oceni ${n} od 5`}
           title={`${n}/5`}

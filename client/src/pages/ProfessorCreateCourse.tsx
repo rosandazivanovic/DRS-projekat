@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { http } from "../api/https";
+import { endpoints } from "../api/endpoints";
 import { useAuth } from "../auth/AuthContext";
-import { addCourse } from "../mocks/courseStore";
-import { mockProfessors } from "../mocks/db";
 
 export default function ProfessorCreateCoursePage() {
   const nav = useNavigate();
@@ -11,47 +11,38 @@ export default function ProfessorCreateCoursePage() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [err, setErr] = useState<string | null>(null);
-
-  useEffect(() => {
-    // noop - in real app fetch professors
-  }, []);
+  const [loading, setLoading] = useState(false);
 
   if (!user || !hasRole(["PROFESOR"])) {
     return <div style={{ padding: 16 }}>Nemaš pristup ovoj stranici.</div>;
   }
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr(null);
     if (!name.trim()) return setErr("Naziv kursa je obavezan.");
     if (!description.trim()) return setErr("Opis kursa je obavezan.");
 
-    const newId =
-      Math.max(0, ...mockProfessors.map((p) => p.id)) +
-      Math.floor(Math.random() * 1000) +
-      1;
-
-    const course = {
-      id: newId,
-      professorId: user.id,
-      professorName: `${user.firstName} ${user.lastName}`,
-      name: name.trim(),
-      description: description.trim(),
-      materialPath: null,
-      createdAt: new Date().toISOString(),
-      status: "PENDING" as const,
-    };
-
-    addCourse(course as any);
-    alert("Kurs poslat administratoru na odobrenje ✅ (mock)");
-    nav("/courses");
+    setLoading(true);
+    try {
+      await http.post(endpoints.courses.request, {
+        name: name.trim(),
+        description: description.trim(),
+      });
+      alert("Kurs poslat administratoru na odobrenje ✅");
+      nav("/professor/courses");
+    } catch (err: any) {
+      setErr(err?.response?.data?.error ?? "Greška pri kreiranju kursa.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #667eea, #764ba2)",
+        background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)",
         padding: 24,
       }}
     >
@@ -62,22 +53,19 @@ export default function ProfessorCreateCoursePage() {
           background: "#fff",
           borderRadius: 20,
           padding: 28,
-          boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+          boxShadow: "0 20px 40px rgba(39,35,30,0.04)",
         }}
       >
         <div style={{ marginBottom: 24 }}>
-          <h2 style={{ margin: 0, color: "#2d2d2d" }}>
+          <h2 style={{ margin: 0, color: "#2c2b28" }}>
             🧑‍🏫 Kreiranje novog kursa
           </h2>
-          <p style={{ margin: "6px 0 0", color: "#666" }}>
+          <p style={{ margin: "6px 0 0", color: "#8b7762" }}>
             Popuni osnovne informacije i pošalji kurs na odobrenje
           </p>
         </div>
 
-        <form
-          onSubmit={submit}
-          style={{ display: "grid", gap: 14 }}
-        >
+        <form onSubmit={submit} style={{ display: "grid", gap: 14 }}>
           <input
             placeholder="Naziv kursa"
             value={name}
@@ -85,8 +73,10 @@ export default function ProfessorCreateCoursePage() {
             style={{
               padding: 12,
               borderRadius: 12,
-              border: "1px solid #ddd",
+              border: "1px solid rgba(44,43,40,0.06)",
               fontSize: 14,
+              background: "#fff",
+              color: "#2c2b28",
             }}
           />
 
@@ -97,17 +87,19 @@ export default function ProfessorCreateCoursePage() {
             style={{
               padding: 12,
               borderRadius: 12,
-              border: "1px solid #ddd",
+              border: "1px solid rgba(44,43,40,0.06)",
               fontSize: 14,
               minHeight: 140,
               resize: "vertical",
+              background: "#fff",
+              color: "#2c2b28",
             }}
           />
 
           {err && (
             <div
               style={{
-                color: "crimson",
+                color: "#7a2a2a",
                 fontSize: 13,
                 textAlign: "center",
               }}
@@ -117,19 +109,22 @@ export default function ProfessorCreateCoursePage() {
           )}
 
           <button
+            disabled={loading}
             style={{
               marginTop: 6,
               padding: 12,
               borderRadius: 12,
               border: "none",
-              cursor: "pointer",
+              cursor: loading ? "not-allowed" : "pointer",
               fontWeight: 600,
               fontSize: 15,
               color: "#fff",
-              background: "linear-gradient(135deg, #667eea, #764ba2)",
+              background: loading
+                ? "#b99a7f"
+                : "linear-gradient(135deg,#d6bca3,#b99a7f)",
             }}
           >
-            Pošalji na odobrenje
+            {loading ? "Šaljem..." : "Pošalji na odobrenje"}
           </button>
         </form>
       </div>

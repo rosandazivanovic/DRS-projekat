@@ -11,7 +11,15 @@ export function ProfessorSelect({ professors, value, onChange }: Props) {
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      style={{ padding: 10, borderRadius: 10, border: "1px solid #ddd", width: "100%" }}
+      style={{
+        padding: 12,
+        borderRadius: 12,
+        border: "1px solid rgba(44,43,40,0.06)",
+        width: "100%",
+        fontSize: 14,
+        background: "#fff",
+        color: "#2c2b28",
+      }}
     >
       <option value="">Svi profesori</option>
       {professors.map((p) => (

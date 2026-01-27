@@ -54,90 +54,45 @@ export default function AdminReportsPage() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #667eea, #764ba2)",
-        padding: 24,
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 700,
-          margin: "0 auto",
-          background: "#fff",
-          borderRadius: 20,
-          padding: 28,
-          boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
-        }}
-      >
-        <div style={{ marginBottom: 24 }}>
-          <h2 style={{ margin: 0, color: "#2d2d2d" }}>
-            📊 Izveštaji
-          </h2>
-          <p style={{ margin: "6px 0 0", color: "#666" }}>
-            Generisanje administrativnih izveštaja
-          </p>
-        </div>
+    <div style={{ maxWidth: 700, margin: "0 auto", padding: 16 }}>
+      <h2 style={{ margin: 0, color: "#2c2b28" }}>Izveštaji (ADMIN)</h2>
 
-        <div style={{ display: "grid", gap: 14 }}>
-          <div style={{ display: "grid", gap: 6 }}>
-            <label
-              style={{
-                fontSize: 13,
-                color: "#555",
-                fontWeight: 500,
-              }}
-            >
-              Tip izveštaja
-            </label>
-            <select
-              value={type}
-              onChange={(e) => setType(e.target.value as ReportType)}
-              style={{
-                padding: 12,
-                borderRadius: 12,
-                border: "1px solid #ddd",
-                fontSize: 14,
-                background: "#fafafa",
-              }}
-            >
-              <option value="ACTIVE">Aktivni kursevi</option>
-              <option value="PENDING">Na čekanju</option>
-              <option value="CLOSED">Završeni</option>
-            </select>
-          </div>
+      <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
+        <label style={{ color: "#8b7762" }}>Tip izveštaja</label>
+        <select
+          value={type}
+          onChange={(e) => setType(e.target.value as ReportType)}
+          style={{
+            padding: 10,
+            borderRadius: 10,
+            border: "1px solid rgba(44,43,40,0.06)",
+            background: "#fff",
+            color: "#2c2b28",
+          }}
+        >
+          <option value="ACTIVE">Aktivni kursevi</option>
+          <option value="PENDING">Na čekanju</option>
+          <option value="CLOSED">Završeni</option>
+        </select>
 
-          <button
-            disabled={loading}
-            onClick={generate}
-            style={{
-              marginTop: 10,
-              padding: 12,
-              borderRadius: 12,
-              border: "none",
-              cursor: loading ? "not-allowed" : "pointer",
-              fontWeight: 600,
-              fontSize: 15,
-              color: "#fff",
-              background: loading
-                ? "#999"
-                : "linear-gradient(135deg, #667eea, #764ba2)",
-            }}
-          >
-            {loading ? "Generišem..." : "Generiši PDF"}
-          </button>
+        <button
+          disabled={loading}
+          onClick={generate}
+          style={{
+            padding: 10,
+            borderRadius: 10,
+            border: "1px solid rgba(44,43,40,0.06)",
+            cursor: loading ? "not-allowed" : "pointer",
+            background: loading ? "#d6bca3" : "linear-gradient(135deg,#d6bca3,#b99a7f)",
+            color: "#fff",
+            fontWeight: 600,
+          }}
+        >
+          {loading ? "Generišem..." : "Generiši PDF"}
+        </button>
 
-          <div
-            style={{
-              marginTop: 6,
-              fontSize: 12,
-              color: "#777",
-              textAlign: "center",
-            }}
-          >
-            Kasnije: POST /api/admin/reports + slanje na mail.
-          </div>
+        <div style={{ fontSize: 12, color: "#777" }}>
+          Kasnije: POST /api/admin/reports + slanje na mail.
         </div>
       </div>
     </div>

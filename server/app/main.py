@@ -1,48 +1,81 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS
 from dotenv import load_dotenv
+from .create_test_data import seed
+
 
 from app.auth import auth_bp
-from app.db import db
-from app.routes_users import users_bp
-from app.routes_admin import admin_bp
-from app.routes_courses import courses_bp
-from app.routes_tasks import tasks_bp
+from app.routes.users import users_bp
+from app.routes.admin import admin_bp
+from app.routes.courses import courses_bp
+from app.routes.tasks import tasks_bp
+from app.routes.reports import reports_bp
 from app.socketio_app import socketio, register_ws_handlers
 from app.redis_client import init_redis
+from app.database import init_db
 
 load_dotenv()
 
 
 def create_app():
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev")
 
-    CORS(app)
+    app.config["SECRET_KEY"] = os.getenv(
+        "SECRET_KEY", "dev-secret-key-change-in-production"
+    )
 
-    db_url = os.getenv("DATABASE_URL", "sqlite:///learning_platform.sqlite3")
-    app.config["SQLALCHEMY_DATABASE_URI"] = db_url
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    CORS(
+        app,
+        origins=["http://localhost:5173"], 
+        supports_credentials=True,
+        methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=["Content-Type", "X-Session-ID"],
+    )
 
-    db.init_app(app)
+    @app.before_request
+    def handle_preflight():
+        if request.method == "OPTIONS":
+            response = make_response("", 204)
+            response.headers["Access-Control-Allow-Origin"] = "http://localhost:5173"
+            response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+            response.headers["Access-Control-Allow-Headers"] = "Content-Type, X-Session-ID"
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+            return response
 
-    init_redis()
+    try:
+        init_redis()
+        print("✅ Redis initialized")
+    except Exception as e:
+        print(f"⚠️ Redis initialization failed: {e}")
 
-    app.register_blueprint(auth_bp, url_prefix="/api/auth")
-    app.register_blueprint(users_bp, url_prefix="/api/users")
-    app.register_blueprint(admin_bp, url_prefix="/api/admin")
-    app.register_blueprint(courses_bp, url_prefix="/api/courses")
-    app.register_blueprint(tasks_bp, url_prefix="/api/tasks")
+    try:
+        init_db()
+        print("✅ Database initialized")
+    except Exception as e:
+        print(f"❌ Database initialization failed: {e}")
+        raise
+
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(users_bp)
+    app.register_blueprint(admin_bp)
+    app.register_blueprint(courses_bp)
+    app.register_blueprint(tasks_bp)
+    app.register_blueprint(reports_bp)
 
     @app.get("/health")
     def health():
-        return jsonify({"status": "server ok"})
+        return jsonify({"status": "ok"})
 
-    with app.app_context():
-        db.create_all()
+    @app.get("/")
+    def root():
+        return jsonify({"message": "Learning Platform API"})
 
-    socketio.init_app(app, cors_allowed_origins="*")
+    socketio.init_app(
+        app,
+        cors_allowed_origins=["http://localhost:5173"],  
+        async_mode="threading"
+    )
     register_ws_handlers()
 
     return app
@@ -51,4 +84,15 @@ def create_app():
 app = create_app()
 
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", port=5000, debug=True)
+    port = int(os.getenv("PORT", "5000"))
+    print(f"\n🚀 Starting server on port {port}...")
+    print(f"📡 CORS enabled for: http://localhost:5173")
+    print(f"🔗 API URL: http://localhost:{port}")
+    
+    socketio.run(
+        app,
+        host="0.0.0.0",
+        port=port,
+        debug=True,
+        allow_unsafe_werkzeug=True,
+    )

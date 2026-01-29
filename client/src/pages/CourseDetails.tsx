@@ -25,6 +25,9 @@ export default function CourseDetailsPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     if (courseId === null) return;
 
@@ -80,11 +83,13 @@ export default function CourseDetailsPage() {
   const createTask = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!newTaskTitle || !newTaskDesc || !newTaskDeadline) {
-      alert("Popuni sva polja!");
+      setError("Popuni sva polja!");
+      setTimeout(() => setError(null), 3000);
       return;
     }
     if (courseId === null) {
-      alert("Nevažeći ID kursa.");
+      setError("Nevažeći ID kursa.");
+      setTimeout(() => setError(null), 3000);
       return;
     }
 
@@ -95,37 +100,43 @@ export default function CourseDetailsPage() {
         description: newTaskDesc,
         deadline: new Date(newTaskDeadline).toISOString(),
       });
-      alert("Zadatak kreiran ✅");
+      setSuccessMessage("Zadatak kreiran ✅");
+      setTimeout(() => setSuccessMessage(null), 3000);
       setNewTaskTitle("");
       setNewTaskDesc("");
       setNewTaskDeadline("");
       await fetchTasks(courseId);
     } catch (err: any) {
-      alert(err?.response?.data?.error ?? "Greška pri kreiranju zadatka.");
+      setError(err?.response?.data?.error ?? "Greška pri kreiranju zadatka.");
+      setTimeout(() => setError(null), 3000);
     }
   };
 
   const submitTask = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    if (!selectedTaskId || selectedTaskId === 0) {
-      alert("Izaberi zadatak!");
+    if (typeof selectedTaskId !== "number" || selectedTaskId === 0) {
+      setError("Izaberi zadatak!");
+      setTimeout(() => setError(null), 3000);
       return;
     }
     
     if (!selectedFile) {
-      alert("Molimo odaberite .py fajl!");
+      setError("Molimo odaberite .py fajl!");
+      setTimeout(() => setError(null), 3000);
       return;
     }
 
     if (!selectedFile.name.toLowerCase().endsWith('.py')) {
-      alert("Fajl mora biti Python skripta (.py)!");
+      setError("Fajl mora biti Python skripta (.py)!");
+      setTimeout(() => setError(null), 3000);
       return;
     }
 
     const maxSize = 5 * 1024 * 1024;
     if (selectedFile.size > maxSize) {
-      alert("Fajl je prevelik! Maksimalna veličina je 5MB.");
+      setError("Fajl je prevelik! Maksimalna veličina je 5MB.");
+      setTimeout(() => setError(null), 3000);
       return;
     }
 
@@ -137,30 +148,43 @@ export default function CourseDetailsPage() {
       reader.onload = async (event) => {
         const base64Data = event.target?.result as string;
         
-        // Šalji Base64 + naziv fajla na backend
-        await http.post(endpoints.tasks.submit(Number(selectedTaskId)), {
-          filePath: base64Data,
-          fileName: selectedFile.name,
-        });
+        try {
+          await http.post(endpoints.tasks.submit(selectedTaskId), {
+            filePath: base64Data,
+            fileName: selectedFile.name,
+          });
 
-        alert("Zadatak uspešno predat! ✅");
-        setSelectedTaskId("");
-        setSelectedFile(null);
-        setSubmitting(false);
-        
-        const fileInput = document.getElementById('file-upload') as HTMLInputElement;
-        if (fileInput) fileInput.value = '';
+          setSuccessMessage("Zadatak uspešno predat! ✅");
+          setTimeout(() => setSuccessMessage(null), 3000);
+          setSelectedTaskId("");
+          setSelectedFile(null);
+          
+          const fileInput = document.getElementById('file-upload') as HTMLInputElement;
+          if (fileInput) fileInput.value = '';
+          
+        } catch (err: any) {
+          if (err?.response?.status === 409) {
+            setError("Već ste predali rešenje za ovaj zadatak.");
+          } else {
+            setError(err?.response?.data?.error ?? "Greška pri predaji.");
+          }
+          setTimeout(() => setError(null), 3000);
+        } finally {
+          setSubmitting(false);
+        }
       };
       
       reader.onerror = () => {
-        alert("Greška pri čitanju fajla");
+        setError("Greška pri čitanju fajla");
+        setTimeout(() => setError(null), 3000);
         setSubmitting(false);
       };
       
       reader.readAsDataURL(selectedFile);
       
     } catch (err: any) {
-      alert(err?.response?.data?.error ?? "Greška pri predaji.");
+      setError(err?.response?.data?.error ?? "Greška pri predaji.");
+      setTimeout(() => setError(null), 3000);
       setSubmitting(false);
     }
   };
@@ -171,7 +195,8 @@ export default function CourseDetailsPage() {
     const comment = prompt("Komentar (opciono):") || "";
     const grade = parseInt(gradeStr, 10);
     if (Number.isNaN(grade)) {
-      alert("Nevažeća ocena.");
+      setError("Nevažeća ocena.");
+      setTimeout(() => setError(null), 3000);
       return;
     }
 
@@ -180,17 +205,40 @@ export default function CourseDetailsPage() {
         grade,
         comment,
       });
-      alert("Ocena postavljena ✅");
+      setSuccessMessage("Ocena postavljena ✅");
+      setTimeout(() => setSuccessMessage(null), 3000);
       await fetchAllSubmissions();
     } catch (err: any) {
-      alert(err?.response?.data?.error ?? "Greška pri ocenjivanju.");
+      setError(err?.response?.data?.error ?? "Greška pri ocenjivanju.");
+      setTimeout(() => setError(null), 3000);
     }
   };
 
   if (loading || !course) {
     return (
-      <div style={{ padding: 24, textAlign: "center", color: "#8b7762" }}>
-        Učitavanje...
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)",
+          padding: 24,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            background: "#fff",
+            borderRadius: 16,
+            padding: 60,
+            textAlign: "center",
+            color: "#8b7762",
+            boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+          }}
+        >
+          <div style={{ fontSize: 40, marginBottom: 12 }}>⏳</div>
+          Učitavanje kursa...
+        </div>
       </div>
     );
   }
@@ -208,29 +256,53 @@ export default function CourseDetailsPage() {
     >
       <div
         style={{
-          maxWidth: 900,
+          maxWidth: 1000,
           margin: "0 auto",
-          background: "#fff",
-          borderRadius: 20,
-          padding: 28,
-          boxShadow: "0 20px 40px rgba(39,35,30,0.04)",
         }}
       >
-        <div style={{ marginBottom: 24 }}>
-          <h2 style={{ margin: 0, color: "#2c2b28" }}>{course.name}</h2>
-          <p style={{ margin: "6px 0 0", color: "#8b7762" }}>{course.professorName}</p>
-          <p style={{ margin: "10px 0 0", color: "rgba(44,43,40,0.8)" }}>{course.description}</p>
+        {/* Header */}
+        <div
+          style={{
+            background: "#fff",
+            borderRadius: 16,
+            padding: 24,
+            marginBottom: 20,
+            boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+          }}
+        >
+          <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 24 }}>
+            {course.name}
+          </h2>
+          <p style={{ margin: "6px 0 0", color: "#8b7762", fontSize: 14 }}>
+            👨‍🏫 {course.professorName}
+          </p>
+          <p style={{ margin: "10px 0 0", color: "rgba(44,43,40,0.75)", fontSize: 14, lineHeight: 1.6 }}>
+            {course.description}
+          </p>
 
           {course.materialPath && (
-            <div style={{ marginTop: 12 }}>
+            <div
+              style={{
+                marginTop: 16,
+                padding: 12,
+                borderRadius: 10,
+                background: "#f9f6f2",
+                border: "1px solid rgba(44,43,40,0.06)",
+              }}
+            >
               {course.materialPath.startsWith("data:") ? (
                 <a
                   href={course.materialPath}
                   download={`${course.name.replace(/\s+/g, '_')}_materijal.pdf`}
                   style={{ 
                     color: "#9a7556", 
-                    textDecoration: "underline",
-                    cursor: "pointer"
+                    textDecoration: "none",
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    fontSize: 14,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
                   }}
                 >
                   📄 Preuzmi materijal (PDF)
@@ -240,7 +312,15 @@ export default function CourseDetailsPage() {
                   href={course.materialPath}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: "#9a7556", textDecoration: "underline" }}
+                  style={{
+                    color: "#9a7556",
+                    textDecoration: "none",
+                    fontWeight: 600,
+                    fontSize: 14,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}
                 >
                   📄 Preuzmi materijal
                 </a>
@@ -249,27 +329,77 @@ export default function CourseDetailsPage() {
           )}
         </div>
 
+        {/* Success Message */}
+        {successMessage && (
+          <div
+            style={{
+              padding: 14,
+              marginBottom: 16,
+              background: "linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%)",
+              border: "1px solid rgba(6,95,70,0.12)",
+              borderRadius: 12,
+              color: "#065f46",
+              fontWeight: 600,
+              fontSize: 14,
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              boxShadow: "0 2px 8px rgba(6,95,70,0.08)",
+            }}
+          >
+            ✅ {successMessage}
+          </div>
+        )}
+
+        {/* Error Message */}
+        {error && (
+          <div
+            style={{
+              padding: 14,
+              marginBottom: 16,
+              background: "#fff5f5",
+              border: "1px solid rgba(220,38,38,0.12)",
+              borderRadius: 12,
+              color: "#991b1b",
+              fontWeight: 600,
+              fontSize: 14,
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              boxShadow: "0 2px 8px rgba(220,38,38,0.08)",
+            }}
+          >
+            ❌ {error}
+          </div>
+        )}
+
+        {/* Professor: Create Task */}
         {isProfessor && (
           <div
             style={{
-              marginBottom: 24,
-              padding: 18,
+              marginBottom: 20,
+              padding: 20,
               border: "1px solid rgba(44,43,40,0.06)",
               borderRadius: 16,
-              background: "#fffaf6",
+              background: "#fff",
+              boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
             }}
           >
-            <h3 style={{ margin: "0 0 14px", color: "#2c2b28" }}>➕ Kreiraj novi zadatak</h3>
+            <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 17 }}>
+              ➕ Kreiraj novi zadatak
+            </h3>
             <form onSubmit={createTask} style={{ display: "grid", gap: 12 }}>
               <input
                 placeholder="Naziv zadatka"
                 value={newTaskTitle}
                 onChange={(e) => setNewTaskTitle(e.target.value)}
                 style={{
-                  padding: 10,
+                  padding: 12,
                   borderRadius: 10,
-                  border: "1px solid rgba(44,43,40,0.06)",
+                  border: "1px solid rgba(44,43,40,0.1)",
                   background: "#fff",
+                  fontSize: 14,
+                  color: "#2c2b28",
                 }}
               />
               <textarea
@@ -277,11 +407,15 @@ export default function CourseDetailsPage() {
                 value={newTaskDesc}
                 onChange={(e) => setNewTaskDesc(e.target.value)}
                 style={{
-                  padding: 10,
+                  padding: 12,
                   borderRadius: 10,
-                  border: "1px solid rgba(44,43,40,0.06)",
-                  minHeight: 80,
+                  border: "1px solid rgba(44,43,40,0.1)",
+                  minHeight: 100,
                   background: "#fff",
+                  fontSize: 14,
+                  color: "#2c2b28",
+                  fontFamily: "inherit",
+                  resize: "vertical",
                 }}
               />
               <input
@@ -289,22 +423,27 @@ export default function CourseDetailsPage() {
                 value={newTaskDeadline}
                 onChange={(e) => setNewTaskDeadline(e.target.value)}
                 style={{
-                  padding: 10,
+                  padding: 12,
                   borderRadius: 10,
-                  border: "1px solid rgba(44,43,40,0.06)",
+                  border: "1px solid rgba(44,43,40,0.1)",
                   background: "#fff",
+                  fontSize: 14,
+                  color: "#2c2b28",
                 }}
               />
               <button
                 type="submit"
                 style={{
-                  padding: 10,
+                  padding: 12,
                   borderRadius: 10,
                   border: "none",
                   cursor: "pointer",
                   fontWeight: 600,
+                  fontSize: 14,
                   color: "#fff",
                   background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
+                  boxShadow: "0 4px 12px rgba(121,86,61,0.15)",
+                  transition: "all 0.2s",
                 }}
               >
                 Kreiraj zadatak
@@ -313,36 +452,55 @@ export default function CourseDetailsPage() {
           </div>
         )}
 
+        {/* Student: Submit Task */}
         {isStudent && (
           <div
             style={{
-              marginBottom: 24,
-              padding: 18,
+              marginBottom: 20,
+              padding: 20,
               border: "1px solid rgba(44,43,40,0.06)",
               borderRadius: 16,
-              background: "#fffaf6",
+              background: "#fff",
+              boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
             }}
           >
-            <h3 style={{ margin: "0 0 14px", color: "#2c2b28" }}>📤 Predaj zadatak</h3>
-            <form onSubmit={submitTask} style={{ display: "grid", gap: 12 }}>
-              <select
-                value={selectedTaskId}
-                onChange={(e) => setSelectedTaskId(e.target.value === "" ? "" : Number(e.target.value))}
-                style={{
-                  padding: 10,
-                  borderRadius: 10,
-                  border: "1px solid rgba(44,43,40,0.06)",
-                  background: "#fff",
-                  color: "#2c2b28",
-                }}
-              >
-                <option value="">Izaberi zadatak</option>
-                {tasks.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.title}
-                  </option>
-                ))}
-              </select>
+            <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 17 }}>
+              📤 Predaj zadatak
+            </h3>
+            <form onSubmit={submitTask} style={{ display: "grid", gap: 14 }}>
+              <div>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: 6,
+                    color: "#8b7762",
+                    fontSize: 13,
+                    fontWeight: 600,
+                  }}
+                >
+                  Izaberi zadatak:
+                </label>
+                <select
+                  value={selectedTaskId}
+                  onChange={(e) => setSelectedTaskId(e.target.value === "" ? "" : Number(e.target.value))}
+                  style={{
+                    padding: 12,
+                    borderRadius: 10,
+                    border: "1px solid rgba(44,43,40,0.1)",
+                    background: "#fff",
+                    color: "#2c2b28",
+                    fontSize: 14,
+                    width: "100%",
+                  }}
+                >
+                  <option value="">-- Izaberi zadatak --</option>
+                  {tasks.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
               <div>
                 <label
@@ -364,27 +522,28 @@ export default function CourseDetailsPage() {
                   style={{
                     padding: 10,
                     borderRadius: 10,
-                    border: "1px solid rgba(44,43,40,0.06)",
+                    border: "1px solid rgba(44,43,40,0.1)",
                     background: "#fff",
                     width: "100%",
                     cursor: "pointer",
+                    fontSize: 14,
                   }}
                 />
                 {selectedFile && (
                   <div
                     style={{
-                      marginTop: 8,
-                      padding: 10,
-                      borderRadius: 8,
-                      background: "#e9fbf4",
-                      border: "1px solid rgba(6,95,70,0.08)",
+                      marginTop: 10,
+                      padding: 12,
+                      borderRadius: 10,
+                      background: "linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%)",
+                      border: "1px solid rgba(6,95,70,0.12)",
                     }}
                   >
-                    <div style={{ fontSize: 12, color: "#065f46", fontWeight: 600 }}>
+                    <div style={{ fontSize: 12, color: "#047857", fontWeight: 600, marginBottom: 4 }}>
                       ✅ Odabran fajl:
                     </div>
-                    <div style={{ fontSize: 13, color: "#047857", marginTop: 4 }}>
-                      📄 <strong>{selectedFile.name}</strong>
+                    <div style={{ fontSize: 13, color: "#065f46", fontWeight: 600 }}>
+                      📄 {selectedFile.name}
                     </div>
                     <div style={{ fontSize: 12, color: "#8b7762", marginTop: 2 }}>
                       Veličina: {(selectedFile.size / 1024).toFixed(2)} KB
@@ -397,14 +556,17 @@ export default function CourseDetailsPage() {
                 type="submit"
                 disabled={submitting}
                 style={{
-                  padding: 10,
+                  padding: 12,
                   borderRadius: 10,
                   border: "none",
                   cursor: submitting ? "not-allowed" : "pointer",
                   opacity: submitting ? 0.6 : 1,
                   fontWeight: 600,
+                  fontSize: 14,
                   color: "#fff",
                   background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
+                  boxShadow: submitting ? "none" : "0 4px 12px rgba(121,86,61,0.15)",
+                  transition: "all 0.2s",
                 }}
               >
                 {submitting ? "Predaja u toku..." : "📤 Predaj rešenje"}
@@ -413,8 +575,20 @@ export default function CourseDetailsPage() {
           </div>
         )}
 
-        <div>
-          <h3 style={{ margin: "0 0 14px", color: "#2c2b28" }}>📝 Zadaci</h3>
+        {/* Tasks List */}
+        <div
+          style={{
+            marginBottom: 20,
+            padding: 20,
+            border: "1px solid rgba(44,43,40,0.06)",
+            borderRadius: 16,
+            background: "#fff",
+            boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+          }}
+        >
+          <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 17 }}>
+            📝 Zadaci
+          </h3>
           <div style={{ display: "grid", gap: 12 }}>
             {tasks.map((t) => (
               <div
@@ -423,69 +597,137 @@ export default function CourseDetailsPage() {
                   padding: 14,
                   border: "1px solid rgba(44,43,40,0.06)",
                   borderRadius: 12,
-                  background: "#fff",
+                  background: "#fafafa",
                 }}
               >
-                <div style={{ fontWeight: 700, color: "#2c2b28" }}>{t.title}</div>
-                <div style={{ color: "rgba(44,43,40,0.8)", fontSize: 14, marginTop: 4 }}>
+                <div style={{ fontWeight: 700, color: "#2c2b28", fontSize: 15, marginBottom: 4 }}>
+                  {t.title}
+                </div>
+                <div style={{ color: "rgba(44,43,40,0.75)", fontSize: 14, marginBottom: 8, lineHeight: 1.5 }}>
                   {t.description}
                 </div>
-                <div style={{ fontSize: 12, color: "#8b7762", marginTop: 6 }}>
-                  Rok: {t.deadline ? new Date(t.deadline).toLocaleString() : "-"}
+                <div style={{ fontSize: 12, color: "#8b7762", fontWeight: 600 }}>
+                  🕐 Rok: {t.deadline ? new Date(t.deadline).toLocaleString('sr-RS') : "-"}
                 </div>
               </div>
             ))}
 
-            {tasks.length === 0 && <div style={{ color: "#777", fontStyle: "italic" }}>Nema zadataka još.</div>}
+            {tasks.length === 0 && (
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: 40,
+                  color: "#8b7762",
+                  fontStyle: "italic",
+                  background: "#fafafa",
+                  borderRadius: 12,
+                  border: "1px solid rgba(44,43,40,0.06)",
+                }}
+              >
+                <div style={{ fontSize: 48, marginBottom: 12 }}>📭</div>
+                Nema zadataka još.
+              </div>
+            )}
           </div>
         </div>
 
+        {/* Professor: Submissions */}
         {isProfessor && submissions.length > 0 && (
-          <div style={{ marginTop: 24 }}>
-            <h3 style={{ margin: "0 0 14px", color: "#2c2b28" }}>📋 Predata rešenja</h3>
+          <div
+            style={{
+              padding: 20,
+              border: "1px solid rgba(44,43,40,0.06)",
+              borderRadius: 16,
+              background: "#fff",
+              boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+            }}
+          >
+            <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 17 }}>
+              📋 Predata rešenja
+            </h3>
             <div style={{ display: "grid", gap: 12 }}>
               {submissions.map((s) => (
                 <div
                   key={s.id}
                   style={{
-                    padding: 14,
+                    padding: 16,
                     border: "1px solid rgba(44,43,40,0.06)",
                     borderRadius: 12,
-                    background: "#fff",
+                    background: s.grade ? "#f0fdf4" : "#fafafa",
                   }}
                 >
-                  <div style={{ fontWeight: 700, color: "#2c2b28" }}>{s.taskTitle}</div>
-                  <div style={{ color: "#8b7762", fontSize: 13 }}>{s.studentName}</div>
-                  <div style={{ color: "rgba(44,43,40,0.8)", fontSize: 14, marginTop: 4 }}>
-                    Fajl: {s.filePath.startsWith('data:') ? 'Python rešenje (.py)' : s.filePath}
+                  <div style={{ fontWeight: 700, color: "#2c2b28", fontSize: 15, marginBottom: 4 }}>
+                    {s.taskTitle}
+                  </div>
+                  <div style={{ color: "#8b7762", fontSize: 13, marginBottom: 8 }}>
+                    👤 {s.studentName}
+                  </div>
+                  <div
+                    style={{
+                      color: "rgba(44,43,40,0.75)",
+                      fontSize: 13,
+                      marginBottom: 10,
+                      padding: 10,
+                      background: "#fff",
+                      borderRadius: 8,
+                      border: "1px solid rgba(44,43,40,0.06)",
+                    }}
+                  >
+                    📄 Fajl: {s.filePath.startsWith('data:') ? 'Python rešenje (.py)' : s.filePath}
                   </div>
 
                   {s.grade ? (
                     <div
                       style={{
-                        marginTop: 8,
-                        padding: 8,
-                        borderRadius: 8,
-                        background: "#effaf3",
-                        border: "1px solid rgba(6,95,70,0.08)",
-                        color: "#065f46",
-                        fontSize: 13,
+                        padding: 12,
+                        borderRadius: 10,
+                        background: "#fff",
+                        border: "1px solid rgba(6,95,70,0.12)",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
                       }}
                     >
-                      Ocena: {s.grade}/5 • {s.comment}
+                      <div style={{ flex: 1 }}>
+                        {s.comment && (
+                          <div style={{ fontSize: 13, color: "#065f46", marginBottom: 4 }}>
+                            {s.comment}
+                          </div>
+                        )}
+                      </div>
+                      <div
+                        style={{
+                          padding: "8px 14px",
+                          borderRadius: 8,
+                          background: "linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%)",
+                          border: "1px solid rgba(6,95,70,0.15)",
+                          boxShadow: "0 1px 3px rgba(6,95,70,0.08)",
+                          textAlign: "center",
+                          minWidth: 70,
+                        }}
+                      >
+                        <div style={{ fontSize: 10, color: "#047857", marginBottom: 2, fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>
+                          Ocena
+                        </div>
+                        <div style={{ fontSize: 20, fontWeight: 700, color: "#065f46", lineHeight: 1 }}>
+                          {s.grade}/5
+                        </div>
+                      </div>
                     </div>
                   ) : (
                     <button
                       onClick={() => gradeSubmission(s.id)}
                       style={{
-                        marginTop: 10,
-                        padding: "6px 12px",
-                        borderRadius: 8,
+                        padding: "10px 16px",
+                        borderRadius: 10,
                         border: "none",
                         cursor: "pointer",
                         fontWeight: 600,
+                        fontSize: 14,
                         color: "#fff",
                         background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
+                        boxShadow: "0 4px 12px rgba(121,86,61,0.15)",
+                        transition: "all 0.2s",
                       }}
                     >
                       Oceni

@@ -1,49 +1,43 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import { http } from "../api/https";
+import { endpoints } from "../api/endpoints";
 import type { Course } from "../types/courses";
-import { listProfessors, listCourses } from "../mocks/handlers";
 import { SearchBar } from "../components/SearchBar";
-import { ProfessorSelect } from "../components/ProfessorSelect";
 import { CourseCard } from "../components/CourseCard";
-import { createEnrollment } from "../mocks/enrollments";
 import { useAuth } from "../auth/AuthContext";
 
-const tabs: { key: Course["status"] | "OPEN"; label: string }[] = [
-  { key: "ACTIVE", label: "Aktivni" },
-  { key: "PENDING", label: "Na čekanju" },
-  { key: "OPEN", label: "Svi" },
-];
-
 export default function CoursesPage() {
-  const [active, setActive] = useState<Course["status"] | "OPEN">("ACTIVE");
-  const [professors, setProfessors] = useState<{ id: number; name: string }[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
   const [search, setSearch] = useState("");
-  const [professorId, setProfessorId] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { user, hasRole } = useAuth();
   const [processingIds, setProcessingIds] = useState<number[]>([]);
 
   useEffect(() => {
-    listProfessors().then(setProfessors);
+    fetchCourses();
   }, []);
 
-  useEffect(() => {
+  const fetchCourses = async () => {
     setLoading(true);
+    setError(null);
+    try {
+      const res = await http.get("/api/courses/");
+      console.log("Fetched courses:", res.data); // ✅ DEBUG
+      setCourses(res.data);
+    } catch (err: any) {
+      console.error("Error fetching courses:", err);
+      setError(err?.response?.data?.error || "Greška pri učitavanju kurseva");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const status = active === "OPEN" ? undefined : active;
-    listCourses({ status: status as any, search, professorId })
-      .then((data) => setCourses(data))
-      .finally(() => setLoading(false));
-  }, [active, search, professorId]);
-
-  const gridStyle = useMemo(
-    () => ({
-      display: "grid",
-      gridTemplateColumns: "1fr",
-      gap: 16,
-      marginTop: 18,
-    }),
-    []
+  const filtered = courses.filter((c) =>
+    search
+      ? c.name.toLowerCase().includes(search.toLowerCase()) ||
+        c.professorName.toLowerCase().includes(search.toLowerCase())
+      : true
   );
 
   const handleEnroll = async (courseId: number) => {
@@ -51,8 +45,11 @@ export default function CoursesPage() {
 
     setProcessingIds((p) => [...p, courseId]);
     try {
-      await createEnrollment(courseId);
-      alert("Uspešno ste upisani na kurs (mock).");
+      await http.post(endpoints.courses.enroll(courseId));
+      alert("Uspešno ste upisani na kurs!");
+      fetchCourses(); 
+    } catch (err: any) {
+      alert(err?.response?.data?.error ?? "Greška pri upisu.");
     } finally {
       setProcessingIds((p) => p.filter((id) => id !== courseId));
     }
@@ -62,7 +59,7 @@ export default function CoursesPage() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #667eea, #764ba2)",
+        background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)",
         padding: 24,
       }}
     >
@@ -73,71 +70,48 @@ export default function CoursesPage() {
           background: "#fff",
           borderRadius: 20,
           padding: 28,
-          boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+          boxShadow: "0 20px 40px rgba(39,35,30,0.04)",
         }}
       >
         <div style={{ marginBottom: 20 }}>
-          <h2 style={{ margin: 0, color: "#2d2d2d" }}>🎓 Kursevi</h2>
-          <p style={{ margin: "6px 0 0", color: "#666" }}>
+          <h2 style={{ margin: 0, color: "#2c2b28" }}>🎓 Kursevi</h2>
+          <p style={{ margin: "6px 0 0", color: "#8b7762" }}>
             Istraži dostupne kurseve i započni učenje
           </p>
         </div>
 
-        {/* Tabs */}
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          {tabs.map((t) => (
-            <button
-              key={t.key}
-              onClick={() => setActive(t.key)}
-              style={{
-                padding: "8px 16px",
-                borderRadius: 999,
-                border: "1px solid #ddd",
-                fontWeight: 500,
-                background:
-                  active === t.key
-                    ? "linear-gradient(135deg, #667eea, #764ba2)"
-                    : "#fff",
-                color: active === t.key ? "#fff" : "#333",
-                cursor: "pointer",
-              }}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Filters */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "2fr 1fr",
-            gap: 14,
-            marginTop: 18,
-          }}
-        >
+        <div style={{ marginBottom: 18 }}>
           <SearchBar value={search} onChange={setSearch} />
-          <ProfessorSelect
-            professors={professors}
-            value={professorId}
-            onChange={setProfessorId}
-          />
         </div>
 
-        {/* Content */}
+        {error && (
+          <div
+            style={{
+              padding: 16,
+              marginBottom: 16,
+              background: "#fff5f5",
+              border: "1px solid rgba(180,130,130,0.08)",
+              borderRadius: 8,
+              color: "#7a2a2a",
+            }}
+          >
+            {error}
+          </div>
+        )}
+
         {loading ? (
           <div
             style={{
               marginTop: 24,
               textAlign: "center",
-              color: "#666",
+              color: "#8b7762",
             }}
           >
-            Učitavanje…
+            Učitavanje...
           </div>
         ) : (
-          <div style={gridStyle}>
-            {courses.map((c) => (
+          <div style={{ display: "grid", gap: 16 }}>
+            {filtered.map((c) => (
               <CourseCard
                 key={c.id}
                 course={c}
@@ -146,7 +120,7 @@ export default function CoursesPage() {
               />
             ))}
 
-            {courses.length === 0 && (
+            {filtered.length === 0 && (
               <div
                 style={{
                   textAlign: "center",
@@ -155,7 +129,9 @@ export default function CoursesPage() {
                   fontStyle: "italic",
                 }}
               >
-                Nema kurseva za izabrani filter.
+                {courses.length === 0
+                  ? "Trenutno nema dostupnih kurseva."
+                  : "Nema kurseva za izabrani filter."}
               </div>
             )}
           </div>

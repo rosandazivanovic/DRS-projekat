@@ -28,14 +28,19 @@ export default function CourseDetailsPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Grading modal state
+  const [gradingSubmission, setGradingSubmission] = useState<TaskSubmission | null>(null);
+  const [gradeValue, setGradeValue] = useState("");
+  const [gradeComment, setGradeComment] = useState("");
+
   useEffect(() => {
     if (courseId === null) return;
 
     (async () => {
       await fetchCourse(courseId);
-      await fetchTasks(courseId);
+      const fetchedTasks = await fetchTasks(courseId);
       if (hasRole && hasRole(["PROFESOR"])) {
-        await fetchAllSubmissions();
+        await fetchAllSubmissions(fetchedTasks);
       }
     })();
   }, [courseId, user]);
@@ -64,10 +69,10 @@ export default function CourseDetailsPage() {
     }
   };
 
-  const fetchAllSubmissions = async () => {
+  const fetchAllSubmissions = async (tasksToFetch: Task[] = tasks) => {
     try {
       const allSubs: TaskSubmission[] = [];
-      for (const task of tasks) {
+      for (const task of tasksToFetch) {
         if (typeof task.id !== "undefined" && task.id !== null) {
           const res = await http.get(endpoints.tasks.submissions(task.id));
           if (Array.isArray(res.data)) allSubs.push(...res.data);
@@ -189,24 +194,65 @@ export default function CourseDetailsPage() {
     }
   };
 
-  const gradeSubmission = async (submissionId: number) => {
-    const gradeStr = prompt("Ocena (1-5):");
-    if (!gradeStr) return;
-    const comment = prompt("Komentar (opciono):") || "";
-    const grade = parseInt(gradeStr, 10);
-    if (Number.isNaN(grade)) {
-      setError("Nevažeća ocena.");
+  const handleDownloadSubmission = async (taskId: number, submissionId: number) => {
+    try {
+      const res = await http.get(`/api/tasks/${taskId}/submissions/${submissionId}/download`);
+      const data = res.data;
+      
+      const base64Data = data.fileData.split(',')[1];
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'text/x-python' });
+      
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = data.fileName;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      
+      setSuccessMessage(`Fajl preuzet: ${data.fileName} ✅`);
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err: any) {
+      setError(err?.response?.data?.error ?? "Greška pri preuzimanju fajla");
+      setTimeout(() => setError(null), 3000);
+    }
+  };
+
+  const openGradingModal = (submission: TaskSubmission) => {
+    setGradingSubmission(submission);
+    setGradeValue("");
+    setGradeComment("");
+  };
+
+  const closeGradingModal = () => {
+    setGradingSubmission(null);
+    setGradeValue("");
+    setGradeComment("");
+  };
+
+  const submitGrade = async () => {
+    if (!gradingSubmission) return;
+
+    const grade = parseInt(gradeValue, 10);
+    if (Number.isNaN(grade) || grade < 1 || grade > 5) {
+      setError("Ocena mora biti između 1 i 5.");
       setTimeout(() => setError(null), 3000);
       return;
     }
 
     try {
-      await http.post(endpoints.tasks.grade(submissionId), {
+      await http.post(endpoints.tasks.grade(gradingSubmission.id), {
         grade,
-        comment,
+        comment: gradeComment,
       });
       setSuccessMessage("Ocena postavljena ✅");
       setTimeout(() => setSuccessMessage(null), 3000);
+      closeGradingModal();
       await fetchAllSubmissions();
     } catch (err: any) {
       setError(err?.response?.data?.error ?? "Greška pri ocenjivanju.");
@@ -418,19 +464,33 @@ export default function CourseDetailsPage() {
                   resize: "vertical",
                 }}
               />
-              <input
-                type="datetime-local"
-                value={newTaskDeadline}
-                onChange={(e) => setNewTaskDeadline(e.target.value)}
-                style={{
-                  padding: 12,
-                  borderRadius: 10,
-                  border: "1px solid rgba(44,43,40,0.1)",
-                  background: "#fff",
-                  fontSize: 14,
-                  color: "#2c2b28",
-                }}
-              />
+              <div>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: 6,
+                    color: "#8b7762",
+                    fontSize: 13,
+                    fontWeight: 600,
+                  }}
+                >
+                  Rok isporuke:
+                </label>
+                <input
+                  type="datetime-local"
+                  value={newTaskDeadline}
+                  onChange={(e) => setNewTaskDeadline(e.target.value)}
+                  style={{
+                    padding: 12,
+                    borderRadius: 10,
+                    border: "1px solid rgba(44,43,40,0.1)",
+                    background: "#fff",
+                    fontSize: 14,
+                    color: "#2c2b28",
+                    width: "100%",
+                  }}
+                />
+              </div>
               <button
                 type="submit"
                 style={{
@@ -645,56 +705,120 @@ export default function CourseDetailsPage() {
             <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 17 }}>
               📋 Predata rešenja
             </h3>
-            <div style={{ display: "grid", gap: 12 }}>
+            <div style={{ display: "grid", gap: 14 }}>
               {submissions.map((s) => (
                 <div
                   key={s.id}
                   style={{
-                    padding: 16,
+                    padding: 18,
                     border: "1px solid rgba(44,43,40,0.06)",
                     borderRadius: 12,
                     background: s.grade ? "#f0fdf4" : "#fafafa",
+                    transition: "all 0.2s",
                   }}
                 >
-                  <div style={{ fontWeight: 700, color: "#2c2b28", fontSize: 15, marginBottom: 4 }}>
-                    {s.taskTitle}
-                  </div>
-                  <div style={{ color: "#8b7762", fontSize: 13, marginBottom: 8 }}>
-                    👤 {s.studentName}
-                  </div>
+                  {/* Header */}
                   <div
                     style={{
-                      color: "rgba(44,43,40,0.75)",
-                      fontSize: 13,
-                      marginBottom: 10,
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      marginBottom: 12,
+                    }}
+                  >
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 700, color: "#2c2b28", fontSize: 16, marginBottom: 6 }}>
+                        {s.taskTitle}
+                      </div>
+                      <div style={{ color: "#8b7762", fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}>
+                        👤 {s.studentName}
+                      </div>
+                    </div>
+
+                    {/* Status badge */}
+                    <div
+                      style={{
+                        padding: "6px 14px",
+                        borderRadius: 20,
+                        fontSize: 12,
+                        fontWeight: 600,
+                        background: s.grade ? "#dcfce7" : "#fff7e8",
+                        color: s.grade ? "#065f46" : "#7a5b32",
+                        border: `1px solid ${s.grade ? "rgba(6,95,70,0.12)" : "rgba(122,91,50,0.12)"}`,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {s.grade ? "✅ Ocenjeno" : "⏳ Na čekanju"}
+                    </div>
+                  </div>
+
+                  {/* File path */}
+                  <div
+                    style={{
+                      fontSize: 14,
+                      color: "rgba(44,43,40,0.8)",
+                      marginBottom: s.grade ? 12 : 0,
                       padding: 10,
                       background: "#fff",
                       borderRadius: 8,
                       border: "1px solid rgba(44,43,40,0.06)",
                     }}
                   >
-                    📄 Fajl: {s.filePath.startsWith('data:') ? 'Python rešenje (.py)' : s.filePath}
+                    📄 Fajl:{" "}
+                    <code
+                      style={{
+                        background: "#f5f5f5",
+                        padding: "3px 8px",
+                        borderRadius: 6,
+                        fontWeight: 600,
+                        color: "#2c2b28",
+                      }}
+                    >
+                      {s.filePath.startsWith('data:') ? 'Python rešenje (.py)' : s.filePath}
+                    </code>
                   </div>
 
+                  {/* Grade or Grade Button */}
                   {s.grade ? (
                     <div
                       style={{
-                        padding: 12,
+                        padding: 14,
                         borderRadius: 10,
                         background: "#fff",
                         border: "1px solid rgba(6,95,70,0.12)",
                         display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
+                        gap: 14,
+                        alignItems: "flex-start",
                       }}
                     >
+                      {/* Left side - Comment */}
                       <div style={{ flex: 1 }}>
-                        {s.comment && (
-                          <div style={{ fontSize: 13, color: "#065f46", marginBottom: 4 }}>
-                            {s.comment}
+                        {s.comment ? (
+                          <div>
+                            <div
+                              style={{
+                                fontSize: 11,
+                                color: "#047857",
+                                marginBottom: 6,
+                                fontWeight: 600,
+                                textTransform: "uppercase",
+                                letterSpacing: "0.5px",
+                              }}
+                            >
+                              💬 Komentar profesora
+                            </div>
+                            <div style={{ fontSize: 13, color: "#065f46", lineHeight: 1.6 }}>
+                              {s.comment}
+                            </div>
+                          </div>
+                        ) : (
+                          <div style={{ fontSize: 13, color: "#8b7762", fontStyle: "italic" }}>
+                            Nema komentara
                           </div>
                         )}
                       </div>
+
+                      {/* Right side - Grade */}
                       <div
                         style={{
                           padding: "8px 14px",
@@ -703,35 +827,92 @@ export default function CourseDetailsPage() {
                           border: "1px solid rgba(6,95,70,0.15)",
                           boxShadow: "0 1px 3px rgba(6,95,70,0.08)",
                           textAlign: "center",
-                          minWidth: 70,
+                          minWidth: 80,
                         }}
                       >
-                        <div style={{ fontSize: 10, color: "#047857", marginBottom: 2, fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>
+                        <div
+                          style={{
+                            fontSize: 10,
+                            color: "#047857",
+                            marginBottom: 2,
+                            fontWeight: 600,
+                            letterSpacing: "0.5px",
+                            textTransform: "uppercase",
+                          }}
+                        >
                           Ocena
                         </div>
-                        <div style={{ fontSize: 20, fontWeight: 700, color: "#065f46", lineHeight: 1 }}>
+                        <div
+                          style={{
+                            fontSize: 22,
+                            fontWeight: 700,
+                            color: "#065f46",
+                            letterSpacing: "-0.5px",
+                            lineHeight: 1,
+                          }}
+                        >
                           {s.grade}/5
                         </div>
                       </div>
                     </div>
                   ) : (
-                    <button
-                      onClick={() => gradeSubmission(s.id)}
-                      style={{
-                        padding: "10px 16px",
-                        borderRadius: 10,
-                        border: "none",
-                        cursor: "pointer",
-                        fontWeight: 600,
-                        fontSize: 14,
-                        color: "#fff",
-                        background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-                        boxShadow: "0 4px 12px rgba(121,86,61,0.15)",
-                        transition: "all 0.2s",
-                      }}
-                    >
-                      Oceni
-                    </button>
+                    <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
+                      <button
+                        onClick={() => handleDownloadSubmission(s.taskId, s.id)}
+                        style={{
+                          flex: 1,
+                          padding: "10px 16px",
+                          borderRadius: 10,
+                          border: "1px solid rgba(44,43,40,0.12)",
+                          cursor: "pointer",
+                          fontWeight: 600,
+                          fontSize: 14,
+                          color: "#2c2b28",
+                          background: "#fff",
+                          boxShadow: "0 1px 3px rgba(39,35,30,0.06)",
+                          transition: "all 0.2s",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = "#f5f5f5";
+                          e.currentTarget.style.transform = "translateY(-1px)";
+                          e.currentTarget.style.boxShadow = "0 2px 6px rgba(39,35,30,0.1)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "#fff";
+                          e.currentTarget.style.transform = "translateY(0)";
+                          e.currentTarget.style.boxShadow = "0 1px 3px rgba(39,35,30,0.06)";
+                        }}
+                      >
+                        📥 Preuzmi
+                      </button>
+                      
+                      <button
+                        onClick={() => openGradingModal(s)}
+                        style={{
+                          flex: 1,
+                          padding: "10px 16px",
+                          borderRadius: 10,
+                          border: "none",
+                          cursor: "pointer",
+                          fontWeight: 600,
+                          fontSize: 14,
+                          color: "#fff",
+                          background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
+                          boxShadow: "0 4px 12px rgba(121,86,61,0.15)",
+                          transition: "all 0.2s",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = "translateY(-1px)";
+                          e.currentTarget.style.boxShadow = "0 6px 16px rgba(121,86,61,0.2)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = "translateY(0)";
+                          e.currentTarget.style.boxShadow = "0 4px 12px rgba(121,86,61,0.15)";
+                        }}
+                      >
+                        ⭐ Oceni
+                      </button>
+                    </div>
                   )}
                 </div>
               ))}
@@ -739,6 +920,149 @@ export default function CourseDetailsPage() {
           </div>
         )}
       </div>
+
+      {/* Grading Modal */}
+      {gradingSubmission && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+            padding: 24,
+          }}
+          onClick={closeGradingModal}
+        >
+          <div
+            style={{
+              background: "#fff",
+              borderRadius: 16,
+              padding: 24,
+              maxWidth: 500,
+              width: "100%",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 20 }}>
+              Oceni rešenje
+            </h3>
+
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 14, color: "#8b7762", marginBottom: 4 }}>
+                <strong>Zadatak:</strong> {gradingSubmission.taskTitle}
+              </div>
+              <div style={{ fontSize: 14, color: "#8b7762" }}>
+                <strong>Student:</strong> {gradingSubmission.studentName}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: 16 }}>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: 6,
+                  color: "#8b7762",
+                  fontSize: 13,
+                  fontWeight: 600,
+                }}
+              >
+                Ocena (1-5):
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="5"
+                value={gradeValue}
+                onChange={(e) => setGradeValue(e.target.value)}
+                placeholder="Unesi ocenu"
+                style={{
+                  padding: 12,
+                  borderRadius: 10,
+                  border: "1px solid rgba(44,43,40,0.1)",
+                  background: "#fff",
+                  fontSize: 14,
+                  color: "#2c2b28",
+                  width: "100%",
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: 20 }}>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: 6,
+                  color: "#8b7762",
+                  fontSize: 13,
+                  fontWeight: 600,
+                }}
+              >
+                Komentar (opciono):
+              </label>
+              <textarea
+                value={gradeComment}
+                onChange={(e) => setGradeComment(e.target.value)}
+                placeholder="Napišite komentar..."
+                style={{
+                  padding: 12,
+                  borderRadius: 10,
+                  border: "1px solid rgba(44,43,40,0.1)",
+                  background: "#fff",
+                  fontSize: 14,
+                  color: "#2c2b28",
+                  width: "100%",
+                  minHeight: 100,
+                  fontFamily: "inherit",
+                  resize: "vertical",
+                }}
+              />
+            </div>
+
+            <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
+              <button
+                onClick={closeGradingModal}
+                style={{
+                  padding: "10px 20px",
+                  borderRadius: 10,
+                  border: "1px solid rgba(44,43,40,0.12)",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  fontSize: 14,
+                  color: "#2c2b28",
+                  background: "#fff",
+                  transition: "all 0.2s",
+                }}
+              >
+                Otkaži
+              </button>
+              <button
+                onClick={submitGrade}
+                style={{
+                  padding: "10px 20px",
+                  borderRadius: 10,
+                  border: "none",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  fontSize: 14,
+                  color: "#fff",
+                  background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
+                  boxShadow: "0 4px 12px rgba(121,86,61,0.15)",
+                  transition: "all 0.2s",
+                }}
+              >
+                Postavi ocenu
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

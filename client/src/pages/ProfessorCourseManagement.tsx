@@ -3,7 +3,6 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { http } from "../api/https";
 import { endpoints } from "../api/endpoints";
 import type { Course } from "../types/courses";
-import type { TaskSubmission } from "../types/tasks"; 
 import { useAuth } from "../auth/AuthContext";
 
 type Student = {
@@ -30,25 +29,19 @@ export default function ProfessorCourseManagementPage() {
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Forme za izmenu kursa
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
 
-  // Upload materijala
   const [materialFile, setMaterialFile] = useState<File | null>(null);
   const [uploadingMaterial, setUploadingMaterial] = useState(false);
 
-  // Dodavanje studenata
   const [showAddStudents, setShowAddStudents] = useState(false);
   const [availableStudents, setAvailableStudents] = useState<Student[]>([]);
   const [enrolledStudents, setEnrolledStudents] = useState<Enrollment[]>([]);
   const [selectedStudentId, setSelectedStudentId] = useState<number | "">("");
   const [addingStudent, setAddingStudent] = useState(false);
 
-  const [submissions, setSubmissions] = useState<TaskSubmission[]>([]);
-  const [loadingSubmissions, setLoadingSubmissions] = useState(false);
-  const [showSubmissions, setShowSubmissions] = useState(false);
 
   useEffect(() => {
     if (courseId === null) return;
@@ -81,38 +74,23 @@ export default function ProfessorCourseManagementPage() {
     }
   };
 
-  const fetchSubmissions = async () => {
-    if (courseId === null) return;
-    
-    setLoadingSubmissions(true);
+
+  const fetchAvailableStudents = async () => {
     try {
-      const res = await http.get(endpoints.courses.allSubmissions(courseId));
-      setSubmissions(res.data || []);
-      setShowSubmissions(true);
+      const res = await http.get(endpoints.courses.availableStudents);
+      const allStudents = res.data;
+      
+      const enrolledIds = new Set(enrolledStudents.map(e => e.studentId));
+      const students = allStudents.filter(
+        (s: Student) => !enrolledIds.has(s.id)
+      );
+      
+      setAvailableStudents(students);
     } catch (err) {
-      console.error("fetchSubmissions error:", err);
-      alert("Greška pri učitavanju rešenja");
-    } finally {
-      setLoadingSubmissions(false);
+      console.error("fetchAvailableStudents error:", err);
+      alert("Greška pri učitavanju studenata");
     }
   };
-
-const fetchAvailableStudents = async () => {
-  try {
-    const res = await http.get(endpoints.courses.availableStudents);
-    const allStudents = res.data;
-    
-    const enrolledIds = new Set(enrolledStudents.map(e => e.studentId));
-    const students = allStudents.filter(
-      (s: Student) => !enrolledIds.has(s.id)
-    );
-    
-    setAvailableStudents(students);
-  } catch (err) {
-    console.error("fetchAvailableStudents error:", err);
-    alert("Greška pri učitavanju studenata");
-  }
-};
 
   const handleUpdateCourse = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -154,58 +132,58 @@ const fetchAvailableStudents = async () => {
     }
   };
 
-const handleMaterialUpload = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleMaterialUpload = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  if (!materialFile) {
-    alert("Molimo izaberite PDF fajl!");
-    return;
-  }
+    if (!materialFile) {
+      alert("Molimo izaberite PDF fajl!");
+      return;
+    }
 
-  if (!materialFile.name.toLowerCase().endsWith('.pdf')) {
-    alert("Fajl mora biti u PDF formatu!");
-    return;
-  }
+    if (!materialFile.name.toLowerCase().endsWith('.pdf')) {
+      alert("Fajl mora biti u PDF formatu!");
+      return;
+    }
 
-  const maxSize = 10 * 1024 * 1024;
-  if (materialFile.size > maxSize) {
-    alert("Fajl je prevelik! Maksimalna veličina je 10MB.");
-    return;
-  }
+    const maxSize = 10 * 1024 * 1024;
+    if (materialFile.size > maxSize) {
+      alert("Fajl je prevelik! Maksimalna veličina je 10MB.");
+      return;
+    }
 
-  if (courseId === null) return;
+    if (courseId === null) return;
 
-  setUploadingMaterial(true);
+    setUploadingMaterial(true);
 
-  try {
-    const reader = new FileReader();
-    
-    reader.onload = async (event) => {
-      const base64Data = event.target?.result as string;
+    try {
+      const reader = new FileReader();
       
-      await http.post(endpoints.courses.material(courseId), {
-        materialPath: base64Data, 
-        fileName: materialFile.name, 
-      });
+      reader.onload = async (event) => {
+        const base64Data = event.target?.result as string;
+        
+        await http.post(endpoints.courses.material(courseId), {
+          materialPath: base64Data, 
+          fileName: materialFile.name, 
+        });
 
-      alert("Materijal uspešno okačen! ✅");
-      setMaterialFile(null);
-      fetchCourse(courseId);
+        alert("Materijal uspešno okačen! ✅");
+        setMaterialFile(null);
+        fetchCourse(courseId);
+        setUploadingMaterial(false);
+      };
+      
+      reader.onerror = () => {
+        alert("Greška pri čitanju fajla");
+        setUploadingMaterial(false);
+      };
+      
+      reader.readAsDataURL(materialFile);
+      
+    } catch (err: any) {
+      alert(err?.response?.data?.error ?? "Greška pri upload-u materijala.");
       setUploadingMaterial(false);
-    };
-    
-    reader.onerror = () => {
-      alert("Greška pri čitanju fajla");
-      setUploadingMaterial(false);
-    };
-    
-    reader.readAsDataURL(materialFile);
-    
-  } catch (err: any) {
-    alert(err?.response?.data?.error ?? "Greška pri upload-u materijala.");
-    setUploadingMaterial(false);
-  }
-};
+    }
+  };
 
   const handleAddStudent = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -214,7 +192,6 @@ const handleMaterialUpload = async (e: React.FormEvent) => {
       alert("Molimo izaberite studenta!");
       return;
     }
-
 
     if (courseId === null) return;
 
@@ -233,58 +210,6 @@ const handleMaterialUpload = async (e: React.FormEvent) => {
       alert(err?.response?.data?.error ?? "Greška pri dodavanju studenta.");
     } finally {
       setAddingStudent(false);
-    }
-  };
-
-  const handleDownloadSubmission = async (taskId: number, submissionId: number) => {
-    try {
-      const res = await http.get(`/api/tasks/${taskId}/submissions/${submissionId}/download`);
-      const data = res.data;
-      
-      const base64Data = data.fileData.split(',')[1];
-      const byteCharacters = atob(base64Data);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'text/x-python' });
-      
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = data.fileName;
-      a.click();
-      window.URL.revokeObjectURL(url);
-      
-      alert(`Fajl preuzet: ${data.fileName} ✅`);
-    } catch (err: any) {
-      alert(err?.response?.data?.error ?? "Greška pri preuzimanju fajla");
-    }
-  };
-
-  const handleGradeSubmission = async (submissionId: number) => {
-    const gradeStr = prompt("Unesite ocenu (1-5):");
-    if (!gradeStr) return;
-    
-    const grade = parseInt(gradeStr, 10);
-    if (isNaN(grade) || grade < 1 || grade > 5) {
-      alert("Ocena mora biti broj između 1 i 5!");
-      return;
-    }
-
-    const comment = prompt("Komentar (opciono):") || "";
-
-    try {
-      await http.post(endpoints.tasks.grade(submissionId), {
-        grade,
-        comment,
-      });
-      
-      alert("Ocena uspešno postavljena! ✅");
-      fetchSubmissions(); 
-    } catch (err: any) {
-      alert(err?.response?.data?.error ?? "Greška pri ocenjivanju.");
     }
   };
 
@@ -318,558 +243,671 @@ const handleMaterialUpload = async (e: React.FormEvent) => {
     >
       <div
         style={{
-          maxWidth: 1000,
+          maxWidth: 1200,
           margin: "0 auto",
-          background: "#fff",
-          borderRadius: 20,
-          padding: 28,
-          boxShadow: "0 20px 40px rgba(39,35,30,0.04)",
         }}
       >
-        <div style={{ marginBottom: 24, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        {/* Header sa breadcrumb i delete button */}
+        <div style={{ 
+          marginBottom: 24, 
+          display: "flex", 
+          justifyContent: "space-between", 
+          alignItems: "center",
+          background: "#fff",
+          padding: 20,
+          borderRadius: 16,
+          boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+        }}>
           <div>
             <Link
               to="/professor/courses"
-              style={{ color: "#9a7556", textDecoration: "none", fontSize: 14, marginBottom: 8, display: "inline-block" }}
+              style={{ 
+                color: "#9a7556", 
+                textDecoration: "none", 
+                fontSize: 14, 
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                marginBottom: 8,
+                fontWeight: 500,
+              }}
             >
               ← Nazad na moje kurseve
             </Link>
-            <h2 style={{ margin: "8px 0 0", color: "#2c2b28" }}>
-              🎓 Upravljanje kursom
+            <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 24 }}>
+              🎓 {course.name}
             </h2>
-            <p style={{ margin: "6px 0 0", color: "#8b7762" }}>
-              {course.name}
+            <p style={{ margin: "4px 0 0", color: "#8b7762", fontSize: 14 }}>
+              Upravljanje kursom
             </p>
           </div>
 
           <button
             onClick={handleDeleteCourse}
             style={{
-              padding: "8px 16px",
+              padding: "10px 18px",
               borderRadius: 10,
-              border: "1px solid rgba(180,130,130,0.12)",
+              border: "1px solid rgba(180,130,130,0.2)",
               cursor: "pointer",
               fontWeight: 600,
               color: "#7a2a2a",
               background: "#fff5f5",
+              fontSize: 14,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              transition: "all 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#ffe5e5";
+              e.currentTarget.style.borderColor = "rgba(180,130,130,0.3)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "#fff5f5";
+              e.currentTarget.style.borderColor = "rgba(180,130,130,0.2)";
             }}
           >
             🗑️ Obriši kurs
           </button>
         </div>
 
-        <div
-          style={{
-            marginBottom: 24,
-            padding: 18,
-            border: "1px solid rgba(44,43,40,0.06)",
-            borderRadius: 16,
-            background: "#fffaf6",
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-            <h3 style={{ margin: 0, color: "#2c2b28" }}>✏️ Informacije o kursu</h3>
-            {!isEditing && (
-              <button
-                onClick={() => setIsEditing(true)}
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: 8,
-                  border: "none",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  color: "#fff",
-                  background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-                  fontSize: 13,
-                }}
-              >
-                Izmeni
-              </button>
-            )}
-          </div>
-
-          {isEditing ? (
-            <form onSubmit={handleUpdateCourse} style={{ display: "grid", gap: 12 }}>
-              <input
-                placeholder="Naziv kursa"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                style={{
-                  padding: 10,
-                  borderRadius: 10,
-                  border: "1px solid rgba(44,43,40,0.06)",
-                  background: "#fff",
-                }}
-              />
-              <textarea
-                placeholder="Opis kursa"
-                value={editDescription}
-                onChange={(e) => setEditDescription(e.target.value)}
-                style={{
-                  padding: 10,
-                  borderRadius: 10,
-                  border: "1px solid rgba(44,43,40,0.06)",
-                  minHeight: 100,
-                  background: "#fff",
-                }}
-              />
-              <div style={{ display: "flex", gap: 10 }}>
-                <button
-                  type="submit"
-                  style={{
-                    padding: 10,
-                    borderRadius: 10,
-                    border: "none",
-                    cursor: "pointer",
-                    fontWeight: 600,
-                    color: "#fff",
-                    background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-                  }}
-                >
-                  Sačuvaj izmene
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsEditing(false);
-                    setEditName(course.name);
-                    setEditDescription(course.description);
-                  }}
-                  style={{
-                    padding: 10,
-                    borderRadius: 10,
-                    border: "1px solid rgba(44,43,40,0.06)",
-                    cursor: "pointer",
-                    fontWeight: 600,
-                    color: "#2c2b28",
-                    background: "#fff",
-                  }}
-                >
-                  Otkaži
-                </button>
-              </div>
-            </form>
-          ) : (
-            <div>
-              <div style={{ fontWeight: 700, color: "#2c2b28", marginBottom: 8 }}>
-                {course.name}
-              </div>
-              <div style={{ color: "rgba(44,43,40,0.8)", fontSize: 14 }}>
-                {course.description}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div
-          style={{
-            marginBottom: 24,
-            padding: 18,
-            border: "1px solid rgba(44,43,40,0.06)",
-            borderRadius: 16,
-            background: "#fffaf6",
-          }}
-        >
-          <h3 style={{ margin: "0 0 14px", color: "#2c2b28" }}>📄 Materijal za učenje</h3>
-          
-          {course.materialPath ? (
+        {/* Grid layout sa 2 kolone */}
+        <div style={{ 
+          display: "grid", 
+          gridTemplateColumns: "2fr 1fr",
+          gap: 24,
+        }}>
+          {/* Leva kolona - Glavni sadržaj */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+            
+            {/* Informacije o kursu */}
             <div
               style={{
-                padding: 14,
-                borderRadius: 10,
-                background: "#e9fbf4",
-                border: "1px solid rgba(6,95,70,0.08)",
-                marginBottom: 14,
-              }}
-            >
-              <div style={{ fontWeight: 600, color: "#065f46", marginBottom: 4 }}>
-                ✅ Materijal okačen
-              </div>
-              <div style={{ fontSize: 13, color: "#047857" }}>
-                {course.materialPath.startsWith("data:") ? (
-                  <>PDF fajl ({Math.round(course.materialPath.length / 1024)} KB)</>
-                ) : (
-                  <>Fajl: {course.materialPath.split('/').pop()}</>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div
-              style={{
-                padding: 12,
-                borderRadius: 10,
-                background: "#fff7e8",
-                border: "1px solid rgba(122,91,50,0.08)",
-                marginBottom: 14,
-                color: "#7a5b32",
-                fontSize: 13,
-              }}
-            >
-              ⚠️ Materijal još nije okačen
-            </div>
-          )}
-
-          <form onSubmit={handleMaterialUpload} style={{ display: "grid", gap: 12 }}>
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: 6,
-                  color: "#8b7762",
-                  fontSize: 13,
-                }}
-              >
-                {course.materialPath ? "Zameni materijal:" : "Izaberite PDF fajl (max 10MB):"}
-              </label>
-              <input
-                type="file"
-                accept=".pdf,application/pdf"
-                onChange={(e) => setMaterialFile(e.target.files?.[0] || null)}
-                style={{
-                  padding: 10,
-                  borderRadius: 10,
-                  border: "1px solid rgba(44,43,40,0.06)",
-                  background: "#fff",
-                  width: "100%",
-                }}
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={uploadingMaterial || !materialFile}
-              style={{
-                padding: 10,
-                borderRadius: 10,
-                border: "none",
-                cursor: uploadingMaterial || !materialFile ? "not-allowed" : "pointer",
-                opacity: uploadingMaterial || !materialFile ? 0.6 : 1,
-                fontWeight: 600,
-                color: "#fff",
-                background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-              }}
-            >
-              {uploadingMaterial ? "Upload u toku..." : course.materialPath ? "Zameni materijal" : "Okači materijal"}
-            </button>
-          </form>
-        </div>
-
-        <div
-          style={{
-            marginBottom: 24,
-            padding: 18,
-            border: "1px solid rgba(44,43,40,0.06)",
-            borderRadius: 16,
-            background: "#fffaf6",
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-            <h3 style={{ margin: 0, color: "#2c2b28" }}>
-              👥 Studenti ({enrolledStudents.length})
-            </h3>
-            {!showAddStudents && (
-              <button
-                onClick={() => {
-                  setShowAddStudents(true);
-                  fetchAvailableStudents();
-                }}
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: 8,
-                  border: "none",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  color: "#fff",
-                  background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-                  fontSize: 13,
-                }}
-              >
-                ➕ Dodaj studenta
-              </button>
-            )}
-          </div>
-
-          {showAddStudents && (
-            <div
-              style={{
-                marginBottom: 16,
-                padding: 14,
-                borderRadius: 12,
-                background: "#fff",
+                padding: 24,
                 border: "1px solid rgba(44,43,40,0.06)",
+                borderRadius: 16,
+                background: "#fff",
+                boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
               }}
             >
-              <form onSubmit={handleAddStudent} style={{ display: "grid", gap: 12 }}>
-                <select
-                  value={selectedStudentId}
-                  onChange={(e) => setSelectedStudentId(e.target.value === "" ? "" : Number(e.target.value))}
-                  style={{
-                    padding: 10,
-                    borderRadius: 10,
-                    border: "1px solid rgba(44,43,40,0.06)",
-                    background: "#fff",
-                  }}
-                >
-                  <option value="">Izaberi studenta</option>
-                  {availableStudents.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.firstName} {s.lastName} ({s.email})
-                    </option>
-                  ))}
-                </select>
-                <div style={{ display: "flex", gap: 10 }}>
+              <div style={{ 
+                display: "flex", 
+                justifyContent: "space-between", 
+                alignItems: "center", 
+                marginBottom: 20,
+                paddingBottom: 16,
+                borderBottom: "2px solid #f5f0ea",
+              }}>
+                <h3 style={{ margin: 0, color: "#2c2b28", fontSize: 18, display: "flex", alignItems: "center", gap: 10 }}>
+                  ✏️ Informacije o kursu
+                </h3>
+                {!isEditing && (
                   <button
-                    type="submit"
-                    disabled={addingStudent}
+                    onClick={() => setIsEditing(true)}
                     style={{
-                      padding: 10,
-                      borderRadius: 10,
+                      padding: "8px 16px",
+                      borderRadius: 8,
                       border: "none",
-                      cursor: addingStudent ? "not-allowed" : "pointer",
-                      opacity: addingStudent ? 0.6 : 1,
+                      cursor: "pointer",
                       fontWeight: 600,
                       color: "#fff",
                       background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
+                      fontSize: 13,
+                      transition: "all 0.2s",
                     }}
                   >
-                    {addingStudent ? "Dodavanje..." : "Dodaj"}
+                    Izmeni
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowAddStudents(false);
-                      setSelectedStudentId("");
+                )}
+              </div>
+
+              {isEditing ? (
+                <form onSubmit={handleUpdateCourse} style={{ display: "grid", gap: 16 }}>
+                  <div>
+                    <label style={{ 
+                      display: "block", 
+                      marginBottom: 8, 
+                      color: "#2c2b28", 
+                      fontSize: 14,
+                      fontWeight: 600,
+                    }}>
+                      Naziv kursa
+                    </label>
+                    <input
+                      placeholder="Naziv kursa"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: 12,
+                        borderRadius: 10,
+                        border: "1px solid rgba(44,43,40,0.12)",
+                        background: "#fff",
+                        fontSize: 14,
+                      }}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label style={{ 
+                      display: "block", 
+                      marginBottom: 8, 
+                      color: "#2c2b28", 
+                      fontSize: 14,
+                      fontWeight: 600,
+                    }}>
+                      Opis kursa
+                    </label>
+                    <textarea
+                      placeholder="Opis kursa"
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: 12,
+                        borderRadius: 10,
+                        border: "1px solid rgba(44,43,40,0.12)",
+                        minHeight: 120,
+                        background: "#fff",
+                        fontSize: 14,
+                        resize: "vertical",
+                      }}
+                    />
+                  </div>
+                  
+                  <div style={{ display: "flex", gap: 12 }}>
+                    <button
+                      type="submit"
+                      style={{
+                        padding: "10px 20px",
+                        borderRadius: 10,
+                        border: "none",
+                        cursor: "pointer",
+                        fontWeight: 600,
+                        color: "#fff",
+                        background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
+                        fontSize: 14,
+                      }}
+                    >
+                      💾 Sačuvaj izmene
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsEditing(false);
+                        setEditName(course.name);
+                        setEditDescription(course.description);
+                      }}
+                      style={{
+                        padding: "10px 20px",
+                        borderRadius: 10,
+                        border: "1px solid rgba(44,43,40,0.12)",
+                        cursor: "pointer",
+                        fontWeight: 600,
+                        color: "#2c2b28",
+                        background: "#fff",
+                        fontSize: 14,
+                      }}
+                    >
+                      Otkaži
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <div>
+                  <div style={{ 
+                    fontWeight: 600, 
+                    color: "#2c2b28", 
+                    marginBottom: 4,
+                    fontSize: 15,
+                  }}>
+                    Naziv
+                  </div>
+                  <div style={{ 
+                    color: "rgba(44,43,40,0.9)", 
+                    fontSize: 14, 
+                    marginBottom: 16,
+                    padding: 12,
+                    background: "#f9f6f2",
+                    borderRadius: 8,
+                  }}>
+                    {course.name}
+                  </div>
+                  
+                  <div style={{ 
+                    fontWeight: 600, 
+                    color: "#2c2b28", 
+                    marginBottom: 4,
+                    fontSize: 15,
+                  }}>
+                    Opis
+                  </div>
+                  <div style={{ 
+                    color: "rgba(44,43,40,0.9)", 
+                    fontSize: 14,
+                    lineHeight: 1.6,
+                    padding: 12,
+                    background: "#f9f6f2",
+                    borderRadius: 8,
+                  }}>
+                    {course.description}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Materijal za učenje */}
+            <div
+              style={{
+                padding: 24,
+                border: "1px solid rgba(44,43,40,0.06)",
+                borderRadius: 16,
+                background: "#fff",
+                boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+              }}
+            >
+              <h3 style={{ 
+                margin: "0 0 20px", 
+                color: "#2c2b28", 
+                fontSize: 18,
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                paddingBottom: 16,
+                borderBottom: "2px solid #f5f0ea",
+              }}>
+                📄 Materijal za učenje
+              </h3>
+              
+              {course.materialPath ? (
+                <div
+                  style={{
+                    padding: 16,
+                    borderRadius: 10,
+                    background: "#e9fbf4",
+                    border: "1px solid rgba(6,95,70,0.12)",
+                    marginBottom: 16,
+                  }}
+                >
+                  <div style={{ 
+                    display: "flex", 
+                    alignItems: "center", 
+                    gap: 12,
+                  }}>
+                    <div style={{ 
+                      fontSize: 32,
+                      lineHeight: 1,
+                    }}>
+                      ✅
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 600, color: "#065f46", marginBottom: 2 }}>
+                        Materijal okačen
+                      </div>
+                      <div style={{ fontSize: 13, color: "#047857" }}>
+                        {course.materialPath.startsWith("data:") ? (
+                          <>PDF fajl ({Math.round(course.materialPath.length / 1024)} KB)</>
+                        ) : (
+                          <>Fajl: {course.materialPath.split('/').pop()}</>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    padding: 16,
+                    borderRadius: 10,
+                    background: "#fff7e8",
+                    border: "1px solid rgba(122,91,50,0.12)",
+                    marginBottom: 16,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                  }}
+                >
+                  <div style={{ fontSize: 24 }}>⚠️</div>
+                  <div style={{ color: "#7a5b32", fontSize: 14 }}>
+                    Materijal još nije okačen
+                  </div>
+                </div>
+              )}
+
+              <form onSubmit={handleMaterialUpload} style={{ display: "grid", gap: 14 }}>
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: 8,
+                      color: "#2c2b28",
+                      fontSize: 14,
+                      fontWeight: 600,
                     }}
+                  >
+                    {course.materialPath ? "Zameni materijal:" : "Izaberite PDF fajl (max 10MB):"}
+                  </label>
+                  <input
+                    type="file"
+                    accept=".pdf,application/pdf"
+                    onChange={(e) => setMaterialFile(e.target.files?.[0] || null)}
                     style={{
                       padding: 10,
                       borderRadius: 10,
-                      border: "1px solid rgba(44,43,40,0.06)",
-                      cursor: "pointer",
-                      fontWeight: 600,
-                      color: "#2c2b28",
+                      border: "1px solid rgba(44,43,40,0.12)",
                       background: "#fff",
+                      width: "100%",
+                      fontSize: 14,
                     }}
-                  >
-                    Otkaži
-                  </button>
+                  />
                 </div>
+                <button
+                  type="submit"
+                  disabled={uploadingMaterial || !materialFile}
+                  style={{
+                    padding: 12,
+                    borderRadius: 10,
+                    border: "none",
+                    cursor: uploadingMaterial || !materialFile ? "not-allowed" : "pointer",
+                    opacity: uploadingMaterial || !materialFile ? 0.6 : 1,
+                    fontWeight: 600,
+                    color: "#fff",
+                    background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
+                    fontSize: 14,
+                  }}
+                >
+                  {uploadingMaterial ? "⏳ Upload..." : course.materialPath ? "🔄 Zameni materijal" : "📤 Okači materijal"}
+                </button>
               </form>
             </div>
-          )}
+          </div>
 
-          <div style={{ display: "grid", gap: 10 }}>
-            {enrolledStudents.map((e) => (
-              <div
-                key={e.id}
-                style={{
+          {/* Desna kolona - Sidebar */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+            
+            {/* Studenti */}
+            <div
+              style={{
+                padding: 20,
+                border: "1px solid rgba(44,43,40,0.06)",
+                borderRadius: 16,
+                background: "#fff",
+                boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+              }}
+            >
+              <div style={{ 
+                display: "flex", 
+                justifyContent: "space-between", 
+                alignItems: "center", 
+                marginBottom: 16,
+                paddingBottom: 14,
+                borderBottom: "2px solid #f5f0ea",
+              }}>
+                <h3 style={{ 
+                  margin: 0, 
+                  color: "#2c2b28", 
+                  fontSize: 17,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}>
+                  👥 Studenti
+                  <span style={{
+                    fontSize: 13,
+                    fontWeight: 600,
+                    padding: "2px 8px",
+                    borderRadius: 12,
+                    background: "#f0fdf4",
+                    color: "#065f46",
+                  }}>
+                    {enrolledStudents.length}
+                  </span>
+                </h3>
+                {!showAddStudents && (
+                  <button
+                    onClick={() => {
+                      setShowAddStudents(true);
+                      fetchAvailableStudents();
+                    }}
+                    style={{
+                      padding: "6px 12px",
+                      borderRadius: 8,
+                      border: "none",
+                      cursor: "pointer",
+                      fontWeight: 600,
+                      color: "#fff",
+                      background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
+                      fontSize: 12,
+                    }}
+                  >
+                    ➕ Dodaj
+                  </button>
+                )}
+              </div>
+
+              {showAddStudents && (
+                <div
+                  style={{
+                    marginBottom: 16,
+                    padding: 14,
+                    borderRadius: 10,
+                    background: "#f9f6f2",
+                    border: "1px solid rgba(44,43,40,0.08)",
+                  }}
+                >
+                  <form onSubmit={handleAddStudent} style={{ display: "grid", gap: 10 }}>
+                    <select
+                      value={selectedStudentId}
+                      onChange={(e) => setSelectedStudentId(e.target.value === "" ? "" : Number(e.target.value))}
+                      style={{
+                        padding: 10,
+                        borderRadius: 8,
+                        border: "1px solid rgba(44,43,40,0.12)",
+                        background: "#fff",
+                        fontSize: 13,
+                      }}
+                    >
+                      <option value="">Izaberi studenta</option>
+                      {availableStudents.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.firstName} {s.lastName}
+                        </option>
+                      ))}
+                    </select>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <button
+                        type="submit"
+                        disabled={addingStudent}
+                        style={{
+                          flex: 1,
+                          padding: 8,
+                          borderRadius: 8,
+                          border: "none",
+                          cursor: addingStudent ? "not-allowed" : "pointer",
+                          opacity: addingStudent ? 0.6 : 1,
+                          fontWeight: 600,
+                          color: "#fff",
+                          background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
+                          fontSize: 13,
+                        }}
+                      >
+                        {addingStudent ? "⏳" : "✅ Dodaj"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowAddStudents(false);
+                          setSelectedStudentId("");
+                        }}
+                        style={{
+                          padding: 8,
+                          borderRadius: 8,
+                          border: "1px solid rgba(44,43,40,0.12)",
+                          cursor: "pointer",
+                          fontWeight: 600,
+                          color: "#2c2b28",
+                          background: "#fff",
+                          fontSize: 13,
+                        }}
+                      >
+                        ✖️
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+
+              <div style={{ display: "grid", gap: 10, maxHeight: 400, overflowY: "auto" }}>
+                {enrolledStudents.map((e) => (
+                  <div
+                    key={e.id}
+                    style={{
+                      padding: 12,
+                      borderRadius: 10,
+                      background: "#fafafa",
+                      border: "1px solid rgba(44,43,40,0.06)",
+                    }}
+                  >
+                    <div style={{ fontWeight: 600, color: "#2c2b28", fontSize: 14 }}>
+                      {e.studentName}
+                    </div>
+                    <div style={{ fontSize: 11, color: "#8b7762", marginTop: 4 }}>
+                      📅 {new Date(e.enrolledAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                ))}
+                {enrolledStudents.length === 0 && (
+                  <div
+                    style={{
+                      textAlign: "center",
+                      padding: 24,
+                      color: "#8b7762",
+                      fontStyle: "italic",
+                      fontSize: 13,
+                    }}
+                  >
+                    Nema upisanih studenata.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Brzi linkovi */}
+            <div
+              style={{
+                padding: 20,
+                border: "1px solid rgba(44,43,40,0.06)",
+                borderRadius: 16,
+                background: "#fff",
+                boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+              }}
+            >
+              <h3 style={{ 
+                margin: "0 0 16px", 
+                color: "#2c2b28", 
+                fontSize: 17,
+                paddingBottom: 14,
+                borderBottom: "2px solid #f5f0ea",
+              }}>
+                🔗 Brzi linkovi
+              </h3>
+              
+              <div style={{ display: "grid", gap: 10 }}>
+                <Link
+                  to={`/courses/${courseId}`}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    padding: "12px 14px",
+                    borderRadius: 10,
+                    border: "1px solid rgba(44,43,40,0.08)",
+                    fontWeight: 600,
+                    color: "#2c2b28",
+                    background: "#fafafa",
+                    textDecoration: "none",
+                    fontSize: 14,
+                    transition: "all 0.2s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#f0f0f0";
+                    e.currentTarget.style.transform = "translateX(4px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#fafafa";
+                    e.currentTarget.style.transform = "translateX(0)";
+                  }}
+                >
+                  📝 Upravljaj zadacima
+                </Link>
+
+                <Link
+                  to="/professor/courses"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    padding: "12px 14px",
+                    borderRadius: 10,
+                    border: "1px solid rgba(44,43,40,0.08)",
+                    fontWeight: 600,
+                    color: "#2c2b28",
+                    background: "#fafafa",
+                    textDecoration: "none",
+                    fontSize: 14,
+                    transition: "all 0.2s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#f0f0f0";
+                    e.currentTarget.style.transform = "translateX(4px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#fafafa";
+                    e.currentTarget.style.transform = "translateX(0)";
+                  }}
+                >
+                  📚 Moji kursevi
+                </Link>
+              </div>
+            </div>
+
+            {/* Statistika */}
+            <div
+              style={{
+                padding: 20,
+                border: "1px solid rgba(44,43,40,0.06)",
+                borderRadius: 16,
+                background: "linear-gradient(135deg, #fff 0%, #fafafa 100%)",
+                boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+              }}
+            >
+              <h3 style={{ 
+                margin: "0 0 16px", 
+                color: "#2c2b28", 
+                fontSize: 17,
+                paddingBottom: 14,
+                borderBottom: "2px solid #f5f0ea",
+              }}>
+                📊 Statistika
+              </h3>
+              
+              <div style={{ display: "grid", gap: 12 }}>
+                <div style={{ 
                   padding: 12,
                   borderRadius: 10,
                   background: "#fff",
                   border: "1px solid rgba(44,43,40,0.06)",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <div>
-                  <div style={{ fontWeight: 600, color: "#2c2b28" }}>
-                    {e.studentName}
+                }}>
+                  <div style={{ fontSize: 12, color: "#8b7762", marginBottom: 4 }}>
+                    Upisani studenti
                   </div>
-                  <div style={{ fontSize: 12, color: "#8b7762" }}>
-                    Upisan: {new Date(e.enrolledAt).toLocaleDateString()}
+                  <div style={{ fontSize: 24, fontWeight: 700, color: "#2c2b28" }}>
+                    {enrolledStudents.length}
                   </div>
                 </div>
-              </div>
-            ))}
-            {enrolledStudents.length === 0 && (
-              <div
-                style={{
-                  textAlign: "center",
-                  padding: 20,
-                  color: "#8b7762",
-                  fontStyle: "italic",
-                }}
-              >
-                Nema upisanih studenata.
-              </div>
-            )}
+             </div>
+            </div>
           </div>
-        </div>
-
-        <div
-          style={{
-            marginBottom: 24,
-            padding: 18,
-            border: "1px solid rgba(44,43,40,0.06)",
-            borderRadius: 16,
-            background: "#fffaf6",
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-            <h3 style={{ margin: 0, color: "#2c2b28" }}>
-              📋 Predata rešenja
-            </h3>
-            {!showSubmissions && (
-              <button
-                onClick={fetchSubmissions}
-                disabled={loadingSubmissions}
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: 8,
-                  border: "none",
-                  cursor: loadingSubmissions ? "not-allowed" : "pointer",
-                  opacity: loadingSubmissions ? 0.6 : 1,
-                  fontWeight: 600,
-                  color: "#fff",
-                  background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-                  fontSize: 13,
-                }}
-              >
-                {loadingSubmissions ? "Učitavanje..." : "Prikaži rešenja"}
-              </button>
-            )}
-          </div>
-
-          {showSubmissions && (
-            <>
-              {submissions.length === 0 ? (
-                <div
-                  style={{
-                    textAlign: "center",
-                    padding: 20,
-                    color: "#8b7762",
-                    fontStyle: "italic",
-                  }}
-                >
-                  Nema predatih rešenja.
-                </div>
-              ) : (
-                <div style={{ display: "grid", gap: 12 }}>
-                  {submissions.map((sub) => (
-                    <div
-                      key={sub.id}
-                      style={{
-                        padding: 14,
-                        borderRadius: 12,
-                        background: "#fff",
-                        border: "1px solid rgba(44,43,40,0.06)",
-                      }}
-                    >
-                      <div style={{ marginBottom: 8 }}>
-                        <div style={{ fontWeight: 700, color: "#2c2b28", fontSize: 15 }}>
-                          {sub.taskTitle}
-                        </div>
-                        <div style={{ color: "#8b7762", fontSize: 13, marginTop: 2 }}>
-                          Student: {sub.studentName}
-                        </div>
-                        <div style={{ color: "rgba(44,43,40,0.7)", fontSize: 13, marginTop: 4 }}>
-                          Fajl: <code style={{ background: "#f5f5f5", padding: "2px 6px", borderRadius: 4 }}>
-                            {sub.filePath.startsWith('data:') ? 'Python rešenje (.py)' : sub.filePath}
-                          </code>
-                        </div>
-                        <div style={{ fontSize: 12, color: "#8b7762", marginTop: 4 }}>
-                          Predato: {new Date(sub.submittedAt).toLocaleString()}
-                        </div>
-                      </div>
-
-                      {sub.grade !== null ? (
-                        <div
-                          style={{
-                            padding: 10,
-                            borderRadius: 8,
-                            background: "#e9fbf4",
-                            border: "1px solid rgba(6,95,70,0.08)",
-                          }}
-                        >
-                          <div style={{ fontWeight: 600, color: "#065f46", fontSize: 14 }}>
-                            ✅ Ocenjeno: {sub.grade}/5
-                          </div>
-                          {sub.comment && (
-                            <div style={{ color: "#065f46", fontSize: 13, marginTop: 4 }}>
-                              Komentar: {sub.comment}
-                            </div>
-                          )}
-                          {sub.gradedAt && (
-                            <div style={{ fontSize: 11, color: "#8b7762", marginTop: 4 }}>
-                              Ocenjeno: {new Date(sub.gradedAt).toLocaleString()}
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
-                          <button
-                            onClick={() => handleDownloadSubmission(sub.taskId, sub.id)}
-                            style={{
-                              padding: "8px 14px",
-                              borderRadius: 8,
-                              border: "1px solid rgba(44,43,40,0.06)",
-                              cursor: "pointer",
-                              fontWeight: 600,
-                              color: "#2c2b28",
-                              background: "#fff",
-                              fontSize: 13,
-                            }}
-                          >
-                            📥 Preuzmi rešenje
-                          </button>
-                          
-                          <button
-                            onClick={() => handleGradeSubmission(sub.id)}
-                            style={{
-                              padding: "8px 14px",
-                              borderRadius: 8,
-                              border: "none",
-                              cursor: "pointer",
-                              fontWeight: 600,
-                              color: "#fff",
-                              background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-                              fontSize: 13,
-                            }}
-                          >
-                            ⭐ Oceni rešenje
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <button
-                onClick={() => setShowSubmissions(false)}
-                style={{
-                  marginTop: 12,
-                  padding: "8px 14px",
-                  borderRadius: 8,
-                  border: "1px solid rgba(44,43,40,0.06)",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  color: "#2c2b28",
-                  background: "#fff",
-                  fontSize: 13,
-                }}
-              >
-                Sakrij rešenja
-              </button>
-            </>
-          )}
-        </div>
-
-        <div style={{ textAlign: "center" }}>
-          <Link
-            to={`/courses/${courseId}`}
-            style={{
-              display: "inline-block",
-              padding: "12px 24px",
-              borderRadius: 12,
-              border: "none",
-              fontWeight: 600,
-              color: "#fff",
-              background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-              textDecoration: "none",
-            }}
-          >
-            📝 Upravljaj zadacima
-          </Link>
         </div>
       </div>
     </div>

@@ -55,20 +55,31 @@ export default function Layout() {
               >
                 Kursevi
               </Link>
-              
+
 
               {user.role === "STUDENT" && (
-                <Link
-                  to="/my-courses"
-                  style={{
-                    color: "#8b7762",
-                    textDecoration: "none",
-                    fontWeight: 500,
-                  }}
-                >
-                  Moji kursevi
-                </Link>
-                
+                <>
+                  <Link
+                    to="/my-courses"
+                    style={{
+                      color: "#8b7762",
+                      textDecoration: "none",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Moji kursevi
+                  </Link>
+                  <Link
+                    to="/my-submissions"
+                    style={{
+                      color: "#8b7762",
+                      textDecoration: "none",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Moja rešenja
+                  </Link>
+                </>
               )}
 
               {user.role === "PROFESOR" && (
@@ -122,49 +133,51 @@ export default function Layout() {
               )}
             </nav>
           </div>
-          
-          <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-              <Link
-                to="/profile"
-                style={{
-                  color: "#2c2b28",
-                  fontSize: 14,
-                  textDecoration: "none",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "6px 12px",
-                  borderRadius: 8,
-                  background: "#f5f0ea",
-                  transition: "all 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "#e8dfd5";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "#f5f0ea";
-                }}
-              >
-                <span>👤</span>
-                <span>
-                  {user.firstName} {user.lastName}
-                </span>
-                <span style={{ fontSize: 11, color: "#8b7762" }}>
-                  ({user.role})
-                </span>
-              </Link>
 
-              <button onClick={handleLogout} style={{padding: "8px 16px",
+          <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+            <Link
+              to="/profile"
+              style={{
+                color: "#2c2b28",
+                fontSize: 14,
+                textDecoration: "none",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "6px 12px",
                 borderRadius: 8,
-                border: "none",
-                cursor: "pointer",
-                fontWeight: 600,
-                color: "#9a7556",
-                background: "#fff",
-                boxShadow: "0 4px 12px rgba(39,35,30,0.04)",}}>
-                Odjavi se
-              </button>
-            </div>
+                background: "#f5f0ea",
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#e8dfd5";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#f5f0ea";
+              }}
+            >
+              <span>👤</span>
+              <span>
+                {user.firstName} {user.lastName}
+              </span>
+              <span style={{ fontSize: 11, color: "#8b7762" }}>
+                ({user.role})
+              </span>
+            </Link>
+
+            <button onClick={handleLogout} style={{
+              padding: "8px 16px",
+              borderRadius: 8,
+              border: "none",
+              cursor: "pointer",
+              fontWeight: 600,
+              color: "#9a7556",
+              background: "#fff",
+              boxShadow: "0 4px 12px rgba(39,35,30,0.04)",
+            }}>
+              Odjavi se
+            </button>
+          </div>
         </div>
       </header>
 

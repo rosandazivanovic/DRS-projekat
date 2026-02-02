@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMyEnrollments } from "../mocks/enrollments";
+import { getMyEnrollments } from "../../mocks/enrollments";
 
 export default function MyEnrollmentsPage() {
   const [items, setItems] = useState<any[]>([]);

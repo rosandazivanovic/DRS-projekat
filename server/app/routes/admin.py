@@ -1,11 +1,11 @@
 from flask import Blueprint, request, jsonify
 from passlib.hash import pbkdf2_sha256
 
-from .db import db
-from .models import User, CourseRequest, Course
-from .auth import session_required, role_required
-from .socketio_app import socketio
-from .email_utils import send_email
+from app.db import db
+from app.models import User, CourseRequest, Course
+from app.auth import session_required, role_required
+from app.socketio_app import socketio
+from app.email_utils import send_email
 
 admin_bp = Blueprint("admin_bp", __name__)
 

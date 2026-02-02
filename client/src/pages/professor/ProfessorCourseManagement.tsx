@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { http } from "../api/https";
-import { endpoints } from "../api/endpoints";
-import type { Course } from "../types/courses";
-import { useAuth } from "../auth/AuthContext";
+import { http } from "../../api/https";
+import { endpoints } from "../../api/endpoints";
+import type { Course } from "../../types/courses";
+import { useAuth } from "../../auth/AuthContext";
 
 type Student = {
   id: number;

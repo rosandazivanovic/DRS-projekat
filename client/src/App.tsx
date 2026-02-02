@@ -2,17 +2,17 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import Layout from "./components/Layout";
 
-import LoginPage from "./pages/Login";
-import RegisterPage from "./pages/Register";
-import CoursesPage from "./pages/Courses";
-import CourseDetailsPage from "./pages/CourseDetails";
-import MyCoursesPage from "./pages/MyCourses";
-import ProfessorCreateCoursePage from "./pages/ProfessorCreateCourse";
-import ProfessorMyCoursesPage from "./pages/ProfessorMyCourses";
-import ProfessorCourseManagementPage from "./pages/ProfessorCourseManagement";
-import AdminPendingCourses from "./pages/AdminPendingCourses";
-import AdminUsersPage from "./pages/AdminUsers";
-import UserProfilePage from "./pages/UserProfile";
+import LoginPage from "./pages/auth/Login";
+import RegisterPage from "./pages/auth/Register";
+import CoursesPage from "./pages/student/Courses";
+import CourseDetailsPage from "./pages/student/CourseDetails";
+import MyCoursesPage from "./pages/student/MyCourses";
+import ProfessorCreateCoursePage from "./pages/professor/ProfessorCreateCourse";
+import ProfessorMyCoursesPage from "./pages/professor/ProfessorMyCourses";
+import ProfessorCourseManagementPage from "./pages/professor/ProfessorCourseManagement";
+import AdminPendingCourses from "./pages/admin/AdminPendingCourses";
+import AdminUsersPage from "./pages/admin/AdminUsers";
+import UserProfilePage from "./pages/shared/UserProfile";
 
 function App() {
   return (

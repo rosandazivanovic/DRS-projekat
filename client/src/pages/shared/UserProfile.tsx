@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../auth/AuthContext";
-import { http } from "../api/https";
-import { endpoints } from "../api/endpoints";
+import { useAuth } from "../../auth/AuthContext";
+import { http } from "../../api/https";
+import { endpoints } from "../../api/endpoints";
 
 export default function UserProfile() {
   const { user } = useAuth();

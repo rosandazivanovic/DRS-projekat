@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify
 
-from .db import db
-from .models import User, Course, CourseRequest, CourseEnrollment
-from .auth import session_required, role_required
-from .socketio_app import socketio
+from app.db import db
+from app.models import User, Course, CourseRequest, CourseEnrollment
+from app.auth import session_required, role_required
+from app.socketio_app import socketio
 
 courses_bp = Blueprint("courses_bp", __name__)
 

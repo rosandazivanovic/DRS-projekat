@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { http } from "../api/https";
-import { endpoints } from "../api/endpoints";
-import type { Course } from "../types/courses";
-import { SearchBar } from "../components/SearchBar";
-import { CourseCard } from "../components/CourseCard";
-import { useAuth } from "../auth/AuthContext";
+import { http } from "../../api/https";
+import { endpoints } from "../../api/endpoints";
+import type { Course } from "../../types/courses";
+import { SearchBar } from "../../components/SearchBar";
+import { CourseCard } from "../../components/CourseCard";
+import { useAuth } from "../../auth/AuthContext";
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);

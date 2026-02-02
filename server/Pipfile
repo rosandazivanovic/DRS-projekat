@@ -4,15 +4,19 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pymongo = "*"
+flask-sqlalchemy = "==3.1.1"
+sqlalchemy = "==2.0.32"
+passlib = "==1.7.4"
+flask-socketio = "==5.3.6"
+python-socketio = "==5.11.4"
+python-engineio = "==4.9.1"
+eventlet = "==0.36.1"
+redis = "==5.0.1"
+psycopg2-binary = "*"
+cors = "*"
 python-dotenv = "*"
-bcrypt = "*"
 flask-cors = "*"
-pydantic = {extras = ["email"], version = "*"}
 flask = "*"
-passlib = "*"
-redis = "*"
-flask-socketio = "*"
 
 [dev-packages]
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { http } from "../api/https";
-import { endpoints } from "../api/endpoints";
-import type { CourseRequest } from "../types/courses";
+import { http } from "../../api/https";
+import { endpoints } from "../../api/endpoints";
+import type { CourseRequest } from "../../types/courses";
 
 export default function AdminPendingCourses() {
   const [requests, setRequests] = useState<CourseRequest[]>([]);

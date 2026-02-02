@@ -1,0 +1,72 @@
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: learning_platform_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: learning_platform
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: learning_platform_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: learning_platform_backend
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@postgres:5432/learning_platform
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: your_secret_key_change_in_production
+      PORT: 5000
+      PYTHONPATH: /app
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: python -m app.main
+    volumes:
+      - ./server:/app
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: learning_platform_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      VITE_API_BASE_URL: http://localhost:5000
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  redis_data:

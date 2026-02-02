@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { http } from "../api/https";
-import { endpoints } from "../api/endpoints";
-import type { CourseRequest, Course } from "../types/courses";
-import { useAuth } from "../auth/AuthContext";
+import { http } from "../../api/https";
+import { endpoints } from "../../api/endpoints";
+import type { CourseRequest, Course } from "../../types/courses";
+import { useAuth } from "../../auth/AuthContext";
 
 export default function ProfessorMyCoursesPage() {
   const { user, hasRole } = useAuth();

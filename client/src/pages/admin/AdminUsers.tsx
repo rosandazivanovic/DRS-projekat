@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { http } from "../api/https";
-import { endpoints } from "../api/endpoints";
-import type { User } from "../types/auth";
+import { http } from "../../api/https";
+import { endpoints } from "../../api/endpoints";
+import type { User } from "../../types/auth";
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([]);

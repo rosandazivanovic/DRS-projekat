@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { http } from "../api/https";
-import { endpoints } from "../api/endpoints";
-import { useAuth } from "../auth/AuthContext";
+import { http } from "../../api/https";
+import { endpoints } from "../../api/endpoints";
+import { useAuth } from "../../auth/AuthContext";
 
 export default function ProfessorCreateCoursePage() {
   const nav = useNavigate();

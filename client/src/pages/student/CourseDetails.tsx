@@ -1,11 +1,11 @@
 import { useEffect, useState} from "react";
 import type { FormEvent } from "react";
 import { useParams } from "react-router-dom";
-import { http } from "../api/https";
-import { endpoints } from "../api/endpoints";
-import type { Course } from "../types/courses";
-import type { Task, TaskSubmission } from "../types/tasks";
-import { useAuth } from "../auth/AuthContext";
+import { http } from "../../api/https";
+import { endpoints } from "../../api/endpoints";
+import type { Course } from "../../types/courses";
+import type { Task, TaskSubmission } from "../../types/tasks";
+import { useAuth } from "../../auth/AuthContext";
 
 export default function CourseDetailsPage() {
   const { id } = useParams<{ id?: string }>();

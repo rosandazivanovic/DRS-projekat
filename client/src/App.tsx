@@ -7,6 +7,7 @@ import RegisterPage from "./pages/auth/Register";
 import CoursesPage from "./pages/student/Courses";
 import CourseDetailsPage from "./pages/student/CourseDetails";
 import MyCoursesPage from "./pages/student/MyCourses";
+import MySubmissionsPage from "./pages/student/MySubmissions";
 import ProfessorCreateCoursePage from "./pages/professor/ProfessorCreateCourse";
 import ProfessorMyCoursesPage from "./pages/professor/ProfessorMyCourses";
 import ProfessorCourseManagementPage from "./pages/professor/ProfessorCourseManagement";
@@ -29,6 +30,7 @@ function App() {
       >
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/courses/:id" element={<CourseDetailsPage />} />
+        
         <Route path="/profile" element={<UserProfilePage />} />
 
         <Route
@@ -36,6 +38,15 @@ function App() {
           element={
             <ProtectedRoute roles={["STUDENT"]}>
               <MyCoursesPage />
+            </ProtectedRoute>
+          }
+        />
+
+            <Route
+          path="/my-submissions"
+          element={
+            <ProtectedRoute roles={["STUDENT"]}>
+              <MySubmissionsPage />
             </ProtectedRoute>
           }
         />

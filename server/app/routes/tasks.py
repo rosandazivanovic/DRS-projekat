@@ -1,3 +1,5 @@
+# server/app/routes/tasks.py - KOMPLETNA VERZIJA
+
 from flask import Blueprint, request, jsonify
 from sqlalchemy.orm import Session
 from datetime import datetime
@@ -102,11 +104,11 @@ def list_course_tasks(course_id):
     finally:
         db.close()
 
-
 @tasks_bp.post("/<int:task_id>/submit")
 @session_required
 @role_required("STUDENT")
 def submit_task(task_id):
+    """STUDENT predaje rešenje zadatka - FILE UPLOAD (Base64)"""
     db: Session = SessionLocal()
     try:
         task = db.query(Task).filter(Task.id == task_id).first()
@@ -115,6 +117,7 @@ def submit_task(task_id):
         
         student_id = request.user.get("user_id")
         
+        # Provera da li je student upisan na kurs
         enrollment = db.query(CourseEnrollment).filter(
             CourseEnrollment.course_id == task.course_id,
             CourseEnrollment.student_id == student_id
@@ -124,78 +127,66 @@ def submit_task(task_id):
             return jsonify({"error": "You are not enrolled in this course"}), 403
         
         data = request.get_json() or {}
-        file_path = data.get("filePath")  
+        file_path = data.get("filePath")  # ✅ Base64 string
         file_name = data.get("fileName", "solution.py")
         
         if not file_path:
             return jsonify({"error": "filePath is required"}), 400
         
-        if not file_name.lower().endswith('.py'):
-            return jsonify({"error": "File must be a Python file (.py)"}), 400
+        # ✅ Validacija da je Base64 Python fajl
+        if not file_path.startswith("data:"):
+            return jsonify({"error": "Invalid file format"}), 400
         
-        if not file_path.startswith('data:'):
-            return jsonify({"error": "Invalid file format - expected Base64 data URL"}), 400
-        
+        # ✅ PROVERA: Da li student već ima predato rešenje
         existing = db.query(TaskSubmission).filter(
             TaskSubmission.task_id == task_id,
             TaskSubmission.student_id == student_id
         ).first()
         
         if existing:
-            existing.file_path = file_path
-            existing.submitted_at = datetime.utcnow()
-            existing.grade = None
-            existing.comment = None
-            existing.graded_at = None
-            db.commit()
-            db.refresh(existing)
-            
             return jsonify({
-                **existing.to_dict(),
-                "message": "Rešenje ažurirano (ponovna predaja)"
-            }), 200
+                "error": "You have already submitted a solution for this task",
+                "submittedAt": existing.submitted_at.isoformat(),
+                "status": "graded" if existing.grade else "pending"
+            }), 409
+        
+        # Kreiranje novog rešenja
         submission = TaskSubmission(
             task_id=task_id,
             student_id=student_id,
-            file_path=file_path  
+            file_path=file_path  # ✅ Čuva Base64
         )
         
         db.add(submission)
         db.commit()
         db.refresh(submission)
         
+        # Email notifikacija profesoru
         professor = task.course.professor
         try:
             send_email(
                 to=professor.email,
-                subject=f"Novo rešenje za zadatak '{task.title}'",
+                subject=f"Novo rešenje predato - {task.title}",
                 body=f"""
-Student {request.user.get('email')} je predao rešenje za zadatak '{task.title}'.
+Student {submission.student.first_name} {submission.student.last_name} je predao rešenje.
 
+Zadatak: {task.title}
 Kurs: {task.course.name}
-Student: {request.user.get('email')}
 Fajl: {file_name}
-Vreme predaje: {datetime.utcnow().strftime('%d.%m.%Y %H:%M')}
-
-Prijavite se na platformu da ocenite rešenje.
+Vreme: {submission.submitted_at.strftime('%d.%m.%Y %H:%M')}
                 """
             )
         except Exception as e:
-            print(f"Failed to send email to professor: {e}")
+            print(f"Email error: {e}")
         
-        return jsonify({
-            **submission.to_dict(),
-            "message": "Zadatak uspešno predat!"
-        }), 201
+        return jsonify(submission.to_dict()), 201
 
     except Exception as e:
         db.rollback()
-        print(f"❌ Submit error: {e}")
         return jsonify({"error": "Failed to submit task", "detail": str(e)}), 500
     finally:
         db.close()
-
-
+        
 @tasks_bp.get("/<int:task_id>/submissions")
 @session_required
 @role_required("PROFESOR")
@@ -288,6 +279,7 @@ Kurs: {submission.task.course.name}
 @session_required
 @role_required("STUDENT")
 def get_my_submissions():
+    """STUDENT vidi svoja rešenja sa detaljima o ocenama"""
     db: Session = SessionLocal()
     try:
         student_id = request.user.get("user_id")

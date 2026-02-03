@@ -42,6 +42,8 @@ export default function ProfessorCourseManagementPage() {
   const [selectedStudentId, setSelectedStudentId] = useState<number | "">("");
   const [addingStudent, setAddingStudent] = useState(false);
 
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (courseId === null) return;
@@ -57,9 +59,10 @@ export default function ProfessorCourseManagementPage() {
       setCourse(data);
       setEditName(data.name);
       setEditDescription(data.description);
-    } catch (err) {
+    } catch (err: any) {
       console.error("fetchCourse error:", err);
-      alert("Greška pri učitavanju kursa");
+      setError("Greška pri učitavanju kursa");
+      setTimeout(() => setError(null), 3000);
     } finally {
       setLoading(false);
     }
@@ -74,29 +77,30 @@ export default function ProfessorCourseManagementPage() {
     }
   };
 
-
   const fetchAvailableStudents = async () => {
     try {
       const res = await http.get(endpoints.courses.availableStudents);
       const allStudents = res.data;
-      
+
       const enrolledIds = new Set(enrolledStudents.map(e => e.studentId));
       const students = allStudents.filter(
         (s: Student) => !enrolledIds.has(s.id)
       );
-      
+
       setAvailableStudents(students);
     } catch (err) {
       console.error("fetchAvailableStudents error:", err);
-      alert("Greška pri učitavanju studenata");
+      setError("Greška pri učitavanju studenata");
+      setTimeout(() => setError(null), 3000);
     }
   };
 
   const handleUpdateCourse = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!editName.trim() || !editDescription.trim()) {
-      alert("Naziv i opis ne mogu biti prazni!");
+      setError("Naziv i opis ne mogu biti prazni!");
+      setTimeout(() => setError(null), 3000);
       return;
     }
 
@@ -107,12 +111,14 @@ export default function ProfessorCourseManagementPage() {
         name: editName.trim(),
         description: editDescription.trim(),
       });
-      
-      alert("Kurs uspešno ažuriran! ✅");
+
+      setSuccessMessage("Kurs uspešno ažuriran! ✅");
+      setTimeout(() => setSuccessMessage(null), 3000);
       setIsEditing(false);
       fetchCourse(courseId);
     } catch (err: any) {
-      alert(err?.response?.data?.error ?? "Greška pri ažuriranju kursa.");
+      setError(err?.response?.data?.error ?? "Greška pri ažuriranju kursa.");
+      setTimeout(() => setError(null), 3000);
     }
   };
 
@@ -125,10 +131,12 @@ export default function ProfessorCourseManagementPage() {
 
     try {
       await http.delete(endpoints.courses.delete(courseId));
-      alert("Kurs uspešno obrisan! ✅");
+      setSuccessMessage("Kurs uspešno obrisan! ✅");
+      setTimeout(() => setSuccessMessage(null), 3000);
       navigate("/professor/courses");
     } catch (err: any) {
-      alert(err?.response?.data?.error ?? "Greška pri brisanju kursa.");
+      setError(err?.response?.data?.error ?? "Greška pri brisanju kursa.");
+      setTimeout(() => setError(null), 3000);
     }
   };
 
@@ -136,18 +144,21 @@ export default function ProfessorCourseManagementPage() {
     e.preventDefault();
 
     if (!materialFile) {
-      alert("Molimo izaberite PDF fajl!");
+      setError("Molimo izaberite PDF fajl!");
+      setTimeout(() => setError(null), 3000);
       return;
     }
 
     if (!materialFile.name.toLowerCase().endsWith('.pdf')) {
-      alert("Fajl mora biti u PDF formatu!");
+      setError("Fajl mora biti u PDF formatu!");
+      setTimeout(() => setError(null), 3000);
       return;
     }
 
     const maxSize = 10 * 1024 * 1024;
     if (materialFile.size > maxSize) {
-      alert("Fajl je prevelik! Maksimalna veličina je 10MB.");
+      setError("Fajl je prevelik! Maksimalna veličina je 10MB.");
+      setTimeout(() => setError(null), 3000);
       return;
     }
 
@@ -157,30 +168,33 @@ export default function ProfessorCourseManagementPage() {
 
     try {
       const reader = new FileReader();
-      
+
       reader.onload = async (event) => {
         const base64Data = event.target?.result as string;
-        
+
         await http.post(endpoints.courses.material(courseId), {
-          materialPath: base64Data, 
-          fileName: materialFile.name, 
+          materialPath: base64Data,
+          fileName: materialFile.name,
         });
 
-        alert("Materijal uspešno okačen! ✅");
+        setSuccessMessage("Materijal uspešno okačen! ✅");
+        setTimeout(() => setSuccessMessage(null), 3000);
         setMaterialFile(null);
         fetchCourse(courseId);
         setUploadingMaterial(false);
       };
-      
+
       reader.onerror = () => {
-        alert("Greška pri čitanju fajla");
+        setError("Greška pri čitanju fajla");
+        setTimeout(() => setError(null), 3000);
         setUploadingMaterial(false);
       };
-      
+
       reader.readAsDataURL(materialFile);
-      
+
     } catch (err: any) {
-      alert(err?.response?.data?.error ?? "Greška pri upload-u materijala.");
+      setError(err?.response?.data?.error ?? "Greška pri upload-u materijala.");
+      setTimeout(() => setError(null), 3000);
       setUploadingMaterial(false);
     }
   };
@@ -189,7 +203,8 @@ export default function ProfessorCourseManagementPage() {
     e.preventDefault();
 
     if (selectedStudentId === "") {
-      alert("Molimo izaberite studenta!");
+      setError("Molimo izaberite studenta!");
+      setTimeout(() => setError(null), 3000);
       return;
     }
 
@@ -202,12 +217,14 @@ export default function ProfessorCourseManagementPage() {
         studentId: selectedStudentId,
       });
 
-      alert("Student uspešno dodat na kurs! ✅");
+      setSuccessMessage("Student uspešno dodat na kurs! ✅");
+      setTimeout(() => setSuccessMessage(null), 3000);
       setSelectedStudentId("");
       setShowAddStudents(false);
       fetchEnrolledStudents(courseId);
     } catch (err: any) {
-      alert(err?.response?.data?.error ?? "Greška pri dodavanju studenta.");
+      setError(err?.response?.data?.error ?? "Greška pri dodavanju studenta.");
+      setTimeout(() => setError(null), 3000);
     } finally {
       setAddingStudent(false);
     }
@@ -310,6 +327,48 @@ export default function ProfessorCourseManagementPage() {
             🗑️ Obriši kurs
           </button>
         </div>
+
+        {successMessage && (
+          <div
+            style={{
+              padding: 14,
+              marginBottom: 16,
+              background: "linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%)",
+              border: "1px solid rgba(6,95,70,0.12)",
+              borderRadius: 12,
+              color: "#065f46",
+              fontWeight: 600,
+              fontSize: 14,
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              boxShadow: "0 2px 8px rgba(6,95,70,0.08)",
+            }}
+          >
+            ✅ {successMessage}
+          </div>
+        )}
+
+        {error && (
+          <div
+            style={{
+              padding: 14,
+              marginBottom: 16,
+              background: "#fff5f5",
+              border: "1px solid rgba(220,38,38,0.12)",
+              borderRadius: 12,
+              color: "#991b1b",
+              fontWeight: 600,
+              fontSize: 14,
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              boxShadow: "0 2px 8px rgba(220,38,38,0.08)",
+            }}
+          >
+            ❌ {error}
+          </div>
+        )}
 
         {/* Grid layout sa 2 kolone */}
         <div style={{ 

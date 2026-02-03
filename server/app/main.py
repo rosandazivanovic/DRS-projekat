@@ -2,7 +2,6 @@ import os
 from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS
 from dotenv import load_dotenv
-from .create_test_data import seed
 
 
 from app.auth import auth_bp

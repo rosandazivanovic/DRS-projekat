@@ -13,6 +13,9 @@ export default function ProfessorCreateCoursePage() {
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
   if (!user || !hasRole(["PROFESOR"])) {
     return <div style={{ padding: 16 }}>Nemaš pristup ovoj stranici.</div>;
   }
@@ -29,10 +32,12 @@ export default function ProfessorCreateCoursePage() {
         name: name.trim(),
         description: description.trim(),
       });
-      alert("Kurs poslat administratoru na odobrenje ✅");
+      setSuccessMessage("Kurs poslat administratoru na odobrenje ✅");
+      setTimeout(() => setSuccessMessage(null), 3000);
       nav("/professor/courses");
     } catch (err: any) {
-      setErr(err?.response?.data?.error ?? "Greška pri kreiranju kursa.");
+      setError(err?.response?.data?.error ?? "Greška pri kreiranju kursa.");
+      setTimeout(() => setError(null), 3000);
     } finally {
       setLoading(false);
     }
@@ -64,6 +69,48 @@ export default function ProfessorCreateCoursePage() {
             Popuni osnovne informacije i pošalji kurs na odobrenje
           </p>
         </div>
+
+        {successMessage && (
+          <div
+            style={{
+              padding: 14,
+              marginBottom: 16,
+              background: "linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%)",
+              border: "1px solid rgba(6,95,70,0.12)",
+              borderRadius: 12,
+              color: "#065f46",
+              fontWeight: 600,
+              fontSize: 14,
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              boxShadow: "0 2px 8px rgba(6,95,70,0.08)",
+            }}
+          >
+            ✅ {successMessage}
+          </div>
+        )}
+
+        {error && (
+          <div
+            style={{
+              padding: 14,
+              marginBottom: 16,
+              background: "#fff5f5",
+              border: "1px solid rgba(220,38,38,0.12)",
+              borderRadius: 12,
+              color: "#991b1b",
+              fontWeight: 600,
+              fontSize: 14,
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              boxShadow: "0 2px 8px rgba(220,38,38,0.08)",
+            }}
+          >
+            ❌ {error}
+          </div>
+        )}
 
         <form onSubmit={submit} style={{ display: "grid", gap: 14 }}>
           <input

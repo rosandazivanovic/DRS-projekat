@@ -12,7 +12,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: #f5f5f5;
 }
-
+:root{
+  --page-bg: #fbf7f2;
+  --card-bg: #fffaf6;
+  --card-elev: 0 20px 40px rgba(39,35,30,0.04);
+  --muted: #8b7762;
+  --text: #2c2b28;
+  --accent: #b99a7f;
+  --success: #065f46;
+  --danger: #991b1b;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --glass: rgba(255,255,255,0.85);
+  
+}
 #root {
   min-height: 100vh;
 }

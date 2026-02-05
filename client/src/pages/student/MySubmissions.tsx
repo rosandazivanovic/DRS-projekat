@@ -30,7 +30,6 @@ export default function MySubmissionsPage() {
     return true;
   });
 
-  // Statistika
   const gradedSubmissions = submissions.filter(s => s.grade !== null);
   const averageGrade = gradedSubmissions.length > 0
     ? (gradedSubmissions.reduce((sum, s) => sum + (s.grade || 0), 0) / gradedSubmissions.length).toFixed(2)

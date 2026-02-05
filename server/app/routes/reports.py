@@ -180,9 +180,6 @@ def cleanup_old_data():
     data = request.get_json() or {}
     days = data.get("days", 90)
     
-    # U realnoj implementaciji bi se pokrenuo proces koji briše stare podatke
-    # Za sada samo vraćamo poruku
-    
     return jsonify({
         "message": f"Cleanup process would remove data older than {days} days",
         "status": "not_implemented"

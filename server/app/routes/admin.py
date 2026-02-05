@@ -137,7 +137,6 @@ def approve_course_request(request_id):
         if course_req.status != "PENDING":
             return jsonify({"error": "Request is not pending"}), 409
 
-        # ✅ Kreiranje aktivnog kursa
         course = Course(
             professor_id=course_req.professor_id,
             name=course_req.name,
@@ -146,13 +145,11 @@ def approve_course_request(request_id):
         )
         db.add(course)
         
-        # Ažuriranje statusa zahteva
         course_req.status = "APPROVED"
         db.commit()
         db.refresh(course_req)
         db.refresh(course)
 
-        # Slanje email-a profesoru
         professor = db.query(User).filter(User.id == course_req.professor_id).first()
         if professor:
             try:
@@ -178,17 +175,15 @@ Learning Platform
             except Exception as e:
                 print(f"Failed to send email: {e}")
 
-            # WebSocket notifikacija profesoru
             socketio.emit(
                 "course_request.approved",
                 {
                     **course_req.to_dict(),
-                    "courseId": course.id  # ✅ Šalji ID kreiranog kursa
+                    "courseId": course.id  
                 },
                 room=f"user:{professor.id}"
             )
 
-        # WebSocket notifikacija adminu
         socketio.emit(
             "course_request.approved",
             course_req.to_dict(),
@@ -197,7 +192,7 @@ Learning Platform
 
         return jsonify({
             **course_req.to_dict(),
-            "courseId": course.id  # ✅ Vrati ID kreiranog kursa
+            "courseId": course.id  
         }), 200
 
     except Exception as e:

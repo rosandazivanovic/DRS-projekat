@@ -16,18 +16,14 @@ export default function CourseDetailsPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [submissions, setSubmissions] = useState<TaskSubmission[]>([]);
   const [loading, setLoading] = useState(false);
-
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [newTaskDesc, setNewTaskDesc] = useState("");
   const [newTaskDeadline, setNewTaskDeadline] = useState("");
-
   const [selectedTaskId, setSelectedTaskId] = useState<number | "">("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
-
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
   const [gradingSubmission, setGradingSubmission] = useState<TaskSubmission | null>(null);
   const [gradeValue, setGradeValue] = useState("");
   const [gradeComment, setGradeComment] = useState("");

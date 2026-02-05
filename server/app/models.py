@@ -22,7 +22,7 @@ class User(Base):
     profile_image = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    # Relationships
+    
     course_requests = relationship("CourseRequest", back_populates="professor", cascade="all, delete-orphan")
     courses = relationship("Course", back_populates="professor", cascade="all, delete-orphan")
     enrollments = relationship("CourseEnrollment", back_populates="student", cascade="all, delete-orphan")
@@ -56,7 +56,7 @@ class CourseRequest(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
-    # Relationships
+
     professor = relationship("User", back_populates="course_requests")
 
     def to_dict(self):
@@ -82,7 +82,6 @@ class Course(Base):
     material_path = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    # Relationships
     professor = relationship("User", back_populates="courses")
     enrollments = relationship("CourseEnrollment", back_populates="course", cascade="all, delete-orphan")
     tasks = relationship("Task", back_populates="course", cascade="all, delete-orphan")
@@ -107,7 +106,6 @@ class CourseEnrollment(Base):
     student_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     enrolled_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    # Relationships
     course = relationship("Course", back_populates="enrollments")
     student = relationship("User", back_populates="enrollments")
 
@@ -132,7 +130,6 @@ class Task(Base):
     deadline = Column(DateTime, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    # Relationships
     course = relationship("Course", back_populates="tasks")
     submissions = relationship("TaskSubmission", back_populates="task", cascade="all, delete-orphan")
 

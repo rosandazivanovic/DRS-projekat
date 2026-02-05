@@ -82,7 +82,7 @@ def process_file_worker(file_path: str, operation: str, result_queue: Queue):
             'operation': operation,
             'processed_at': datetime.utcnow().isoformat(),
             'status': 'completed',
-            'lines_processed': 1000,  # Simulacija
+            'lines_processed': 1000,  
             'errors': 0
         }
         

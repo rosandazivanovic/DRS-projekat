@@ -3,43 +3,22 @@ import { http } from "../../api/https";
 import { endpoints } from "../../api/endpoints";
 import type { User } from "../../types/auth";
 
-/**
- * Poboljšana verzija AdminUsersPage:
- * - modal za kreiranje korisnika
- * - potvrda za brisanje
- * - search + debounce
- * - pagination
- * - kortice korisnika + avatar inicijali
- * - skeleton loader
- *
- * Copy/paste preko postojećeg AdminUsersPage.tsx
- */
-
 export default function AdminUsersPage() {
-  // data
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
-
-  // UI
   const [showCreate, setShowCreate] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<User | null>(null);
-
-  // messages
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  // search + pagination
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [page, setPage] = useState(1);
   const pageSize = 8;
 
-  // fetch on mount
   useEffect(() => {
     fetchUsers();
   }, []);
 
-  // debounce search
   useEffect(() => {
     const t = setTimeout(() => setDebouncedQuery(query.trim().toLowerCase()), 300);
     return () => clearTimeout(t);
@@ -59,7 +38,6 @@ export default function AdminUsersPage() {
     }
   };
 
-  // CREATE (will be called by modal)
   const createUser = async (payload: {
     firstName: string;
     lastName: string;
@@ -84,7 +62,6 @@ export default function AdminUsersPage() {
     }
   };
 
-  // DELETE
   const deleteUser = async (id: number) => {
     try {
       await http.delete(endpoints.admin.deleteUser(id));
@@ -98,7 +75,6 @@ export default function AdminUsersPage() {
     }
   };
 
-  // derived: filter & paginate
   const filtered = useMemo(() => {
     if (!debouncedQuery) return users;
     return users.filter((u) => {
@@ -298,7 +274,6 @@ function CreateUserModal({ onClose, onCreate }: { onClose: ()=>void; onCreate: (
 
   const submit = (e?: React.FormEvent) => {
     e?.preventDefault();
-    // basic validation
     if (!firstName || !lastName || !email || !password) {
       alert("Popunite sve obavezne podatke (ime, prezime, email, lozinka).");
       return;

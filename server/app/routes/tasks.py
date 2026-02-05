@@ -1,5 +1,3 @@
-# server/app/routes/tasks.py - KOMPLETNA VERZIJA
-
 from flask import Blueprint, request, jsonify
 from sqlalchemy.orm import Session
 from datetime import datetime
@@ -117,7 +115,6 @@ def submit_task(task_id):
         
         student_id = request.user.get("user_id")
         
-        # Provera da li je student upisan na kurs
         enrollment = db.query(CourseEnrollment).filter(
             CourseEnrollment.course_id == task.course_id,
             CourseEnrollment.student_id == student_id
@@ -127,17 +124,15 @@ def submit_task(task_id):
             return jsonify({"error": "You are not enrolled in this course"}), 403
         
         data = request.get_json() or {}
-        file_path = data.get("filePath")  # ✅ Base64 string
+        file_path = data.get("filePath") 
         file_name = data.get("fileName", "solution.py")
         
         if not file_path:
             return jsonify({"error": "filePath is required"}), 400
         
-        # ✅ Validacija da je Base64 Python fajl
         if not file_path.startswith("data:"):
             return jsonify({"error": "Invalid file format"}), 400
         
-        # ✅ PROVERA: Da li student već ima predato rešenje
         existing = db.query(TaskSubmission).filter(
             TaskSubmission.task_id == task_id,
             TaskSubmission.student_id == student_id
@@ -150,18 +145,16 @@ def submit_task(task_id):
                 "status": "graded" if existing.grade else "pending"
             }), 409
         
-        # Kreiranje novog rešenja
         submission = TaskSubmission(
             task_id=task_id,
             student_id=student_id,
-            file_path=file_path  # ✅ Čuva Base64
+            file_path=file_path 
         )
         
         db.add(submission)
         db.commit()
         db.refresh(submission)
         
-        # Email notifikacija profesoru
         professor = task.course.professor
         try:
             send_email(
@@ -248,7 +241,6 @@ def grade_submission(submission_id):
         db.commit()
         db.refresh(submission)
         
-        # Slanje email-a studentu
         student = submission.student
         try:
             send_email(

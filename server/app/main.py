@@ -3,7 +3,6 @@ from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS
 from dotenv import load_dotenv
 
-
 from app.auth import auth_bp
 from app.routes.users import users_bp
 from app.routes.admin import admin_bp
@@ -26,7 +25,7 @@ def create_app():
 
     CORS(
         app,
-        origins=["http://localhost:5173"], 
+        origins="*",  
         supports_credentials=True,
         methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allow_headers=["Content-Type", "X-Session-ID"],
@@ -36,7 +35,7 @@ def create_app():
     def handle_preflight():
         if request.method == "OPTIONS":
             response = make_response("", 204)
-            response.headers["Access-Control-Allow-Origin"] = "http://localhost:5173"
+            response.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin", "*")  
             response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
             response.headers["Access-Control-Allow-Headers"] = "Content-Type, X-Session-ID"
             response.headers["Access-Control-Allow-Credentials"] = "true"
@@ -72,8 +71,12 @@ def create_app():
 
     socketio.init_app(
         app,
-        cors_allowed_origins=["http://localhost:5173"],  
-        async_mode="threading"
+        cors_allowed_origins="*", 
+        async_mode="threading",
+        ping_timeout=60,
+        ping_interval=25,
+        logger=True,  
+        engineio_logger=True
     )
     register_ws_handlers()
 
@@ -84,14 +87,32 @@ app = create_app()
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", "5000"))
-    print(f"\n🚀 Starting server on port {port}...")
-    print(f"📡 CORS enabled for: http://localhost:5173")
-    print(f"🔗 API URL: http://localhost:{port}")
+    
+    import socket
+    hostname = socket.gethostname()
+    try:
+        server_ip = socket.gethostbyname(hostname)
+    except:
+        server_ip = "Unable to detect IP"
+    
+    print("\n" + "="*60)
+    print("🚀 LEARNING PLATFORM SERVER")
+    print("="*60)
+    print(f"📍 Server IP Address: {server_ip}")
+    print(f"🔗 Local Access:      http://localhost:{port}")
+    print(f"🌐 Network Access:    http://{server_ip}:{port}")
+    print(f"📡 CORS:              Enabled for all origins (*)")
+    print(f"🔌 WebSocket:         Enabled on ws://{server_ip}:{port}")
+    print("="*60)
+    print(f"\n💡 Other devices can access at: http://{server_ip}:{port}")
+    print("="*60 + "\n")
     
     socketio.run(
         app,
-        host="0.0.0.0",
+        host="0.0.0.0",  
         port=port,
         debug=True,
         allow_unsafe_werkzeug=True,
+        use_reloader=False,  
+        log_output=True
     )

@@ -51,7 +51,6 @@ def session_required(fn):
 
     @wraps(fn)
     def wrapper(*args, **kwargs):
-        # ✅ NE PROVJERAVAJ na OPTIONS requestima
         if request.method == "OPTIONS":
             return fn(*args, **kwargs)
            

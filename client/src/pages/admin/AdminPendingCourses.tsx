@@ -16,15 +16,10 @@ export default function AdminPendingCourses() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [allRequests, setAllRequests] = useState<CourseRequest[]>([]);
-  
-
-  // UI state
   const [rejectingId, setRejectingId] = useState<number | null>(null);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<CourseRequest | null>(null);
-
-  // filters
   const [query, setQuery] = useState<{ search?: string; sort?: string }>({});
 
   useEffect(() => { fetchRequests(); }, []);
@@ -110,7 +105,6 @@ const fetchRequests = async () => {
     setPreviewOpen(false);
   };
 
-  // derived + search/sort
   const visible = useMemo(() => {
     let items = [...requests];
 

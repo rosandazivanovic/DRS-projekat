@@ -50,13 +50,11 @@ export default function CoursesPage() {
   };
 
   const filtered = courses.filter((c) => {
-    // Search filter
     const matchesSearch = search
       ? c.name.toLowerCase().includes(search.toLowerCase()) ||
         c.professorName.toLowerCase().includes(search.toLowerCase())
       : true;
     
-    // Enrollment filter
     const matchesFilter = 
       filter === "enrolled" ? enrolledCourseIds.has(c.id) :
       filter === "not-enrolled" ? !enrolledCourseIds.has(c.id) :
@@ -64,7 +62,6 @@ export default function CoursesPage() {
     
     return matchesSearch && matchesFilter;
   }).sort((a, b) => {
-    // Sort: non-enrolled first, then enrolled
     const aEnrolled = enrolledCourseIds.has(a.id);
     const bEnrolled = enrolledCourseIds.has(b.id);
     

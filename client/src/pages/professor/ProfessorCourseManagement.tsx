@@ -685,171 +685,171 @@ export default function ProfessorCourseManagementPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             
             {/* Studenti */}
-            <div
-              style={{
-                padding: 20,
-                border: "1px solid rgba(44,43,40,0.06)",
-                borderRadius: 16,
-                background: "#fff",
-                boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
-              }}
-            >
-              <div style={{ 
-                display: "flex", 
-                justifyContent: "space-between", 
-                alignItems: "center", 
-                marginBottom: 16,
-                paddingBottom: 14,
-                borderBottom: "2px solid #f5f0ea",
-              }}>
-                <h3 style={{ 
-                  margin: 0, 
-                  color: "#2c2b28", 
-                  fontSize: 17,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                }}>
-                  👥 Studenti
-                  <span style={{
-                    fontSize: 13,
-                    fontWeight: 600,
-                    padding: "2px 8px",
-                    borderRadius: 12,
-                    background: "#f0fdf4",
-                    color: "#065f46",
-                  }}>
-                    {enrolledStudents.length}
-                  </span>
-                </h3>
-                {!showAddStudents && (
-                  <button
-                    onClick={() => {
-                      setShowAddStudents(true);
-                      fetchAvailableStudents();
-                    }}
-                    style={{
-                      padding: "6px 12px",
-                      borderRadius: 8,
-                      border: "none",
-                      cursor: "pointer",
-                      fontWeight: 600,
-                      color: "#fff",
-                      background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-                      fontSize: 12,
-                    }}
-                  >
-                    ➕ Dodaj
-                  </button>
-                )}
-              </div>
+<div
+  style={{
+    padding: 20,
+    border: "1px solid rgba(44,43,40,0.06)",
+    borderRadius: 16,
+    background: "#fff",
+    boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+  }}
+>
+  <div style={{ 
+    display: "flex", 
+    justifyContent: "space-between", 
+    alignItems: "center", 
+    marginBottom: 16,
+    paddingBottom: 14,
+    borderBottom: "2px solid #f5f0ea",
+  }}>
+    <h3 style={{ 
+      margin: 0, 
+      color: "#2c2b28", 
+      fontSize: 17,
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+    }}>
+      👥 Studenti
+      <span style={{
+        fontSize: 13,
+        fontWeight: 600,
+        padding: "2px 8px",
+        borderRadius: 12,
+        background: "#f0fdf4",
+        color: "#065f46",
+      }}>
+        {enrolledStudents.length}
+      </span>
+    </h3>
+    {!showAddStudents && (
+      <button
+        onClick={() => {
+          setShowAddStudents(true);
+          fetchAvailableStudents();
+        }}
+        style={{
+          padding: "6px 12px",
+          borderRadius: 8,
+          border: "none",
+          cursor: "pointer",
+          fontWeight: 600,
+          color: "#fff",
+          background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
+          fontSize: 12,
+        }}
+      >
+        ➕ Dodaj
+      </button>
+    )}
+  </div>
 
-              {showAddStudents && (
-                <div
-                  style={{
-                    marginBottom: 16,
-                    padding: 14,
-                    borderRadius: 10,
-                    background: "#f9f6f2",
-                    border: "1px solid rgba(44,43,40,0.08)",
-                  }}
-                >
-                  <form onSubmit={handleAddStudent} style={{ display: "grid", gap: 10 }}>
-                    <select
-                      value={selectedStudentId}
-                      onChange={(e) => setSelectedStudentId(e.target.value === "" ? "" : Number(e.target.value))}
-                      style={{
-                        padding: 10,
-                        borderRadius: 8,
-                        border: "1px solid rgba(44,43,40,0.12)",
-                        background: "#fff",
-                        fontSize: 13,
-                      }}
-                    >
-                      <option value="">Izaberi studenta</option>
-                      {availableStudents.map((s) => (
-                        <option key={s.id} value={s.id}>
-                          {s.firstName} {s.lastName}
-                        </option>
-                      ))}
-                    </select>
-                    <div style={{ display: "flex", gap: 8 }}>
-                      <button
-                        type="submit"
-                        disabled={addingStudent}
-                        style={{
-                          flex: 1,
-                          padding: 8,
-                          borderRadius: 8,
-                          border: "none",
-                          cursor: addingStudent ? "not-allowed" : "pointer",
-                          opacity: addingStudent ? 0.6 : 1,
-                          fontWeight: 600,
-                          color: "#fff",
-                          background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-                          fontSize: 13,
-                        }}
-                      >
-                        {addingStudent ? "⏳" : "✅ Dodaj"}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowAddStudents(false);
-                          setSelectedStudentId("");
-                        }}
-                        style={{
-                          padding: 8,
-                          borderRadius: 8,
-                          border: "1px solid rgba(44,43,40,0.12)",
-                          cursor: "pointer",
-                          fontWeight: 600,
-                          color: "#2c2b28",
-                          background: "#fff",
-                          fontSize: 13,
-                        }}
-                      >
-                        ✖️
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              )}
+  {showAddStudents && (
+    <div
+      style={{
+        marginBottom: 16,
+        padding: 14,
+        borderRadius: 10,
+        background: "#f9f6f2",
+        border: "1px solid rgba(44,43,40,0.08)",
+      }}
+    >
+      <form onSubmit={handleAddStudent} style={{ display: "grid", gap: 10 }}>
+        <select
+          value={selectedStudentId}
+          onChange={(e) => setSelectedStudentId(e.target.value === "" ? "" : Number(e.target.value))}
+          style={{
+            padding: 10,
+            borderRadius: 8,
+            border: "1px solid rgba(44,43,40,0.12)",
+            background: "#fff",
+            fontSize: 13,
+          }}
+        >
+          <option value="">Izaberi studenta</option>
+          {availableStudents.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.firstName} {s.lastName}
+            </option>
+          ))}
+        </select>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button
+            type="submit"
+            disabled={addingStudent}
+            style={{
+              flex: 1,
+              padding: 8,
+              borderRadius: 8,
+              border: "none",
+              cursor: addingStudent ? "not-allowed" : "pointer",
+              opacity: addingStudent ? 0.6 : 1,
+              fontWeight: 600,
+              color: "#fff",
+              background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
+              fontSize: 13,
+            }}
+          >
+            {addingStudent ? "⏳" : "✅ Dodaj"}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setShowAddStudents(false);
+              setSelectedStudentId("");
+            }}
+            style={{
+              padding: 8,
+              borderRadius: 8,
+              border: "1px solid rgba(44,43,40,0.12)",
+              cursor: "pointer",
+              fontWeight: 600,
+              color: "#2c2b28",
+              background: "#fff",
+              fontSize: 13,
+            }}
+          >
+            ✖️
+          </button>
+        </div>
+      </form>
+    </div>
+  )}
 
-              <div style={{ display: "grid", gap: 10, maxHeight: 400, overflowY: "auto" }}>
-                {enrolledStudents.map((e) => (
-                  <div
-                    key={e.id}
-                    style={{
-                      padding: 12,
-                      borderRadius: 10,
-                      background: "#fafafa",
-                      border: "1px solid rgba(44,43,40,0.06)",
-                    }}
-                  >
-                    <div style={{ fontWeight: 600, color: "#2c2b28", fontSize: 14 }}>
-                      {e.studentName}
-                    </div>
-                    <div style={{ fontSize: 11, color: "#8b7762", marginTop: 4 }}>
-                      📅 {new Date(e.enrolledAt).toLocaleDateString()}
-                    </div>
-                  </div>
-                ))}
-                {enrolledStudents.length === 0 && (
-                  <div
-                    style={{
-                      textAlign: "center",
-                      padding: 24,
-                      color: "#8b7762",
-                      fontStyle: "italic",
-                      fontSize: 13,
-                    }}
-                  >
-                    Nema upisanih studenata.
-                  </div>
-                )}
-              </div>
-            </div>
+  <div style={{ display: "grid", gap: 10, maxHeight: 240, overflowY: "auto", paddingRight: 4 }}>
+    {enrolledStudents.map((e) => (
+      <div
+        key={e.id}
+        style={{
+          padding: 12,
+          borderRadius: 10,
+          background: "#fafafa",
+          border: "1px solid rgba(44,43,40,0.06)",
+        }}
+      >
+        <div style={{ fontWeight: 600, color: "#2c2b28", fontSize: 14 }}>
+          {e.studentName}
+        </div>
+        <div style={{ fontSize: 11, color: "#8b7762", marginTop: 4 }}>
+          📅 {new Date(e.enrolledAt).toLocaleDateString()}
+        </div>
+      </div>
+    ))}
+    {enrolledStudents.length === 0 && (
+      <div
+        style={{
+          textAlign: "center",
+          padding: 24,
+          color: "#8b7762",
+          fontStyle: "italic",
+          fontSize: 13,
+        }}
+      >
+        Nema upisanih studenata.
+      </div>
+    )}
+  </div>
+</div>
 
             {/* Brzi linkovi */}
             <div

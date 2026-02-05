@@ -1,6 +1,42 @@
 import React from "react";
 import type { CourseRequest } from "../types/courses";
 
+const UserIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+    <circle cx="12" cy="7" r="4"/>
+  </svg>
+);
+
+const ClockIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <polyline points="12 6 12 12 16 14"/>
+  </svg>
+);
+
+const EyeIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+    <circle cx="12" cy="12" r="3"/>
+  </svg>
+);
+
+const CheckCircleIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+);
+
+const XCircleIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="15" y1="9" x2="9" y2="15"/>
+    <line x1="9" y1="9" x2="15" y2="15"/>
+  </svg>
+);
+
 export default function RequestCard({
   req,
   onApprove,
@@ -23,10 +59,16 @@ export default function RequestCard({
           <div style={headerRow}>
             <div>
               <div style={courseName}>{req.name}</div>
-              <div style={professorName}>👨‍🏫 {req.professorName}</div>
+              <div style={professorName}>
+                <UserIcon />
+                {req.professorName}
+              </div>
             </div>
 
-            <div style={statusTag}>⏳ NA ČEKANJU</div>
+            <div style={statusTag}>
+              <ClockIcon />
+              NA ČEKANJU
+            </div>
           </div>
 
           <p style={description}>
@@ -36,13 +78,16 @@ export default function RequestCard({
 
           <div style={actionsRow}>
             <button onClick={() => onPreview(req)} style={ghostBtn}>
-              👁️ Pregled
+              <EyeIcon />
+              Pregled
             </button>
             <button onClick={() => onApprove(req.id)} style={approveBtn}>
-              ✅ Odobri
+              <CheckCircleIcon />
+              Odobri
             </button>
             <button onClick={() => onStartReject(req.id)} style={rejectBtn}>
-              ❌ Odbij
+              <XCircleIcon />
+              Odbij
             </button>
             {isRejecting && (
               <span style={processingText}>Unos razloga…</span>
@@ -119,6 +164,9 @@ const statusTag: React.CSSProperties = {
   border: "1px solid rgba(122,91,50,0.2)",
   fontWeight: 600,
   whiteSpace: "nowrap",
+  display: "flex",
+  alignItems: "center",
+  gap: 4,
 };
 
 const description: React.CSSProperties = {
@@ -146,6 +194,9 @@ const ghostBtn: React.CSSProperties = {
   color: "#2c2b28",
   cursor: "pointer",
   transition: "all 0.2s",
+  display: "flex",
+  alignItems: "center",
+  gap: 6,
 };
 
 const approveBtn: React.CSSProperties = {
@@ -159,6 +210,9 @@ const approveBtn: React.CSSProperties = {
   cursor: "pointer",
   boxShadow: "0 2px 8px rgba(135,200,143,0.2)",
   transition: "all 0.2s",
+  display: "flex",
+  alignItems: "center",
+  gap: 6,
 };
 
 const rejectBtn: React.CSSProperties = {
@@ -171,6 +225,9 @@ const rejectBtn: React.CSSProperties = {
   fontSize: 13,
   cursor: "pointer",
   transition: "all 0.2s",
+  display: "flex",
+  alignItems: "center",
+  gap: 6,
 };
 
 const processingText: React.CSSProperties = {

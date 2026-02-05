@@ -1,6 +1,20 @@
 import type { Course } from "../types/courses";
 import { useAuth } from "../auth/AuthContext";
 
+const UserIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+    <circle cx="12" cy="7" r="4"/>
+  </svg>
+);
+
+const CheckCircleIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+);
+
 type Props = {
   course: Course;
   onEnroll?: (id: number) => void;
@@ -31,13 +45,15 @@ export function CourseCard({ course, onEnroll, isEnrolling, isEnrolled = false }
             </div>
             {isEnrolled && (
               <div style={enrolledBadge}>
-                ✓ Upisan
+                <CheckCircleIcon />
+                Upisan
               </div>
             )}
           </div>
           
           <div style={professor}>
-            👨‍🏫 {course.professorName}
+            <UserIcon />
+            {course.professorName}
           </div>
           
           <div style={description}>
@@ -73,9 +89,22 @@ export function CourseCard({ course, onEnroll, isEnrolling, isEnrolled = false }
               boxShadow: isEnrolling || isEnrolled
                 ? "none"
                 : "0 4px 12px rgba(121,86,61,0.15)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 6,
             }}
           >
-            {isEnrolled ? "✓ Upisani" : isEnrolling ? "Obrada..." : "Upiši se"}
+            {isEnrolled ? (
+              <>
+                <CheckCircleIcon />
+                Upisani
+              </>
+            ) : isEnrolling ? (
+              "Obrada..."
+            ) : (
+              "Upiši se"
+            )}
           </button>
         </div>
       )}
@@ -120,6 +149,9 @@ const enrolledBadge: React.CSSProperties = {
   background: "#dcfce7",
   color: "#065f46",
   border: "1px solid rgba(6,95,70,0.12)",
+  display: "flex",
+  alignItems: "center",
+  gap: 4,
 };
 
 const professor: React.CSSProperties = {

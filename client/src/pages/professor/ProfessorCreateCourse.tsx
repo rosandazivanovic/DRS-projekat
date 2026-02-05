@@ -4,6 +4,36 @@ import { http } from "../../api/https";
 import { endpoints } from "../../api/endpoints";
 import { useAuth } from "../../auth/AuthContext";
 
+const BookOpenIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+  </svg>
+);
+
+const CheckCircleIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+);
+
+const XCircleIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="15" y1="9" x2="9" y2="15"/>
+    <line x1="9" y1="9" x2="15" y2="15"/>
+  </svg>
+);
+
+const AlertCircleIcon = () => (
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="12" y1="8" x2="12" y2="12"/>
+    <line x1="12" y1="16" x2="12.01" y2="16"/>
+  </svg>
+);
+
 export default function ProfessorCreateCoursePage() {
   const nav = useNavigate();
   const { user, hasRole } = useAuth();
@@ -20,7 +50,9 @@ export default function ProfessorCreateCoursePage() {
     return (
       <div style={pageWrap}>
         <div style={errorContainer}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>🚫</div>
+          <div style={{ marginBottom: 16, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+            <AlertCircleIcon />
+          </div>
           Nemaš pristup ovoj stranici.
         </div>
       </div>
@@ -39,7 +71,7 @@ export default function ProfessorCreateCoursePage() {
         name: name.trim(),
         description: description.trim(),
       });
-      setSuccessMessage("Kurs poslat administratoru na odobrenje ✅");
+      setSuccessMessage("Kurs poslat administratoru na odobrenje");
       setTimeout(() => setSuccessMessage(null), 3000);
       nav("/professor/courses");
     } catch (err: any) {
@@ -54,8 +86,11 @@ export default function ProfessorCreateCoursePage() {
     <div style={pageWrap}>
       <div style={container}>
         <div style={header}>
-          <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 26, fontWeight: 700 }}>
-            🧑‍🏫 Kreiranje novog kursa
+          <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 26, fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ color: "#9a7556" }}>
+              <BookOpenIcon />
+            </span>
+            Kreiranje novog kursa
           </h2>
           <p style={{ margin: "6px 0 0", color: "#8b7762", fontSize: 15 }}>
             Popuni osnovne informacije i pošalji kurs na odobrenje
@@ -64,13 +99,15 @@ export default function ProfessorCreateCoursePage() {
 
         {successMessage && (
           <div style={successBanner}>
-            ✅ {successMessage}
+            <CheckCircleIcon />
+            {successMessage}
           </div>
         )}
 
         {error && (
           <div style={errorBanner}>
-            ❌ {error}
+            <XCircleIcon />
+            {error}
           </div>
         )}
 

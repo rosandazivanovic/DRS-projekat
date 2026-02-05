@@ -10,6 +10,35 @@ import RequestCard from "../../components/RequestCard";
 import PreviewModal from "../../components/PreviewModal";
 import RejectModal from "../../components/RejectModal";
 
+const ClipboardIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+  </svg>
+);
+
+const CheckCircleIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+);
+
+const XCircleIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="15" y1="9" x2="9" y2="15"/>
+    <line x1="9" y1="9" x2="15" y2="15"/>
+  </svg>
+);
+
+const InboxIcon = () => (
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/>
+    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
+  </svg>
+);
+
 export default function AdminPendingCourses() {
   const [requests, setRequests] = useState<CourseRequest[]>([]);
   const [loading, setLoading] = useState(false);
@@ -50,7 +79,7 @@ const fetchRequests = async () => {
   const approve = async (id: number) => {
     try {
       await http.post(endpoints.admin.approveRequest(id));
-      setSuccessMessage("Zahtev za kurs odobren ✅");
+      setSuccessMessage("Zahtev za kurs odobren");
       setTimeout(() => setSuccessMessage(null), 3000);
       fetchRequests();
     } catch (err: any) {
@@ -83,7 +112,7 @@ const fetchRequests = async () => {
         reason: reason.trim()
       });
 
-      setSuccessMessage("Zahtev za kurs odbijen ❌");
+      setSuccessMessage("Zahtev za kurs odbijen");
       setTimeout(() => setSuccessMessage(null), 3000);
 
       setRejectingId(null);
@@ -141,8 +170,11 @@ const fetchRequests = async () => {
           <div style={mainColumn}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, marginBottom: 20 }}>
               <div>
-                <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 26, fontWeight: 700 }}>
-                  📋 Zahtevi za kurseve
+                <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 26, fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ color: "#9a7556" }}>
+                    <ClipboardIcon />
+                  </span>
+                  Zahtevi za kurseve
                 </h2>
                 <p style={{ margin: "6px 0 0", color: "#8b7762", fontSize: 15 }}>
                   Administratorski pregled novih kurseva
@@ -152,13 +184,15 @@ const fetchRequests = async () => {
 
             {successMessage && (
               <div style={successBanner}>
-                ✅ {successMessage}
+                <CheckCircleIcon />
+                {successMessage}
               </div>
             )}
             
             {error && (
               <div style={errorBanner}>
-                ❌ {error}
+                <XCircleIcon />
+                {error}
               </div>
             )}
 
@@ -186,7 +220,9 @@ const fetchRequests = async () => {
 
                   {visible.length === 0 && (
                     <div style={emptyState}>
-                      <div style={{ fontSize: 48, marginBottom: 12 }}>📭</div>
+                      <div style={{ marginBottom: 16, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+                        <InboxIcon />
+                      </div>
                       Nema zahteva za kurseve.
                       <div style={{ marginTop: 16 }}>
                         <button onClick={fetchRequests} style={refreshButton}>
@@ -228,21 +264,6 @@ const fetchRequests = async () => {
                     </div>
                   </div>
                 ))}
-              </div>
-            </div>
-
-            <div style={sidebarSection}>
-              <div style={sidebarTitle}>Brze akcije</div>
-              <div style={{ display: "flex", gap: 8 }}>
-                <button onClick={fetchRequests} style={ghostBtn}>
-                  Osveži
-                </button>
-                <button 
-                  onClick={() => { /* future: bulk approve */ }} 
-                  style={primaryBtn}
-                >
-                  Masovno odobri
-                </button>
               </div>
             </div>
           </aside>
@@ -367,27 +388,4 @@ const refreshButton: React.CSSProperties = {
   transition: "all 0.2s",
 };
 
-const ghostBtn: React.CSSProperties = {
-  padding: "8px 12px",
-  borderRadius: 10,
-  border: "1px solid rgba(44,43,40,0.12)",
-  background: "#fff",
-  fontWeight: 600,
-  fontSize: 13,
-  color: "#2c2b28",
-  cursor: "pointer",
-  transition: "all 0.2s",
-};
 
-const primaryBtn: React.CSSProperties = {
-  padding: "8px 12px",
-  borderRadius: 10,
-  border: "none",
-  background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-  color: "#fff",
-  fontWeight: 600,
-  fontSize: 13,
-  cursor: "pointer",
-  boxShadow: "0 2px 8px rgba(121,86,61,0.15)",
-  transition: "all 0.2s",
-};

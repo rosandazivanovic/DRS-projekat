@@ -3,6 +3,85 @@ import { useAuth } from "../../auth/AuthContext";
 import { http } from "../../api/https";
 import { endpoints } from "../../api/endpoints";
 
+const UserIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+    <circle cx="12" cy="7" r="4"/>
+  </svg>
+);
+
+const LockIcon = () => (
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+  </svg>
+);
+
+const CameraIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+    <circle cx="12" cy="13" r="4"/>
+  </svg>
+);
+
+const InfoIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="12" y1="16" x2="12" y2="12"/>
+    <line x1="12" y1="8" x2="12.01" y2="8"/>
+  </svg>
+);
+
+const LoaderIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="2" x2="12" y2="6"/>
+    <line x1="12" y1="18" x2="12" y2="22"/>
+    <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/>
+    <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/>
+    <line x1="2" y1="12" x2="6" y2="12"/>
+    <line x1="18" y1="12" x2="22" y2="12"/>
+    <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/>
+    <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/>
+  </svg>
+);
+
+const FolderIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+  </svg>
+);
+
+const TrashIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="3 6 5 6 21 6"/>
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+  </svg>
+);
+
+const SaveIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+    <polyline points="17 21 17 13 7 13 7 21"/>
+    <polyline points="7 3 7 8 15 8"/>
+  </svg>
+);
+
+
+const LightbulbIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 18h6"/>
+    <path d="M10 22h4"/>
+    <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.36.5 2.6 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/>
+  </svg>
+);
+
+const PinIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 17v5"/>
+    <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/>
+  </svg>
+);
+
 export default function UserProfile() {
   const { user } = useAuth();
   
@@ -74,7 +153,7 @@ export default function UserProfile() {
         number: number.trim(),
       });
       
-      setSuccess("Profil uspešno ažuriran! ✅");
+      setSuccess("Profil uspešno ažuriran!");
       
       setTimeout(() => {
         setSuccess(null);
@@ -173,7 +252,7 @@ export default function UserProfile() {
       setProfileImage(newImage);
       console.log("✅ State updated with new image");
       
-      setSuccess("Slika profila ažurirana! ✅");
+      setSuccess("Slika profila ažurirana!");
       setTimeout(() => setSuccess(null), 3000);
       
     } catch (err: any) {
@@ -213,7 +292,7 @@ export default function UserProfile() {
       const userData = response.data;
       setProfileImage(userData.profileImage || "");
       
-      setSuccess("Slika uklonjena! ✅");
+      setSuccess("Slika uklonjena!");
       setTimeout(() => setSuccess(null), 2000);
     } catch (err: any) {
       setError(err?.response?.data?.error ?? "Greška pri uklanjanju slike");
@@ -244,7 +323,9 @@ export default function UserProfile() {
             boxShadow: "0 20px 40px rgba(39,35,30,0.04)",
           }}
         >
-          <div style={{ fontSize: 64, marginBottom: 16 }}>🔒</div>
+          <div style={{ marginBottom: 16, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+            <LockIcon />
+          </div>
           <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 24 }}>
             Admin pristup
           </h2>
@@ -293,8 +374,11 @@ export default function UserProfile() {
         }}
       >
         <div style={{ marginBottom: 32 }}>
-          <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 24 }}>
-            👤 Moj profil
+          <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 24, display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ color: "#9a7556" }}>
+              <UserIcon />
+            </span>
+            Moj profil
           </h2>
           <p style={{ margin: "6px 0 0", color: "#8b7762" }}>
             Upravljaj svojim podacima i postavkama
@@ -342,8 +426,11 @@ export default function UserProfile() {
             background: "#fff",
           }}
         >
-          <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 18 }}>
-            📸 Slika profila
+          <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 18, display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ color: "#9a7556" }}>
+              <CameraIcon />
+            </span>
+            Slika profila
           </h3>
 
           <div
@@ -387,10 +474,9 @@ export default function UserProfile() {
                     alignItems: "center",
                     justifyContent: "center",
                     color: "#fff",
-                    fontSize: 14,
                   }}
                 >
-                  ⏳
+                  <LoaderIcon />
                 </div>
               )}
             </div>
@@ -399,7 +485,9 @@ export default function UserProfile() {
               <label
                 htmlFor="image-upload"
                 style={{
-                  display: "inline-block",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
                   padding: "10px 20px",
                   borderRadius: 10,
                   border: "1px solid rgba(44,43,40,0.12)",
@@ -410,7 +498,17 @@ export default function UserProfile() {
                   transition: "all 0.2s",
                 }}
               >
-                {uploadingImage ? "⏳ Upload..." : "📁 Odaberi sliku"}
+                {uploadingImage ? (
+                  <>
+                    <LoaderIcon />
+                    Upload...
+                  </>
+                ) : (
+                  <>
+                    <FolderIcon />
+                    Odaberi sliku
+                  </>
+                )}
               </label>
               <input
                 id="image-upload"
@@ -443,9 +541,13 @@ export default function UserProfile() {
                     fontSize: 13,
                     color: uploadingImage ? "#999" : "#7a2a2a",
                     background: uploadingImage ? "#f5f5f5" : "#fff5f5",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
                   }}
                 >
-                  🗑️ Ukloni sliku
+                  <TrashIcon />
+                  Ukloni sliku
                 </button>
               )}
             </div>
@@ -461,8 +563,11 @@ export default function UserProfile() {
               background: "#fff",
             }}
           >
-            <h3 style={{ margin: "0 0 20px", color: "#2c2b28", fontSize: 18 }}>
-              ℹ️ Osnovni podaci
+            <h3 style={{ margin: "0 0 20px", color: "#2c2b28", fontSize: 18, display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ color: "#9a7556" }}>
+                <InfoIcon />
+              </span>
+              Osnovni podaci
             </h3>
 
             <div
@@ -557,8 +662,9 @@ export default function UserProfile() {
                     color: "#2c2b28",
                   }}
                 />
-                <div style={{ marginTop: 4, fontSize: 12, color: "#8b7762" }}>
-                  💡 Email adresa se može menjati
+                <div style={{ marginTop: 4, fontSize: 12, color: "#8b7762", display: "flex", alignItems: "center", gap: 4 }}>
+                  <LightbulbIcon />
+                  Email adresa se može menjati
                 </div>
               </div>
 
@@ -726,9 +832,13 @@ export default function UserProfile() {
                     : "linear-gradient(135deg,#d6bca3,#b99a7f)",
                   boxShadow: saving ? "none" : "0 6px 18px rgba(121,86,61,0.12)",
                   transition: "all 0.2s",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
                 }}
               >
-                {saving ? "Čuvanje..." : "💾 Sačuvaj izmene"}
+                <SaveIcon />
+                {saving ? "Čuvanje..." : "Sačuvaj izmene"}
               </button>
             </div>
           </div>
@@ -743,8 +853,13 @@ export default function UserProfile() {
             border: "1px solid rgba(44,43,40,0.04)",
           }}
         >
-          <div style={{ fontSize: 13, color: "#8b7762", lineHeight: 1.6 }}>
-            <strong>📌 Napomena:</strong> Promene se čuvaju odmah nakon klika na dugme "Sačuvaj izmene".
+          <div style={{ fontSize: 13, color: "#8b7762", lineHeight: 1.6, display: "flex", alignItems: "flex-start", gap: 6 }}>
+            <span style={{ marginTop: 2 }}>
+              <PinIcon />
+            </span>
+            <span>
+              <strong>Napomena:</strong> Promene se čuvaju odmah nakon klika na dugme "Sačuvaj izmene".
+            </span>
           </div>
         </div>
       </div>

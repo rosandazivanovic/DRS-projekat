@@ -3,6 +3,97 @@ import { http } from "../../api/https";
 import { endpoints } from "../../api/endpoints";
 import type { TaskSubmission } from "../../types/tasks";
 
+const ClipboardCheckIcon = () => (
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+    <path d="M9 14l2 2 4-4"/>
+  </svg>
+);
+
+const ClockIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <polyline points="12 6 12 12 16 14"/>
+  </svg>
+);
+
+const CheckCircleIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+);
+
+const HourglassIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 22h14"/>
+    <path d="M5 2h14"/>
+    <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>
+    <path d="M7 22v-4.172a2 2 0 0 1 .586-1.414L12 12 7.586 7.586A2 2 0 0 1 7 6.172V2"/>
+  </svg>
+);
+
+const FileTextIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="16" y1="13" x2="8" y2="13"/>
+    <line x1="16" y1="17" x2="8" y2="17"/>
+    <polyline points="10 9 9 9 8 9"/>
+  </svg>
+);
+
+const MessageCircleIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+  </svg>
+);
+
+const BarChartIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="20" x2="12" y2="10"/>
+    <line x1="18" y1="20" x2="18" y2="4"/>
+    <line x1="6" y1="20" x2="6" y2="16"/>
+  </svg>
+);
+
+const TrendingUpIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+    <polyline points="17 6 23 6 23 12"/>
+  </svg>
+);
+
+const TargetIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <circle cx="12" cy="12" r="6"/>
+    <circle cx="12" cy="12" r="2"/>
+  </svg>
+);
+
+const InboxIcon = () => (
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/>
+    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
+  </svg>
+);
+
+const LightbulbIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="9" y1="18" x2="15" y2="18"/>
+    <line x1="10" y1="22" x2="14" y2="22"/>
+    <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/>
+  </svg>
+);
+
+const StarIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </svg>
+);
+
 export default function MySubmissionsPage() {
   const [submissions, setSubmissions] = useState<TaskSubmission[]>([]);
   const [loading, setLoading] = useState(false);
@@ -58,8 +149,18 @@ export default function MySubmissionsPage() {
           borderRadius: 16,
           boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
         }}>
-          <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 24 }}>
-            📋 Moja rešenja
+          <h2 style={{ 
+            margin: 0, 
+            color: "#2c2b28", 
+            fontSize: 24,
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+          }}>
+            <span style={{ color: "#9a7556" }}>
+              <ClipboardCheckIcon />
+            </span>
+            Moja rešenja
           </h2>
           <p style={{ margin: "6px 0 0", color: "#8b7762", fontSize: 14 }}>
             Pregled svih predatih zadataka i ocena
@@ -127,8 +228,13 @@ export default function MySubmissionsPage() {
                   textAlign: "center", 
                   color: "#8b7762",
                   padding: 40,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 8,
                 }}>
-                  ⏳ Učitavanje...
+                  <HourglassIcon />
+                  Učitavanje...
                 </div>
               ) : (
                 <div style={{ display: "grid", gap: 14 }}>
@@ -172,7 +278,8 @@ export default function MySubmissionsPage() {
                               gap: 6,
                             }}
                           >
-                            🕐 Predato: {new Date(s.submittedAt).toLocaleString('sr-RS', {
+                            <ClockIcon />
+                            Predato: {new Date(s.submittedAt).toLocaleString('sr-RS', {
                               day: '2-digit',
                               month: '2-digit',
                               year: 'numeric',
@@ -193,9 +300,22 @@ export default function MySubmissionsPage() {
                             color: s.grade ? "#065f46" : "#7a5b32",
                             border: `1px solid ${s.grade ? "rgba(6,95,70,0.12)" : "rgba(122,91,50,0.12)"}`,
                             whiteSpace: "nowrap",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 6,
                           }}
                         >
-                          {s.grade ? "✅ Ocenjeno" : "⏳ Na čekanju"}
+                          {s.grade ? (
+                            <>
+                              <CheckCircleIcon />
+                              Ocenjeno
+                            </>
+                          ) : (
+                            <>
+                              <HourglassIcon />
+                              Na čekanju
+                            </>
+                          )}
                         </div>
                       </div>
 
@@ -209,9 +329,13 @@ export default function MySubmissionsPage() {
                           background: "#fff",
                           borderRadius: 8,
                           border: "1px solid rgba(44,43,40,0.06)",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
                         }}
                       >
-                        📄 Fajl:{" "}
+                        <FileTextIcon />
+                        Fajl:{" "}
                         <code
                           style={{
                             background: "#f5f5f5",
@@ -255,7 +379,8 @@ export default function MySubmissionsPage() {
                                     letterSpacing: "0.5px",
                                   }}
                                 >
-                                  💬 Komentar profesora
+                                  <MessageCircleIcon />
+                                  Komentar profesora
                                 </div>
                                 <div
                                   style={{
@@ -338,7 +463,9 @@ export default function MySubmissionsPage() {
                         border: "1px solid rgba(44,43,40,0.06)",
                       }}
                     >
-                      <div style={{ fontSize: 48, marginBottom: 12 }}>📭</div>
+                      <div style={{ marginBottom: 12, color: "#9a7556" }}>
+                        <InboxIcon />
+                      </div>
                       {filter === "graded" && "Nema ocenjenih rešenja."}
                       {filter === "pending" && "Nema rešenja na čekanju."}
                       {filter === "all" && "Još niste predali nijedno rešenje."}
@@ -373,7 +500,10 @@ export default function MySubmissionsPage() {
                 alignItems: "center",
                 gap: 8,
               }}>
-                📊 Statistika
+                <span style={{ color: "#9a7556" }}>
+                  <BarChartIcon />
+                </span>
+                Statistika
               </h3>
               
               <div style={{ display: "grid", gap: 12 }}>
@@ -458,8 +588,14 @@ export default function MySubmissionsPage() {
                   fontSize: 17,
                   paddingBottom: 14,
                   borderBottom: "2px solid #f5f0ea",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
                 }}>
-                  📈 Napredak
+                  <span style={{ color: "#9a7556" }}>
+                    <TrendingUpIcon />
+                  </span>
+                  Napredak
                 </h3>
                 
                 <div style={{ marginBottom: 16 }}>
@@ -497,8 +633,14 @@ export default function MySubmissionsPage() {
                   fontSize: 13,
                   color: "#8b7762",
                   lineHeight: 1.5,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
                 }}>
-                  💡 <strong>Savет:</strong> Nastavite predavati zadatke i pratite svoj napredak!
+                  <LightbulbIcon />
+                  <div>
+                    <strong>Savet:</strong> Nastavite predavati zadatke i pratite svoj napredak!
+                  </div>
                 </div>
               </div>
             )}
@@ -520,8 +662,14 @@ export default function MySubmissionsPage() {
                   fontSize: 17,
                   paddingBottom: 14,
                   borderBottom: "2px solid #f5f0ea",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
                 }}>
-                  🎯 Raspodela ocena
+                  <span style={{ color: "#9a7556" }}>
+                    <TargetIcon />
+                  </span>
+                  Raspodela ocena
                 </h3>
                 
                 <div style={{ display: "grid", gap: 10 }}>
@@ -536,8 +684,14 @@ export default function MySubmissionsPage() {
                           fontWeight: 700, 
                           color: "#2c2b28",
                           minWidth: 30,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 4,
                         }}>
-                          {grade}⭐
+                          {grade}
+                          <span style={{ color: "#f59e0b" }}>
+                            <StarIcon />
+                          </span>
                         </div>
                         <div style={{ flex: 1 }}>
                           <div style={{

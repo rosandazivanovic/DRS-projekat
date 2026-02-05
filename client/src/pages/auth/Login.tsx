@@ -1,6 +1,13 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
+
+const BookOpenIcon = () => (
+  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+  </svg>
+);
 
 export default function LoginPage() {
   const nav = useNavigate();
@@ -48,11 +55,21 @@ export default function LoginPage() {
         }}
       >
         <div style={{ textAlign: "center", marginBottom: 24 }}>
-          <div style={{ fontSize: 36, display: "inline-block", padding: 8, borderRadius: 10, background: "#f1e9df", color: "#7a5b3b" }}>📚</div>
-          <h2 style={{ margin: "8px 0 4px", color: "#2c2b28" }}>
+          <div style={{ 
+            display: "inline-flex", 
+            padding: 12, 
+            borderRadius: 12, 
+            background: "#f1e9df", 
+            color: "#7a5b3b",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>
+            <BookOpenIcon />
+          </div>
+          <h2 style={{ margin: "12px 0 4px", color: "#2c2b28", fontSize: 24, fontWeight: 700 }}>
             Dobrodošao nazad
           </h2>
-          <p style={{ margin: 0, color: "#8b7762" }}>Nastavi svoje učenje</p>
+          <p style={{ margin: 0, color: "#8b7762", fontSize: 14 }}>Nastavi svoje učenje</p>
         </div>
 
         <form onSubmit={onSubmit} style={{ display: "grid", gap: 14 }}>
@@ -129,17 +146,6 @@ export default function LoginPage() {
             color: "#8b7762",
           }}
         >
-          Nemaš nalog?{" "}
-          <Link
-            to="/register"
-            style={{
-              color: "#9a7556",
-              fontWeight: 600,
-              textDecoration: "none",
-            }}
-          >
-            Registruj se
-          </Link>
         </div>
 
         <div

@@ -12,23 +12,10 @@ export type User = {
   role: Role;
 };
 
-type RegisterData = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  birthDate?: string;
-  gender?: string;
-  country?: string;
-  street?: string;
-  number?: string;
-};
-
 type AuthState = {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  register: (data: RegisterData) => Promise<void>;
   hasRole: (roles: Role[]) => boolean;
 };
 
@@ -57,20 +44,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(u);
   };
 
-  const register = async (data: RegisterData) => {
-    console.log("📝 Attempting registration...");
-    const res = await http.post(endpoints.auth.register, data);
-    const result = res.data;
-    const sid = result.sessionId;
-    const u = result.user as User;
-    
-    console.log("✅ Registration successful, session:", sid);
-    
-    localStorage.setItem(SID_KEY, sid);
-    localStorage.setItem(USER_KEY, JSON.stringify(u));
-    setUser(u);
-  };
-
   const logout = async () => {
     const sid = localStorage.getItem(SID_KEY);
     try {
@@ -88,7 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const hasRole = (roles: Role[]) => !!user && roles.includes(user.role);
 
   const value = useMemo(
-    () => ({ user, login, logout, register, hasRole }),
+    () => ({ user, login, logout, hasRole }),
     [user]
   );
 

@@ -4,7 +4,6 @@ export const endpoints = {
   auth: {
     login: `${API_BASE}/auth/login`,
     logout: `${API_BASE}/auth/logout`,
-    register: `${API_BASE}/auth/register`,
     me: `${API_BASE}/auth/me`,
   },
   courses: {

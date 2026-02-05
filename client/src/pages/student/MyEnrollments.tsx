@@ -1,6 +1,27 @@
 import { useEffect, useState } from "react";
 import { getMyEnrollments } from "../../mocks/enrollments";
 
+const ClipboardIcon = () => (
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+  </svg>
+);
+
+const ClockIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <polyline points="12 6 12 12 16 14"/>
+  </svg>
+);
+
+const InboxIcon = () => (
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/>
+    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
+  </svg>
+);
+
 export default function MyEnrollmentsPage() {
   const [items, setItems] = useState<any[]>([]);
 
@@ -15,8 +36,19 @@ export default function MyEnrollmentsPage() {
     <div style={pageWrap}>
       <div style={container}>
         <div style={header}>
-          <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 26, fontWeight: 700 }}>
-            📋 Moji upisi
+          <h2 style={{ 
+            margin: 0, 
+            color: "#2c2b28", 
+            fontSize: 26, 
+            fontWeight: 700,
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+          }}>
+            <span style={{ color: "#9a7556" }}>
+              <ClipboardIcon />
+            </span>
+            Moji upisi
           </h2>
           <p style={{ margin: "6px 0 0", color: "#8b7762", fontSize: 15 }}>
             Pregled svih zahteva za upis na kurseve
@@ -35,14 +67,17 @@ export default function MyEnrollmentsPage() {
                 </div>
               </div>
               <div style={dateInfo}>
-                🕐 {new Date(p.createdAt).toLocaleString("sr-RS")}
+                <ClockIcon />
+                {new Date(p.createdAt).toLocaleString("sr-RS")}
               </div>
             </div>
           ))}
 
           {items.length === 0 && (
             <div style={emptyState}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}>📭</div>
+              <div style={{ marginBottom: 12, color: "#9a7556" }}>
+                <InboxIcon />
+              </div>
               Još nema upisa.
             </div>
           )}

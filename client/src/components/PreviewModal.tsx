@@ -1,5 +1,26 @@
 import type { CourseRequest } from "../types/courses";
 
+const UserIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+    <circle cx="12" cy="7" r="4"/>
+  </svg>
+);
+
+const ClockIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <polyline points="12 6 12 12 16 14"/>
+  </svg>
+);
+
+const XIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"/>
+    <line x1="6" y1="6" x2="18" y2="18"/>
+  </svg>
+);
+
 export default function PreviewModal({ 
   open, 
   req, 
@@ -30,12 +51,20 @@ export default function PreviewModal({
             style={closeButton}
             aria-label="Zatvori"
           >
-            ✕
+            <XIcon />
           </button>
         </div>
 
         <div style={modalMeta}>
-          👨‍🏫 {req.professorName} • 🕐 {new Date(req.createdAt).toLocaleString("sr-RS")}
+          <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <UserIcon />
+            {req.professorName}
+          </span>
+          <span style={{ color: "#d6bca3" }}>•</span>
+          <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <ClockIcon />
+            {new Date(req.createdAt).toLocaleString("sr-RS")}
+          </span>
         </div>
 
         <div style={modalBody}>
@@ -93,12 +122,14 @@ const modalTitle: React.CSSProperties = {
 const closeButton: React.CSSProperties = {
   background: "none",
   border: "none",
-  fontSize: 24,
   color: "#8b7762",
   cursor: "pointer",
   padding: 4,
   lineHeight: 1,
   transition: "color 0.2s",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 };
 
 const modalMeta: React.CSSProperties = {

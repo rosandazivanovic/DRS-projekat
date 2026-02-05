@@ -3,7 +3,6 @@ import ProtectedRoute from "./auth/ProtectedRoute";
 import Layout from "./components/Layout";
 
 import LoginPage from "./pages/auth/Login";
-import RegisterPage from "./pages/auth/Register";
 import CoursesPage from "./pages/student/Courses";
 import CourseDetailsPage from "./pages/student/CourseDetails";
 import MyCoursesPage from "./pages/student/MyCourses";
@@ -19,7 +18,6 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
 
       <Route
         element={

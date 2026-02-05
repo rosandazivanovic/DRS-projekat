@@ -7,6 +7,126 @@ import type { Course } from "../../types/courses";
 import type { Task, TaskSubmission } from "../../types/tasks";
 import { useAuth } from "../../auth/AuthContext";
 
+const UserIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+    <circle cx="12" cy="7" r="4"/>
+  </svg>
+);
+
+const FileTextIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="16" y1="13" x2="8" y2="13"/>
+    <line x1="16" y1="17" x2="8" y2="17"/>
+    <polyline points="10 9 9 9 8 9"/>
+  </svg>
+);
+
+const DownloadIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    <polyline points="7 10 12 15 17 10"/>
+    <line x1="12" y1="15" x2="12" y2="3"/>
+  </svg>
+);
+
+const PlusCircleIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="12" y1="8" x2="12" y2="16"/>
+    <line x1="8" y1="12" x2="16" y2="12"/>
+  </svg>
+);
+
+const ClipboardIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+  </svg>
+);
+
+const ListIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="8" y1="6" x2="21" y2="6"/>
+    <line x1="8" y1="12" x2="21" y2="12"/>
+    <line x1="8" y1="18" x2="21" y2="18"/>
+    <line x1="3" y1="6" x2="3.01" y2="6"/>
+    <line x1="3" y1="12" x2="3.01" y2="12"/>
+    <line x1="3" y1="18" x2="3.01" y2="18"/>
+  </svg>
+);
+
+const ClockIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <polyline points="12 6 12 12 16 14"/>
+  </svg>
+);
+
+const UploadIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    <polyline points="17 8 12 3 7 8"/>
+    <line x1="12" y1="3" x2="12" y2="15"/>
+  </svg>
+);
+
+const CheckCircleIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+);
+
+const XCircleIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="15" y1="9" x2="9" y2="15"/>
+    <line x1="9" y1="9" x2="15" y2="15"/>
+  </svg>
+);
+
+const MessageSquareIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+);
+
+const StarIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </svg>
+);
+
+const InboxIcon = () => (
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/>
+    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
+  </svg>
+);
+
+const LoaderIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="2" x2="12" y2="6"/>
+    <line x1="12" y1="18" x2="12" y2="22"/>
+    <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/>
+    <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/>
+    <line x1="2" y1="12" x2="6" y2="12"/>
+    <line x1="18" y1="12" x2="22" y2="12"/>
+    <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/>
+    <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/>
+  </svg>
+);
+
+const BookOpenIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+  </svg>
+);
+
 export default function CourseDetailsPage() {
   const { id } = useParams<{ id?: string }>();
   const courseId = id ? Number(id) : null;
@@ -100,7 +220,7 @@ export default function CourseDetailsPage() {
         description: newTaskDesc,
         deadline: new Date(newTaskDeadline).toISOString(),
       });
-      setSuccessMessage("Zadatak kreiran ✅");
+      setSuccessMessage("Zadatak kreiran");
       setTimeout(() => setSuccessMessage(null), 3000);
       setNewTaskTitle("");
       setNewTaskDesc("");
@@ -154,7 +274,7 @@ export default function CourseDetailsPage() {
             fileName: selectedFile!.name,
           });
 
-          setSuccessMessage("Zadatak uspešno predat! ✅");
+          setSuccessMessage("Zadatak uspešno predat!");
           setTimeout(() => setSuccessMessage(null), 3000);
           setSelectedTaskId("");
           setSelectedFile(null);
@@ -210,7 +330,7 @@ export default function CourseDetailsPage() {
       a.click();
       window.URL.revokeObjectURL(url);
       
-      setSuccessMessage(`Fajl preuzet: ${data.fileName} ✅`);
+      setSuccessMessage(`Fajl preuzet: ${data.fileName}`);
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err: any) {
       setError(err?.response?.data?.error ?? "Greška pri preuzimanju fajla");
@@ -245,7 +365,7 @@ export default function CourseDetailsPage() {
         grade,
         comment: gradeComment,
       });
-      setSuccessMessage("Ocena postavljena ✅");
+      setSuccessMessage("Ocena postavljena");
       setTimeout(() => setSuccessMessage(null), 3000);
       closeGradingModal();
       await fetchAllSubmissions();
@@ -259,7 +379,9 @@ export default function CourseDetailsPage() {
     return (
       <div style={{ minHeight: "100vh", background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)", padding: 24, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ background: "#fff", borderRadius: 16, padding: 60, textAlign: "center", color: "#8b7762", boxShadow: "0 2px 8px rgba(39,35,30,0.04)" }}>
-          <div style={{ fontSize: 40, marginBottom: 12 }}>⏳</div>
+          <div style={{ marginBottom: 12, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+            <LoaderIcon />
+          </div>
           Učitavanje kursa...
         </div>
       </div>
@@ -273,19 +395,30 @@ export default function CourseDetailsPage() {
     <div style={{ minHeight: "100vh", background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)", padding: 24 }}>
       <div style={{ maxWidth: 1400, margin: "0 auto" }}>
         
+        {/* Header - Informacije o kursu */}
         <div style={{ background: "#fff", borderRadius: 16, padding: 24, marginBottom: 20, boxShadow: "0 2px 8px rgba(39,35,30,0.04)" }}>
-          <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 24 }}>{course.name}</h2>
-          <p style={{ margin: "6px 0 0", color: "#8b7762", fontSize: 14 }}>👨‍🏫 {course.professorName}</p>
-          <p style={{ margin: "10px 0 0", color: "rgba(44,43,40,0.75)", fontSize: 14, lineHeight: 1.6 }}>{course.description}</p>
+          <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 24, display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ color: "#9a7556" }}>
+              <BookOpenIcon />
+            </span>
+            {course.name}
+          </h2>
+          <p style={{ margin: "8px 0 0", color: "#8b7762", fontSize: 14, display: "flex", alignItems: "center", gap: 6 }}>
+            <UserIcon />
+            {course.professorName}
+          </p>
+          <p style={{ margin: "12px 0 0", color: "rgba(44,43,40,0.75)", fontSize: 14, lineHeight: 1.6 }}>{course.description}</p>
           {course.materialPath && (
             <div style={{ marginTop: 16, padding: 12, borderRadius: 10, background: "#f9f6f2", border: "1px solid rgba(44,43,40,0.06)" }}>
               {course.materialPath.startsWith("data:") ? (
                 <a href={course.materialPath} download={`${course.name.replace(/\s+/g, '_')}_materijal.pdf`} style={{ color: "#9a7556", textDecoration: "none", cursor: "pointer", fontWeight: 600, fontSize: 14, display: "flex", alignItems: "center", gap: 8 }}>
-                  📄 Preuzmi materijal (PDF)
+                  <DownloadIcon />
+                  Preuzmi materijal (PDF)
                 </a>
               ) : (
                 <a href={course.materialPath} target="_blank" rel="noopener noreferrer" style={{ color: "#9a7556", textDecoration: "none", fontWeight: 600, fontSize: 14, display: "flex", alignItems: "center", gap: 8 }}>
-                  📄 Preuzmi materijal
+                  <DownloadIcon />
+                  Preuzmi materijal
                 </a>
               )}
             </div>
@@ -294,13 +427,15 @@ export default function CourseDetailsPage() {
 
         {successMessage && (
           <div style={{ padding: 14, marginBottom: 16, background: "linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%)", border: "1px solid rgba(6,95,70,0.12)", borderRadius: 12, color: "#065f46", fontWeight: 600, fontSize: 14, display: "flex", alignItems: "center", gap: 10, boxShadow: "0 2px 8px rgba(6,95,70,0.08)" }}>
-            ✅ {successMessage}
+            <CheckCircleIcon />
+            {successMessage}
           </div>
         )}
 
         {error && (
           <div style={{ padding: 14, marginBottom: 16, background: "#fff5f5", border: "1px solid rgba(220,38,38,0.12)", borderRadius: 12, color: "#991b1b", fontWeight: 600, fontSize: 14, display: "flex", alignItems: "center", gap: 10, boxShadow: "0 2px 8px rgba(220,38,38,0.08)" }}>
-            ❌ {error}
+            <XCircleIcon />
+            {error}
           </div>
         )}
 
@@ -310,7 +445,12 @@ export default function CourseDetailsPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               
               <div style={{ padding: 20, border: "1px solid rgba(44,43,40,0.06)", borderRadius: 16, background: "#fff", boxShadow: "0 2px 8px rgba(39,35,30,0.04)" }}>
-                <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 17 }}>➕ Kreiraj novi zadatak</h3>
+                <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 17, display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ color: "#9a7556" }}>
+                    <PlusCircleIcon />
+                  </span>
+                  Kreiraj novi zadatak
+                </h3>
                 <form onSubmit={createTask} style={{ display: "grid", gap: 12 }}>
                   <input placeholder="Naziv zadatka" value={newTaskTitle} onChange={(e) => setNewTaskTitle(e.target.value)} style={{ padding: 12, borderRadius: 10, border: "1px solid rgba(44,43,40,0.1)", background: "#fff", fontSize: 14, color: "#2c2b28" }} />
                   <textarea placeholder="Opis zadatka" value={newTaskDesc} onChange={(e) => setNewTaskDesc(e.target.value)} style={{ padding: 12, borderRadius: 10, border: "1px solid rgba(44,43,40,0.1)", minHeight: 100, background: "#fff", fontSize: 14, color: "#2c2b28", fontFamily: "inherit", resize: "vertical" }} />
@@ -323,18 +463,28 @@ export default function CourseDetailsPage() {
               </div>
 
               <div style={{ padding: 20, border: "1px solid rgba(44,43,40,0.06)", borderRadius: 16, background: "#fff", boxShadow: "0 2px 8px rgba(39,35,30,0.04)", flex: 1 }}>
-                <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 17 }}>📝 Zadaci ({tasks.length})</h3>
+                <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 17, display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ color: "#9a7556" }}>
+                    <ClipboardIcon />
+                  </span>
+                  Zadaci ({tasks.length})
+                </h3>
                 <div style={{ display: "grid", gap: 12, maxHeight: 500, overflowY: "auto", paddingRight: 8 }}>
                   {tasks.map((t) => (
                     <div key={t.id} style={{ padding: 14, border: "1px solid rgba(44,43,40,0.06)", borderRadius: 12, background: "#fafafa" }}>
                       <div style={{ fontWeight: 700, color: "#2c2b28", fontSize: 15, marginBottom: 4 }}>{t.title}</div>
                       <div style={{ color: "rgba(44,43,40,0.75)", fontSize: 14, marginBottom: 8, lineHeight: 1.5 }}>{t.description}</div>
-                      <div style={{ fontSize: 12, color: "#8b7762", fontWeight: 600 }}>🕐 Rok: {t.deadline ? new Date(t.deadline).toLocaleString('sr-RS') : "-"}</div>
+                      <div style={{ fontSize: 12, color: "#8b7762", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                        <ClockIcon />
+                        Rok: {t.deadline ? new Date(t.deadline).toLocaleString('sr-RS') : "-"}
+                      </div>
                     </div>
                   ))}
                   {tasks.length === 0 && (
                     <div style={{ textAlign: "center", padding: 40, color: "#8b7762", fontStyle: "italic", background: "#fafafa", borderRadius: 12, border: "1px solid rgba(44,43,40,0.06)" }}>
-                      <div style={{ fontSize: 48, marginBottom: 12 }}>📭</div>
+                      <div style={{ marginBottom: 12, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+                        <InboxIcon />
+                      </div>
                       Nema zadataka još.
                     </div>
                   )}
@@ -343,28 +493,50 @@ export default function CourseDetailsPage() {
             </div>
 
             <div style={{ padding: 20, border: "1px solid rgba(44,43,40,0.06)", borderRadius: 16, background: "#fff", boxShadow: "0 2px 8px rgba(39,35,30,0.04)" }}>
-              <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 17 }}>📋 Predata rešenja ({submissions.length})</h3>
+              <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 17, display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ color: "#9a7556" }}>
+                  <ListIcon />
+                </span>
+                Predata rešenja ({submissions.length})
+              </h3>
               <div style={{ display: "grid", gap: 14, maxHeight: 800, overflowY: "auto", paddingRight: 8 }}>
                 {submissions.map((s) => (
                   <div key={s.id} style={{ padding: 18, border: "1px solid rgba(44,43,40,0.06)", borderRadius: 12, background: s.grade ? "#f0fdf4" : "#fafafa", transition: "all 0.2s" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
                       <div style={{ flex: 1 }}>
                         <div style={{ fontWeight: 700, color: "#2c2b28", fontSize: 16, marginBottom: 6 }}>{s.taskTitle}</div>
-                        <div style={{ color: "#8b7762", fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}>👤 {s.studentName}</div>
+                        <div style={{ color: "#8b7762", fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}>
+                          <UserIcon />
+                          {s.studentName}
+                        </div>
                       </div>
-                      <div style={{ padding: "6px 14px", borderRadius: 20, fontSize: 12, fontWeight: 600, background: s.grade ? "#dcfce7" : "#fff7e8", color: s.grade ? "#065f46" : "#7a5b32", border: `1px solid ${s.grade ? "rgba(6,95,70,0.12)" : "rgba(122,91,50,0.12)"}`, whiteSpace: "nowrap" }}>
-                        {s.grade ? "✅ Ocenjeno" : "⏳ Na čekanju"}
+                      <div style={{ padding: "6px 14px", borderRadius: 20, fontSize: 12, fontWeight: 600, background: s.grade ? "#dcfce7" : "#fff7e8", color: s.grade ? "#065f46" : "#7a5b32", border: `1px solid ${s.grade ? "rgba(6,95,70,0.12)" : "rgba(122,91,50,0.12)"}`, whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 6 }}>
+                        {s.grade ? (
+                          <>
+                            <CheckCircleIcon />
+                            Ocenjeno
+                          </>
+                        ) : (
+                          <>
+                            <ClockIcon />
+                            Na čekanju
+                          </>
+                        )}
                       </div>
                     </div>
-                    <div style={{ fontSize: 14, color: "rgba(44,43,40,0.8)", marginBottom: s.grade ? 12 : 0, padding: 10, background: "#fff", borderRadius: 8, border: "1px solid rgba(44,43,40,0.06)" }}>
-                      📄 Fajl: <code style={{ background: "#f5f5f5", padding: "3px 8px", borderRadius: 6, fontWeight: 600, color: "#2c2b28" }}>{s.filePath.startsWith('data:') ? 'Python rešenje (.py)' : s.filePath}</code>
+                    <div style={{ fontSize: 14, color: "rgba(44,43,40,0.8)", marginBottom: s.grade ? 12 : 0, padding: 10, background: "#fff", borderRadius: 8, border: "1px solid rgba(44,43,40,0.06)", display: "flex", alignItems: "center", gap: 6 }}>
+                      <FileTextIcon />
+                      Fajl: <code style={{ background: "#f5f5f5", padding: "3px 8px", borderRadius: 6, fontWeight: 600, color: "#2c2b28" }}>{s.filePath.startsWith('data:') ? 'Python rešenje (.py)' : s.filePath}</code>
                     </div>
                     {s.grade ? (
                       <div style={{ padding: 14, borderRadius: 10, background: "#fff", border: "1px solid rgba(6,95,70,0.12)", display: "flex", gap: 14, alignItems: "flex-start" }}>
                         <div style={{ flex: 1 }}>
                           {s.comment ? (
                             <div>
-                              <div style={{ fontSize: 11, color: "#047857", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px" }}>💬 Komentar profesora</div>
+                              <div style={{ fontSize: 11, color: "#047857", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", display: "flex", alignItems: "center", gap: 4 }}>
+                                <MessageSquareIcon />
+                                Komentar profesora
+                              </div>
                               <div style={{ fontSize: 13, color: "#065f46", lineHeight: 1.6 }}>{s.comment}</div>
                             </div>
                           ) : (
@@ -378,15 +550,23 @@ export default function CourseDetailsPage() {
                       </div>
                     ) : (
                       <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
-                        <button onClick={() => handleDownloadSubmission(s.taskId, s.id)} style={{ flex: 1, padding: "10px 16px", borderRadius: 10, border: "1px solid rgba(44,43,40,0.12)", cursor: "pointer", fontWeight: 600, fontSize: 14, color: "#2c2b28", background: "#fff", boxShadow: "0 1px 3px rgba(39,35,30,0.06)", transition: "all 0.2s" }} onMouseEnter={(e) => { e.currentTarget.style.background = "#f5f5f5"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 2px 6px rgba(39,35,30,0.1)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 3px rgba(39,35,30,0.06)"; }}>📥 Preuzmi</button>
-                        <button onClick={() => openGradingModal(s)} style={{ flex: 1, padding: "10px 16px", borderRadius: 10, border: "none", cursor: "pointer", fontWeight: 600, fontSize: 14, color: "#fff", background: "linear-gradient(135deg,#d6bca3,#b99a7f)", boxShadow: "0 4px 12px rgba(121,86,61,0.15)", transition: "all 0.2s" }} onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 6px 16px rgba(121,86,61,0.2)"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(121,86,61,0.15)"; }}>⭐ Oceni</button>
+                        <button onClick={() => handleDownloadSubmission(s.taskId, s.id)} style={{ flex: 1, padding: "10px 16px", borderRadius: 10, border: "1px solid rgba(44,43,40,0.12)", cursor: "pointer", fontWeight: 600, fontSize: 14, color: "#2c2b28", background: "#fff", boxShadow: "0 1px 3px rgba(39,35,30,0.06)", transition: "all 0.2s", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }} onMouseEnter={(e) => { e.currentTarget.style.background = "#f5f5f5"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 2px 6px rgba(39,35,30,0.1)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 3px rgba(39,35,30,0.06)"; }}>
+                          <DownloadIcon />
+                          Preuzmi
+                        </button>
+                        <button onClick={() => openGradingModal(s)} style={{ flex: 1, padding: "10px 16px", borderRadius: 10, border: "none", cursor: "pointer", fontWeight: 600, fontSize: 14, color: "#fff", background: "linear-gradient(135deg,#d6bca3,#b99a7f)", boxShadow: "0 4px 12px rgba(121,86,61,0.15)", transition: "all 0.2s", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }} onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 6px 16px rgba(121,86,61,0.2)"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(121,86,61,0.15)"; }}>
+                          <StarIcon />
+                          Oceni
+                        </button>
                       </div>
                     )}
                   </div>
                 ))}
                 {submissions.length === 0 && (
                   <div style={{ textAlign: "center", padding: 60, color: "#8b7762", fontStyle: "italic", background: "#fafafa", borderRadius: 12, border: "1px solid rgba(44,43,40,0.06)" }}>
-                    <div style={{ fontSize: 64, marginBottom: 16 }}>📭</div>
+                    <div style={{ marginBottom: 16, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+                      <InboxIcon />
+                    </div>
                     <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>Nema predatih rešenja</div>
                     <div style={{ fontSize: 13 }}>Kada studenti predaju zadatke, ovde će se pojaviti.</div>
                   </div>
@@ -397,9 +577,16 @@ export default function CourseDetailsPage() {
         )}
 
         {isStudent && (
-          <>
-            <div style={{ marginBottom: 20, padding: 20, border: "1px solid rgba(44,43,40,0.06)", borderRadius: 16, background: "#fff", boxShadow: "0 2px 8px rgba(39,35,30,0.04)" }}>
-              <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 17 }}>📤 Predaj zadatak</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+            
+            {/* Leva kolona - Predaja zadataka */}
+            <div style={{ padding: 20, border: "1px solid rgba(44,43,40,0.06)", borderRadius: 16, background: "#fff", boxShadow: "0 2px 8px rgba(39,35,30,0.04)" }}>
+              <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 17, display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ color: "#9a7556" }}>
+                  <UploadIcon />
+                </span>
+                Predaj zadatak
+              </h3>
               <form onSubmit={submitTask} style={{ display: "grid", gap: 14 }}>
                 <div>
                   <label style={{ display: "block", marginBottom: 6, color: "#8b7762", fontSize: 13, fontWeight: 600 }}>Izaberi zadatak:</label>
@@ -415,34 +602,55 @@ export default function CourseDetailsPage() {
                   <input id="file-upload" type="file" accept=".py,text/x-python" onChange={(e) => setSelectedFile(e.target.files?.[0] || null)} style={{ padding: 10, borderRadius: 10, border: "1px solid rgba(44,43,40,0.1)", background: "#fff", width: "100%", cursor: "pointer", fontSize: 14 }} />
                   {selectedFile && (
                     <div style={{ marginTop: 10, padding: 12, borderRadius: 10, background: "linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%)", border: "1px solid rgba(6,95,70,0.12)" }}>
-                      <div style={{ fontSize: 12, color: "#047857", fontWeight: 600, marginBottom: 4 }}>✅ Odabran fajl:</div>
-                      <div style={{ fontSize: 13, color: "#065f46", fontWeight: 600 }}>📄 {selectedFile.name}</div>
+                      <div style={{ fontSize: 12, color: "#047857", fontWeight: 600, marginBottom: 4, display: "flex", alignItems: "center", gap: 4 }}>
+                        <CheckCircleIcon />
+                        Odabran fajl:
+                      </div>
+                      <div style={{ fontSize: 13, color: "#065f46", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                        <FileTextIcon />
+                        {selectedFile.name}
+                      </div>
                       <div style={{ fontSize: 12, color: "#8b7762", marginTop: 2 }}>Veličina: {(selectedFile.size / 1024).toFixed(2)} KB</div>
                     </div>
                   )}
                 </div>
-                <button type="submit" disabled={submitting} style={{ padding: 12, borderRadius: 10, border: "none", cursor: submitting ? "not-allowed" : "pointer", opacity: submitting ? 0.6 : 1, fontWeight: 600, fontSize: 14, color: "#fff", background: "linear-gradient(135deg,#d6bca3,#b99a7f)", boxShadow: submitting ? "none" : "0 4px 12px rgba(121,86,61,0.15)", transition: "all 0.2s" }}>{submitting ? "Predaja u toku..." : "📤 Predaj rešenje"}</button>
+                <button type="submit" disabled={submitting} style={{ padding: 12, borderRadius: 10, border: "none", cursor: submitting ? "not-allowed" : "pointer", opacity: submitting ? 0.6 : 1, fontWeight: 600, fontSize: 14, color: "#fff", background: "linear-gradient(135deg,#d6bca3,#b99a7f)", boxShadow: submitting ? "none" : "0 4px 12px rgba(121,86,61,0.15)", transition: "all 0.2s", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                  <UploadIcon />
+                  {submitting ? "Predaja u toku..." : "Predaj rešenje"}
+                </button>
               </form>
             </div>
-            <div style={{ marginBottom: 20, padding: 20, border: "1px solid rgba(44,43,40,0.06)", borderRadius: 16, background: "#fff", boxShadow: "0 2px 8px rgba(39,35,30,0.04)" }}>
-              <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 17 }}>📝 Zadaci</h3>
-              <div style={{ display: "grid", gap: 12 }}>
+
+            {/* Desna kolona - Lista zadataka */}
+            <div style={{ padding: 20, border: "1px solid rgba(44,43,40,0.06)", borderRadius: 16, background: "#fff", boxShadow: "0 2px 8px rgba(39,35,30,0.04)" }}>
+              <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 17, display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ color: "#9a7556" }}>
+                  <ClipboardIcon />
+                </span>
+                Zadaci ({tasks.length})
+              </h3>
+              <div style={{ display: "grid", gap: 12, maxHeight: 600, overflowY: "auto", paddingRight: 8 }}>
                 {tasks.map((t) => (
                   <div key={t.id} style={{ padding: 14, border: "1px solid rgba(44,43,40,0.06)", borderRadius: 12, background: "#fafafa" }}>
                     <div style={{ fontWeight: 700, color: "#2c2b28", fontSize: 15, marginBottom: 4 }}>{t.title}</div>
                     <div style={{ color: "rgba(44,43,40,0.75)", fontSize: 14, marginBottom: 8, lineHeight: 1.5 }}>{t.description}</div>
-                    <div style={{ fontSize: 12, color: "#8b7762", fontWeight: 600 }}>🕐 Rok: {t.deadline ? new Date(t.deadline).toLocaleString('sr-RS') : "-"}</div>
+                    <div style={{ fontSize: 12, color: "#8b7762", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                      <ClockIcon />
+                      Rok: {t.deadline ? new Date(t.deadline).toLocaleString('sr-RS') : "-"}
+                    </div>
                   </div>
                 ))}
                 {tasks.length === 0 && (
                   <div style={{ textAlign: "center", padding: 40, color: "#8b7762", fontStyle: "italic", background: "#fafafa", borderRadius: 12, border: "1px solid rgba(44,43,40,0.06)" }}>
-                    <div style={{ fontSize: 48, marginBottom: 12 }}>📭</div>
+                    <div style={{ marginBottom: 12, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+                      <InboxIcon />
+                    </div>
                     Nema zadataka još.
                   </div>
                 )}
               </div>
             </div>
-          </>
+          </div>
         )}
       </div>
 

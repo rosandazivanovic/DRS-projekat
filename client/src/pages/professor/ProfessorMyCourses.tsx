@@ -5,6 +5,63 @@ import { endpoints } from "../../api/endpoints";
 import type { CourseRequest, Course } from "../../types/courses";
 import { useAuth } from "../../auth/AuthContext";
 
+const BookIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+  </svg>
+);
+
+const CheckCircleIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+);
+
+const ClockIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <polyline points="12 6 12 12 16 14"/>
+  </svg>
+);
+
+const XCircleIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="15" y1="9" x2="9" y2="15"/>
+    <line x1="9" y1="9" x2="15" y2="15"/>
+  </svg>
+);
+
+const MessageIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+);
+
+const SettingsIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M12 1v6m0 6v6m5.196-14.196l-4.242 4.242m0 5.908l-4.242 4.242M23 12h-6m-6 0H5m14.196 5.196l-4.242-4.242m0-5.908l-4.242-4.242"/>
+  </svg>
+);
+
+const BarChartIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="20" x2="12" y2="10"/>
+    <line x1="18" y1="20" x2="18" y2="4"/>
+    <line x1="6" y1="20" x2="6" y2="16"/>
+  </svg>
+);
+
+const LibraryIcon = () => (
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+  </svg>
+);
+
 export default function ProfessorMyCoursesPage() {
   const { user, hasRole } = useAuth();
   const [requests, setRequests] = useState<CourseRequest[]>([]);
@@ -72,8 +129,19 @@ export default function ProfessorMyCoursesPage() {
             boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
           }}
         >
-          <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 26, fontWeight: 700 }}>
-            📚 Moji kursevi
+          <h2 style={{ 
+            margin: 0, 
+            color: "#2c2b28", 
+            fontSize: 26, 
+            fontWeight: 700,
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+          }}>
+            <span style={{ color: "#9a7556" }}>
+              <LibraryIcon />
+            </span>
+            Moji kursevi
           </h2>
           <p style={{ margin: "6px 0 0", color: "#8b7762", fontSize: 15 }}>
             Upravljanje i status tvojih kurseva
@@ -87,7 +155,10 @@ export default function ProfessorMyCoursesPage() {
             color: "#8b7762",
             fontSize: 16,
           }}>
-            ⏳ Učitavanje...
+            <div style={{ marginBottom: 12, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+              <ClockIcon />
+            </div>
+            Učitavanje...
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 24 }}>
@@ -119,7 +190,10 @@ export default function ProfessorMyCoursesPage() {
                     alignItems: "center",
                     gap: 10,
                   }}>
-                    ✅ Aktivni kursevi
+                    <span style={{ color: "#065f46" }}>
+                      <CheckCircleIcon />
+                    </span>
+                    Aktivni kursevi
                     <span style={{
                       fontSize: 14,
                       fontWeight: 700,
@@ -173,9 +247,15 @@ export default function ProfessorMyCoursesPage() {
                                 fontSize: 17,
                                 color: "#2c2b28",
                                 marginBottom: 6,
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 8,
                               }}
                             >
-                              📖 {c.name}
+                              <span style={{ color: "#065f46" }}>
+                                <BookIcon />
+                              </span>
+                              {c.name}
                             </div>
                             <div
                               style={{
@@ -202,7 +282,9 @@ export default function ProfessorMyCoursesPage() {
                               whiteSpace: "nowrap",
                               boxShadow: "0 2px 8px rgba(121,86,61,0.2)",
                               transition: "all 0.2s",
-                              display: "inline-block",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 6,
                             }}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.transform = "translateY(-1px)";
@@ -213,7 +295,8 @@ export default function ProfessorMyCoursesPage() {
                               e.currentTarget.style.boxShadow = "0 2px 8px rgba(121,86,61,0.2)";
                             }}
                           >
-                            ⚙️ Upravljaj
+                            <SettingsIcon />
+                            Upravljaj
                           </Link>
                         </div>
                       </div>
@@ -259,7 +342,10 @@ export default function ProfessorMyCoursesPage() {
                       alignItems: "center",
                       gap: 10,
                     }}>
-                      ❌ Odbijeni zahtevi
+                      <span style={{ color: "#7a2a2a" }}>
+                        <XCircleIcon />
+                      </span>
+                      Odbijeni zahtevi
                       <span style={{
                         fontSize: 14,
                         fontWeight: 700,
@@ -318,8 +404,12 @@ export default function ProfessorMyCoursesPage() {
                               color: "#7a2a2a", 
                               fontSize: 13,
                               marginBottom: 4,
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 6,
                             }}>
-                              💬 Razlog odbijanja:
+                              <MessageIcon />
+                              Razlog odbijanja:
                             </div>
                             <div style={{ color: "#7a2a2a", fontSize: 13 }}>
                               {c.rejectionReason}
@@ -358,7 +448,10 @@ export default function ProfessorMyCoursesPage() {
                     alignItems: "center",
                     gap: 8,
                   }}>
-                    ⏳ Na čekanju
+                    <span style={{ color: "#7a5b32" }}>
+                      <ClockIcon />
+                    </span>
+                    Na čekanju
                     {pendingRequests.length > 0 && (
                       <span style={{
                         fontSize: 13,
@@ -378,7 +471,16 @@ export default function ProfessorMyCoursesPage() {
                   </p>
                 </div>
 
-                <div style={{ display: "grid", gap: 12 }}>
+                <div 
+                  style={{ 
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 12,
+                    maxHeight: "195px",
+                    overflowY: "auto",
+                    paddingRight: 4,
+                  }}
+                >
                   {pendingRequests.length > 0 ? (
                     pendingRequests.map((c) => (
                       <div
@@ -388,6 +490,7 @@ export default function ProfessorMyCoursesPage() {
                           borderRadius: 12,
                           padding: 14,
                           background: "#fffcf5",
+                          flexShrink: 0,
                         }}
                       >
                         <div
@@ -420,10 +523,18 @@ export default function ProfessorMyCoursesPage() {
                             background: "#fff7e8",
                             color: "#7a5b32",
                             border: "1px solid rgba(122,91,50,0.2)",
-                            display: "inline-block",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 5,
                           }}
                         >
-                          ⏳ Na čekanju
+                          <span style={{ display: "flex", alignItems: "center", width: 13, height: 13 }}>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <circle cx="12" cy="12" r="10"/>
+                              <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                          </span>
+                          Na čekanju
                         </div>
                       </div>
                     ))
@@ -461,8 +572,14 @@ export default function ProfessorMyCoursesPage() {
                   fontWeight: 700,
                   paddingBottom: 14,
                   borderBottom: "2px solid #f5f0ea",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
                 }}>
-                  📊 Pregled
+                  <span style={{ color: "#9a7556" }}>
+                    <BarChartIcon />
+                  </span>
+                  Pregled
                 </h3>
                 
                 <div style={{ display: "grid", gap: 12 }}>
@@ -510,7 +627,6 @@ export default function ProfessorMyCoursesPage() {
                 </div>
               </div>
             </div>
-
           </div>
         )}
       </div>

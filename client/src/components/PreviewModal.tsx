@@ -1,23 +1,153 @@
 import type { CourseRequest } from "../types/courses";
 
-// ---------------------- PreviewModal ----------------------
-export default function PreviewModal({ open, req, onClose }: { open: boolean; req?: CourseRequest | null; onClose: () => void }) {
+export default function PreviewModal({ 
+  open, 
+  req, 
+  onClose 
+}: { 
+  open: boolean; 
+  req?: CourseRequest | null; 
+  onClose: () => void;
+}) {
   if (!open || !req) return null;
+
   return (
-    <div style={overlay} role="dialog" aria-modal="true" aria-label="Pregled kursa">
-      <div style={{ ...modal, width: 760 }}>
-        <h3 style={{ marginTop: 0 }}>{req.name}</h3>
-        <div style={{ color: "var(--muted)" }}>{req.professorName} • {new Date(req.createdAt).toLocaleString("sr-RS")}</div>
-        <div style={{ marginTop: 12 }}>{req.description}</div>
-        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 12 }}>
-          <button onClick={onClose} style={{ padding: 8, borderRadius: 8 }}>Zatvori</button>
+    <div 
+      style={overlay} 
+      role="dialog" 
+      aria-modal="true" 
+      aria-label="Pregled kursa"
+      onClick={onClose}
+    >
+      <div 
+        style={modal}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div style={modalHeader}>
+          <h3 style={modalTitle}>{req.name}</h3>
+          <button 
+            onClick={onClose}
+            style={closeButton}
+            aria-label="Zatvori"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div style={modalMeta}>
+          👨‍🏫 {req.professorName} • 🕐 {new Date(req.createdAt).toLocaleString("sr-RS")}
+        </div>
+
+        <div style={modalBody}>
+          <div style={sectionTitle}>Opis kursa</div>
+          <div style={description}>{req.description}</div>
+        </div>
+
+        <div style={modalFooter}>
+          <button onClick={onClose} style={actionButton}>
+            Zatvori
+          </button>
         </div>
       </div>
     </div>
   );
 }
 
+/* ----------------- Styles ----------------- */
+const overlay: React.CSSProperties = {
+  position: "fixed",
+  inset: 0,
+  background: "rgba(0,0,0,0.4)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  zIndex: 999,
+  padding: 24,
+};
 
-const overlay: React.CSSProperties = { position: "fixed", inset: 0, background: "rgba(0,0,0,0.25)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999 };
-const modal: React.CSSProperties = { width: 720, background: "var(--glass)", padding: 18, borderRadius: 12, boxShadow: "0 20px 40px rgba(0,0,0,0.2)" };
+const modal: React.CSSProperties = {
+  width: "100%",
+  maxWidth: 720,
+  background: "#fff",
+  padding: 24,
+  borderRadius: 16,
+  boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
+};
 
+const modalHeader: React.CSSProperties = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "flex-start",
+  marginBottom: 12,
+  paddingBottom: 16,
+  borderBottom: "2px solid #f5f0ea",
+};
+
+const modalTitle: React.CSSProperties = {
+  margin: 0,
+  color: "#2c2b28",
+  fontSize: 22,
+  fontWeight: 700,
+};
+
+const closeButton: React.CSSProperties = {
+  background: "none",
+  border: "none",
+  fontSize: 24,
+  color: "#8b7762",
+  cursor: "pointer",
+  padding: 4,
+  lineHeight: 1,
+  transition: "color 0.2s",
+};
+
+const modalMeta: React.CSSProperties = {
+  color: "#8b7762",
+  fontSize: 14,
+  marginBottom: 20,
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+};
+
+const modalBody: React.CSSProperties = {
+  marginBottom: 20,
+};
+
+const sectionTitle: React.CSSProperties = {
+  fontSize: 13,
+  color: "#8b7762",
+  fontWeight: 600,
+  textTransform: "uppercase",
+  letterSpacing: "0.5px",
+  marginBottom: 10,
+};
+
+const description: React.CSSProperties = {
+  color: "#2c2b28",
+  fontSize: 14,
+  lineHeight: 1.6,
+  padding: 16,
+  background: "#fffaf6",
+  borderRadius: 10,
+  border: "1px solid rgba(44,43,40,0.06)",
+};
+
+const modalFooter: React.CSSProperties = {
+  display: "flex",
+  justifyContent: "flex-end",
+  paddingTop: 16,
+  borderTop: "1px solid rgba(44,43,40,0.06)",
+};
+
+const actionButton: React.CSSProperties = {
+  padding: "10px 20px",
+  borderRadius: 10,
+  border: "1px solid rgba(44,43,40,0.12)",
+  background: "#fff",
+  fontWeight: 600,
+  fontSize: 14,
+  color: "#2c2b28",
+  cursor: "pointer",
+  transition: "all 0.2s",
+};

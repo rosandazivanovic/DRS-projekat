@@ -139,13 +139,13 @@ export default function CoursesPage() {
         {/* Header + Search */}
         <div style={headerCard}>
           <div style={headerContent}>
-            <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 26, fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
-              <span style={{ color: "#9a7556" }}>
+            <h2 style={{ margin: 0, color: "#63628B", fontSize: 26, fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
+              <span style={{ color: "#56629A" }}>
                 <GraduationCapIcon />
               </span>
               Kursevi
             </h2>
-            <p style={{ margin: "6px 0 0", color: "#8b7762", fontSize: 15 }}>
+            <p style={{ margin: "6px 0 0", color: "#8B7762", fontSize: 15 }}>
               Istraži dostupne kurseve i započni učenje
             </p>
           </div>
@@ -197,7 +197,7 @@ export default function CoursesPage() {
         {/* Content */}
         {loading ? (
           <div style={loadingState}>
-            <div style={{ marginBottom: 16, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+            <div style={{ marginBottom: 16, color: "#56629A", display: "flex", justifyContent: "center" }}>
               <LoaderIcon />
             </div>
             Učitavanje kurseva...
@@ -216,7 +216,7 @@ export default function CoursesPage() {
 
             {filtered.length === 0 && (
               <div style={emptyState}>
-                <div style={{ marginBottom: 16, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+                <div style={{ marginBottom: 16, color: "#56629A", display: "flex", justifyContent: "center" }}>
                   <SearchIcon />
                 </div>
                 {courses.length === 0
@@ -234,7 +234,7 @@ export default function CoursesPage() {
 /* ----------------- Styles ----------------- */
 const pageWrap: React.CSSProperties = {
   minHeight: "100vh",
-  background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)",
+  background: "linear-gradient(180deg, #F3F2FB 0%, #FBF7F2 100%)",
   padding: 24,
 };
 
@@ -244,11 +244,11 @@ const container: React.CSSProperties = {
 };
 
 const headerCard: React.CSSProperties = {
-  background: "#fff",
+  background: "#FFFFFF",
   borderRadius: 16,
   padding: 24,
   marginBottom: 20,
-  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
 };
 
 const headerContent: React.CSSProperties = {
@@ -258,7 +258,7 @@ const headerContent: React.CSSProperties = {
 const filterSection: React.CSSProperties = {
   marginTop: 16,
   paddingTop: 16,
-  borderTop: "2px solid #f5f0ea",
+  borderTop: "2px solid #F3F2FB",
   display: "flex",
   gap: 12,
   alignItems: "center",
@@ -267,7 +267,7 @@ const filterSection: React.CSSProperties = {
 
 const filterLabel: React.CSSProperties = {
   fontWeight: 600,
-  color: "#2c2b28",
+  color: "#63628B",
   fontSize: 14,
   marginRight: 8,
 };
@@ -275,20 +275,20 @@ const filterLabel: React.CSSProperties = {
 const filterButton: React.CSSProperties = {
   padding: "8px 16px",
   borderRadius: 10,
-  border: "1px solid rgba(44,43,40,0.12)",
+  border: "1px solid rgba(86,98,154,0.15)",
   cursor: "pointer",
   fontWeight: 600,
   fontSize: 13,
-  color: "#2c2b28",
-  background: "#fff",
+  color: "#63628B",
+  background: "#FFFFFF",
   transition: "all 0.2s",
 };
 
 const filterButtonActive: React.CSSProperties = {
   border: "none",
-  color: "#fff",
-  background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-  boxShadow: "0 2px 8px rgba(121,86,61,0.15)",
+  color: "#FFFFFF",
+  background: "linear-gradient(135deg, #56629A, #63628B)",
+  boxShadow: "0 2px 8px rgba(86,98,154,0.2)",
 };
 
 const successBanner: React.CSSProperties = {
@@ -322,20 +322,20 @@ const errorBanner: React.CSSProperties = {
 };
 
 const loadingState: React.CSSProperties = {
-  background: "#fff",
+  background: "#FFFFFF",
   borderRadius: 16,
   padding: 60,
   textAlign: "center",
-  color: "#8b7762",
-  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+  color: "#8B7762",
+  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
 };
 
 const emptyState: React.CSSProperties = {
-  background: "#fff",
+  background: "#FFFFFF",
   borderRadius: 16,
   padding: 60,
   textAlign: "center",
-  color: "#8b7762",
+  color: "#8B7762",
   fontStyle: "italic",
-  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
 };

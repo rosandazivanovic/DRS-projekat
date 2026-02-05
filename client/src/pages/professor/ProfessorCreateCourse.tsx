@@ -50,7 +50,7 @@ export default function ProfessorCreateCoursePage() {
     return (
       <div style={pageWrap}>
         <div style={errorContainer}>
-          <div style={{ marginBottom: 16, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+          <div style={{ marginBottom: 16, color: "#56629A", display: "flex", justifyContent: "center" }}>
             <AlertCircleIcon />
           </div>
           Nemaš pristup ovoj stranici.
@@ -86,13 +86,13 @@ export default function ProfessorCreateCoursePage() {
     <div style={pageWrap}>
       <div style={container}>
         <div style={header}>
-          <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 26, fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ color: "#9a7556" }}>
+          <h2 style={{ margin: 0, color: "#63628B", fontSize: 26, fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ color: "#56629A" }}>
               <BookOpenIcon />
             </span>
             Kreiranje novog kursa
           </h2>
-          <p style={{ margin: "6px 0 0", color: "#8b7762", fontSize: 15 }}>
+          <p style={{ margin: "6px 0 0", color: "#8B7762", fontSize: 15 }}>
             Popuni osnovne informacije i pošalji kurs na odobrenje
           </p>
         </div>
@@ -157,40 +157,40 @@ export default function ProfessorCreateCoursePage() {
 /* ----------------- Styles ----------------- */
 const pageWrap: React.CSSProperties = {
   minHeight: "100vh",
-  background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)",
+  background: "linear-gradient(180deg, #F3F2FB 0%, #FBF7F2 100%)",
   padding: 24,
 };
 
 const container: React.CSSProperties = {
   maxWidth: 900,
   margin: "0 auto",
-  background: "#fff",
+  background: "#FFFFFF",
   borderRadius: 20,
   padding: 28,
-  boxShadow: "0 20px 40px rgba(39,35,30,0.04)",
+  boxShadow: "0 20px 40px rgba(99,98,139,0.08)",
 };
 
 const errorContainer: React.CSSProperties = {
   maxWidth: 600,
   margin: "0 auto",
-  background: "#fff",
+  background: "#FFFFFF",
   borderRadius: 20,
   padding: 60,
   textAlign: "center",
-  color: "#8b7762",
-  boxShadow: "0 20px 40px rgba(39,35,30,0.04)",
+  color: "#8B7762",
+  boxShadow: "0 20px 40px rgba(99,98,139,0.08)",
 };
 
 const header: React.CSSProperties = {
   marginBottom: 24,
   paddingBottom: 20,
-  borderBottom: "2px solid #f5f0ea",
+  borderBottom: "2px solid #F3F2FB",
 };
 
 const label: React.CSSProperties = {
   display: "block",
   marginBottom: 8,
-  color: "#8b7762",
+  color: "#56629A",
   fontSize: 13,
   fontWeight: 600,
   textTransform: "uppercase",
@@ -201,10 +201,10 @@ const inputStyle: React.CSSProperties = {
   width: "100%",
   padding: 12,
   borderRadius: 12,
-  border: "1px solid rgba(44,43,40,0.1)",
+  border: "1px solid rgba(86,98,154,0.15)",
   fontSize: 14,
-  background: "#fff",
-  color: "#2c2b28",
+  background: "#FFFFFF",
+  color: "#63628B",
   boxShadow: "inset 0 1px 0 rgba(0,0,0,0.02)",
   transition: "all 0.2s",
 };
@@ -213,12 +213,12 @@ const textareaStyle: React.CSSProperties = {
   width: "100%",
   padding: 12,
   borderRadius: 12,
-  border: "1px solid rgba(44,43,40,0.1)",
+  border: "1px solid rgba(86,98,154,0.15)",
   fontSize: 14,
   minHeight: 140,
   resize: "vertical",
-  background: "#fff",
-  color: "#2c2b28",
+  background: "#FFFFFF",
+  color: "#63628B",
   fontFamily: "inherit",
   boxShadow: "inset 0 1px 0 rgba(0,0,0,0.02)",
   transition: "all 0.2s",
@@ -242,9 +242,9 @@ const submitButton: React.CSSProperties = {
   border: "none",
   fontWeight: 700,
   fontSize: 15,
-  color: "#fff",
-  background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-  boxShadow: "0 4px 12px rgba(121,86,61,0.15)",
+  color: "#FFFFFF",
+  background: "linear-gradient(135deg, #56629A, #63628B)",
+  boxShadow: "0 4px 12px rgba(86,98,154,0.2)",
   transition: "all 0.2s",
 };
 

@@ -170,13 +170,13 @@ const fetchRequests = async () => {
           <div style={mainColumn}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, marginBottom: 20 }}>
               <div>
-                <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 26, fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
-                  <span style={{ color: "#9a7556" }}>
+                <h2 style={{ margin: 0, color: "#63628B", fontSize: 26, fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ color: "#56629A" }}>
                     <ClipboardIcon />
                   </span>
                   Zahtevi za kurseve
                 </h2>
-                <p style={{ margin: "6px 0 0", color: "#8b7762", fontSize: 15 }}>
+                <p style={{ margin: "6px 0 0", color: "#8B7762", fontSize: 15 }}>
                   Administratorski pregled novih kurseva
                 </p>
               </div>
@@ -220,7 +220,7 @@ const fetchRequests = async () => {
 
                   {visible.length === 0 && (
                     <div style={emptyState}>
-                      <div style={{ marginBottom: 16, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+                      <div style={{ marginBottom: 16, color: "#56629A", display: "flex", justifyContent: "center" }}>
                         <InboxIcon />
                       </div>
                       Nema zahteva za kurseve.
@@ -250,16 +250,16 @@ const fetchRequests = async () => {
               </div>
               <div style={{ display: "grid", gap: 10 }}>
                 {recent.length === 0 && (
-                  <div style={{ color: "#8b7762", fontStyle: "italic", fontSize: 13 }}>
+                  <div style={{ color: "#8B7762", fontStyle: "italic", fontSize: 13 }}>
                     Nema nedavnih zahteva
                   </div>
                 )}
                 {recent.map((r) => (
                   <div key={r.id} style={recentItem}>
-                    <div style={{ fontWeight: 700, fontSize: 14, color: "#2c2b28" }}>
+                    <div style={{ fontWeight: 700, fontSize: 14, color: "#63628B" }}>
                       {r.name}
                     </div>
-                    <div style={{ fontSize: 12, color: "#8b7762", marginTop: 4 }}>
+                    <div style={{ fontSize: 12, color: "#8B7762", marginTop: 4 }}>
                       {r.professorName} • {new Date(r.createdAt).toLocaleString("sr-RS")}
                     </div>
                   </div>
@@ -279,17 +279,17 @@ const fetchRequests = async () => {
 /* ----------------- Styles ----------------- */
 const pageWrap: React.CSSProperties = {
   minHeight: "100vh",
-  background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)",
+  background: "linear-gradient(180deg, #F3F2FB 0%, #FBF7F2 100%)",
   padding: 24,
 };
 
 const container: React.CSSProperties = {
   maxWidth: 1200,
   margin: "0 auto",
-  background: "#fffaf6",
+  background: "#FFFFFF",
   borderRadius: 20,
   padding: 28,
-  boxShadow: "0 20px 40px rgba(39,35,30,0.04)",
+  boxShadow: "0 20px 40px rgba(99,98,139,0.08)",
 };
 
 const mainGrid: React.CSSProperties = {
@@ -313,15 +313,15 @@ const sidebar: React.CSSProperties = {
 
 const sidebarSection: React.CSSProperties = {
   padding: 18,
-  background: "#fff",
+  background: "#F3F2FB",
   borderRadius: 14,
-  border: "1px solid rgba(44,43,40,0.06)",
-  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+  border: "1px solid rgba(86,98,154,0.1)",
+  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
 };
 
 const sidebarTitle: React.CSSProperties = {
   fontSize: 13,
-  color: "#8b7762",
+  color: "#56629A",
   marginBottom: 12,
   fontWeight: 600,
   textTransform: "uppercase",
@@ -331,8 +331,8 @@ const sidebarTitle: React.CSSProperties = {
 const recentItem: React.CSSProperties = {
   padding: 12,
   borderRadius: 10,
-  background: "#fffaf6",
-  border: "1px solid rgba(44,43,40,0.04)",
+  background: "#FFFFFF",
+  border: "1px solid rgba(86,98,154,0.08)",
   transition: "all 0.2s",
 };
 
@@ -369,23 +369,21 @@ const errorBanner: React.CSSProperties = {
 const emptyState: React.CSSProperties = {
   textAlign: "center",
   padding: 60,
-  color: "#8b7762",
+  color: "#8B7762",
   fontStyle: "italic",
-  background: "#fff",
+  background: "#F3F2FB",
   borderRadius: 16,
-  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
 };
 
 const refreshButton: React.CSSProperties = {
   padding: "10px 20px",
   borderRadius: 10,
   border: "none",
-  background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
+  background: "linear-gradient(135deg, #56629A, #63628B)",
   color: "#fff",
   fontWeight: 600,
   cursor: "pointer",
-  boxShadow: "0 2px 8px rgba(121,86,61,0.15)",
+  boxShadow: "0 2px 8px rgba(86,98,154,0.2)",
   transition: "all 0.2s",
 };
-
-

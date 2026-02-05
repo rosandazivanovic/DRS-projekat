@@ -36,7 +36,7 @@ export default function LoginPage() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)",
+        background: "linear-gradient(180deg, #F3F2FB 0%, #FBF7F2 100%)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -47,11 +47,11 @@ export default function LoginPage() {
         style={{
           width: "100%",
           maxWidth: 420,
-          background: "#fffaf6",
+          background: "#FFFFFF",
           borderRadius: 18,
           padding: 32,
-          boxShadow: "0 20px 40px rgba(39,35,30,0.04)",
-          border: "1px solid rgba(44,43,40,0.03)",
+          boxShadow: "0 20px 40px rgba(99,98,139,0.1)",
+          border: "1px solid rgba(86,98,154,0.08)",
         }}
       >
         <div style={{ textAlign: "center", marginBottom: 24 }}>
@@ -59,17 +59,17 @@ export default function LoginPage() {
             display: "inline-flex", 
             padding: 12, 
             borderRadius: 12, 
-            background: "#f1e9df", 
-            color: "#7a5b3b",
+            background: "#F3F2FB", 
+            color: "#56629A",
             alignItems: "center",
             justifyContent: "center",
           }}>
             <BookOpenIcon />
           </div>
-          <h2 style={{ margin: "12px 0 4px", color: "#2c2b28", fontSize: 24, fontWeight: 700 }}>
+          <h2 style={{ margin: "12px 0 4px", color: "#63628B", fontSize: 24, fontWeight: 700 }}>
             Dobrodošao nazad
           </h2>
-          <p style={{ margin: 0, color: "#8b7762", fontSize: 14 }}>Nastavi svoje učenje</p>
+          <p style={{ margin: 0, color: "#8B7762", fontSize: 14 }}>Nastavi svoje učenje</p>
         </div>
 
         <form onSubmit={onSubmit} style={{ display: "grid", gap: 14 }}>
@@ -82,10 +82,10 @@ export default function LoginPage() {
             style={{
               padding: 12,
               borderRadius: 12,
-              border: "1px solid rgba(44,43,40,0.06)",
+              border: "1px solid rgba(86,98,154,0.12)",
               fontSize: 14,
-              background: "#fff",
-              color: "#2c2b28",
+              background: "#FFFFFF",
+              color: "#63628B",
             }}
           />
           <input
@@ -97,17 +97,17 @@ export default function LoginPage() {
             style={{
               padding: 12,
               borderRadius: 12,
-              border: "1px solid rgba(44,43,40,0.06)",
+              border: "1px solid rgba(86,98,154,0.12)",
               fontSize: 14,
-              background: "#fff",
-              color: "#2c2b28",
+              background: "#FFFFFF",
+              color: "#63628B",
             }}
           />
 
           {err && (
             <div
               style={{
-                color: "#7a2a2a",
+                color: "#991b1b",
                 fontSize: 13,
                 textAlign: "center",
               }}
@@ -126,12 +126,12 @@ export default function LoginPage() {
               cursor: loading ? "not-allowed" : "pointer",
               fontWeight: 600,
               fontSize: 15,
-              color: "#fff",
+              color: "#FFFFFF",
               background: loading
-                ? "#b99a7f"
-                : "linear-gradient(135deg,#d6bca3,#b99a7f)",
+                ? "#8B7762"
+                : "linear-gradient(135deg, #56629A, #63628B)",
               transition: "opacity 0.2s",
-              boxShadow: loading ? "none" : "0 6px 18px rgba(121,86,61,0.12)",
+              boxShadow: loading ? "none" : "0 6px 18px rgba(86,98,154,0.2)",
             }}
           >
             {loading ? "Prijava..." : "Prijavi se"}
@@ -143,30 +143,12 @@ export default function LoginPage() {
             marginTop: 20,
             textAlign: "center",
             fontSize: 14,
-            color: "#8b7762",
+            color: "#8B7762",
           }}
         >
         </div>
 
-        <div
-          style={{
-            marginTop: 18,
-            textAlign: "center",
-            color: "#9b8b7a",
-            fontSize: 12,
-            padding: 12,
-            background: "#fbf6f1",
-            borderRadius: 8,
-          }}
-        >
-          <strong>Test nalozi:</strong>
-          <br />
-          <span style={{ fontSize: 11 }}>
-            admin@test.com / profesor@test.com / student@test.com
-            <br />
-            lozinka: <strong>test1234</strong>
-          </span>
-        </div>
+    
       </div>
     </div>
   );

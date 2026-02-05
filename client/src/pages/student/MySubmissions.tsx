@@ -131,7 +131,7 @@ export default function MySubmissionsPage() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)",
+        background: "linear-gradient(180deg, #F3F2FB 0%, #FBF7F2 100%)",
         padding: 24,
       }}
     >
@@ -144,25 +144,25 @@ export default function MySubmissionsPage() {
         {/* Header */}
         <div style={{ 
           marginBottom: 24,
-          background: "#fff",
+          background: "#FFFFFF",
           padding: 20,
           borderRadius: 16,
-          boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+          boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
         }}>
           <h2 style={{ 
             margin: 0, 
-            color: "#2c2b28", 
+            color: "#63628B", 
             fontSize: 24,
             display: "flex",
             alignItems: "center",
             gap: 12,
           }}>
-            <span style={{ color: "#9a7556" }}>
+            <span style={{ color: "#56629A" }}>
               <ClipboardCheckIcon />
             </span>
             Moja rešenja
           </h2>
-          <p style={{ margin: "6px 0 0", color: "#8b7762", fontSize: 14 }}>
+          <p style={{ margin: "6px 0 0", color: "#8B7762", fontSize: 14 }}>
             Pregled svih predatih zadataka i ocena
           </p>
         </div>
@@ -180,22 +180,22 @@ export default function MySubmissionsPage() {
             <div
               style={{
                 padding: 24,
-                border: "1px solid rgba(44,43,40,0.06)",
+                border: "1px solid rgba(86,98,154,0.1)",
                 borderRadius: 16,
-                background: "#fff",
-                boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+                background: "#FFFFFF",
+                boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
               }}
             >
               {/* Filter */}
               <div style={{ 
                 marginBottom: 20, 
                 paddingBottom: 16,
-                borderBottom: "2px solid #f5f0ea",
+                borderBottom: "2px solid #F3F2FB",
                 display: "flex", 
                 gap: 12,
                 alignItems: "center",
               }}>
-                <span style={{ fontWeight: 600, color: "#2c2b28", fontSize: 14, marginRight: 8 }}>
+                <span style={{ fontWeight: 600, color: "#63628B", fontSize: 14, marginRight: 8 }}>
                   Filtriraj:
                 </span>
                 {(["all", "graded", "pending"] as const).map((f) => (
@@ -205,14 +205,14 @@ export default function MySubmissionsPage() {
                     style={{
                       padding: "8px 16px",
                       borderRadius: 10,
-                      border: filter === f ? "none" : "1px solid rgba(44,43,40,0.12)",
+                      border: filter === f ? "none" : "1px solid rgba(86,98,154,0.15)",
                       cursor: "pointer",
                       fontWeight: 600,
                       fontSize: 13,
-                      color: filter === f ? "#fff" : "#2c2b28",
+                      color: filter === f ? "#fff" : "#63628B",
                       background: filter === f
-                        ? "linear-gradient(135deg,#d6bca3,#b99a7f)"
-                        : "#fff",
+                        ? "linear-gradient(135deg, #56629A, #63628B)"
+                        : "#FFFFFF",
                       transition: "all 0.2s",
                     }}
                   >
@@ -226,7 +226,7 @@ export default function MySubmissionsPage() {
               {loading ? (
                 <div style={{ 
                   textAlign: "center", 
-                  color: "#8b7762",
+                  color: "#8B7762",
                   padding: 40,
                   display: "flex",
                   flexDirection: "column",
@@ -243,9 +243,9 @@ export default function MySubmissionsPage() {
                       key={s.id}
                       style={{
                         padding: 18,
-                        border: "1px solid rgba(44,43,40,0.06)",
+                        border: "1px solid rgba(86,98,154,0.1)",
                         borderRadius: 12,
-                        background: s.grade ? "#f0fdf4" : "#fafafa",
+                        background: s.grade ? "#f0fdf4" : "#F3F2FB",
                         transition: "all 0.2s",
                       }}
                     >
@@ -263,7 +263,7 @@ export default function MySubmissionsPage() {
                             style={{
                               fontWeight: 700,
                               fontSize: 16,
-                              color: "#2c2b28",
+                              color: "#63628B",
                               marginBottom: 6,
                             }}
                           >
@@ -272,7 +272,7 @@ export default function MySubmissionsPage() {
                           <div
                             style={{
                               fontSize: 13,
-                              color: "#8b7762",
+                              color: "#8B7762",
                               display: "flex",
                               alignItems: "center",
                               gap: 6,
@@ -323,12 +323,12 @@ export default function MySubmissionsPage() {
                       <div
                         style={{
                           fontSize: 14,
-                          color: "rgba(44,43,40,0.8)",
+                          color: "rgba(99,98,139,0.8)",
                           marginBottom: s.grade ? 12 : 0,
                           padding: 10,
-                          background: "#fff",
+                          background: "#FFFFFF",
                           borderRadius: 8,
-                          border: "1px solid rgba(44,43,40,0.06)",
+                          border: "1px solid rgba(86,98,154,0.1)",
                           display: "flex",
                           alignItems: "center",
                           gap: 8,
@@ -338,11 +338,11 @@ export default function MySubmissionsPage() {
                         Fajl:{" "}
                         <code
                           style={{
-                            background: "#f5f5f5",
+                            background: "#F3F2FB",
                             padding: "3px 8px",
                             borderRadius: 6,
                             fontWeight: 600,
-                            color: "#2c2b28",
+                            color: "#63628B",
                           }}
                         >
                           {s.filePath.split('/')[0]}
@@ -355,7 +355,7 @@ export default function MySubmissionsPage() {
                           style={{
                             padding: 14,
                             borderRadius: 10,
-                            background: "#fff",
+                            background: "#FFFFFF",
                             border: "1px solid rgba(6,95,70,0.12)",
                             display: "flex",
                             gap: 14,
@@ -395,7 +395,7 @@ export default function MySubmissionsPage() {
                             ) : (
                               s.gradedAt && (
                                 <div>
-                                  <div style={{ fontSize: 10, color: "#8b7762", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: 600 }}>
+                                  <div style={{ fontSize: 10, color: "#8B7762", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: 600 }}>
                                     Ocenjeno
                                   </div>
                                   <div style={{ fontSize: 12, color: "#065f46", fontWeight: 600 }}>
@@ -456,14 +456,14 @@ export default function MySubmissionsPage() {
                       style={{
                         textAlign: "center",
                         padding: 60,
-                        color: "#8b7762",
+                        color: "#8B7762",
                         fontStyle: "italic",
-                        background: "#fafafa",
+                        background: "#F3F2FB",
                         borderRadius: 12,
-                        border: "1px solid rgba(44,43,40,0.06)",
+                        border: "1px solid rgba(86,98,154,0.1)",
                       }}
                     >
-                      <div style={{ marginBottom: 12, color: "#9a7556" }}>
+                      <div style={{ marginBottom: 12, color: "#56629A" }}>
                         <InboxIcon />
                       </div>
                       {filter === "graded" && "Nema ocenjenih rešenja."}
@@ -484,23 +484,23 @@ export default function MySubmissionsPage() {
             <div
               style={{
                 padding: 20,
-                border: "1px solid rgba(44,43,40,0.06)",
+                border: "1px solid rgba(86,98,154,0.1)",
                 borderRadius: 16,
-                background: "linear-gradient(135deg, #fff 0%, #fafafa 100%)",
-                boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+                background: "linear-gradient(135deg, #FFFFFF 0%, #F3F2FB 100%)",
+                boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
               }}
             >
               <h3 style={{ 
                 margin: "0 0 16px", 
-                color: "#2c2b28", 
+                color: "#63628B", 
                 fontSize: 17,
                 paddingBottom: 14,
-                borderBottom: "2px solid #f5f0ea",
+                borderBottom: "2px solid #F3F2FB",
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
               }}>
-                <span style={{ color: "#9a7556" }}>
+                <span style={{ color: "#56629A" }}>
                   <BarChartIcon />
                 </span>
                 Statistika
@@ -510,13 +510,13 @@ export default function MySubmissionsPage() {
                 <div style={{ 
                   padding: 14,
                   borderRadius: 10,
-                  background: "#fff",
-                  border: "1px solid rgba(44,43,40,0.06)",
+                  background: "#FFFFFF",
+                  border: "1px solid rgba(86,98,154,0.1)",
                 }}>
-                  <div style={{ fontSize: 12, color: "#8b7762", marginBottom: 6, fontWeight: 600 }}>
+                  <div style={{ fontSize: 12, color: "#8B7762", marginBottom: 6, fontWeight: 600 }}>
                     Ukupno rešenja
                   </div>
-                  <div style={{ fontSize: 28, fontWeight: 700, color: "#2c2b28" }}>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: "#63628B" }}>
                     {submissions.length}
                   </div>
                 </div>
@@ -576,23 +576,23 @@ export default function MySubmissionsPage() {
               <div
                 style={{
                   padding: 20,
-                  border: "1px solid rgba(44,43,40,0.06)",
+                  border: "1px solid rgba(86,98,154,0.1)",
                   borderRadius: 16,
-                  background: "#fff",
-                  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+                  background: "#FFFFFF",
+                  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
                 }}
               >
                 <h3 style={{ 
                   margin: "0 0 16px", 
-                  color: "#2c2b28", 
+                  color: "#63628B", 
                   fontSize: 17,
                   paddingBottom: 14,
-                  borderBottom: "2px solid #f5f0ea",
+                  borderBottom: "2px solid #F3F2FB",
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
                 }}>
-                  <span style={{ color: "#9a7556" }}>
+                  <span style={{ color: "#56629A" }}>
                     <TrendingUpIcon />
                   </span>
                   Napredak
@@ -604,7 +604,7 @@ export default function MySubmissionsPage() {
                     justifyContent: "space-between",
                     marginBottom: 8,
                   }}>
-                    <span style={{ fontSize: 13, color: "#8b7762", fontWeight: 600 }}>
+                    <span style={{ fontSize: 13, color: "#8B7762", fontWeight: 600 }}>
                       Ocenjeno zadataka
                     </span>
                     <span style={{ fontSize: 13, color: "#065f46", fontWeight: 700 }}>
@@ -613,7 +613,7 @@ export default function MySubmissionsPage() {
                   </div>
                   <div style={{
                     height: 10,
-                    background: "#f0f0f0",
+                    background: "#F3F2FB",
                     borderRadius: 10,
                     overflow: "hidden",
                   }}>
@@ -629,9 +629,9 @@ export default function MySubmissionsPage() {
                 <div style={{ 
                   padding: 12,
                   borderRadius: 8,
-                  background: "#f9f6f2",
+                  background: "#F3F2FB",
                   fontSize: 13,
-                  color: "#8b7762",
+                  color: "#8B7762",
                   lineHeight: 1.5,
                   display: "flex",
                   alignItems: "center",
@@ -650,23 +650,23 @@ export default function MySubmissionsPage() {
               <div
                 style={{
                   padding: 20,
-                  border: "1px solid rgba(44,43,40,0.06)",
+                  border: "1px solid rgba(86,98,154,0.1)",
                   borderRadius: 16,
-                  background: "#fff",
-                  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+                  background: "#FFFFFF",
+                  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
                 }}
               >
                 <h3 style={{ 
                   margin: "0 0 16px", 
-                  color: "#2c2b28", 
+                  color: "#63628B", 
                   fontSize: 17,
                   paddingBottom: 14,
-                  borderBottom: "2px solid #f5f0ea",
+                  borderBottom: "2px solid #F3F2FB",
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
                 }}>
-                  <span style={{ color: "#9a7556" }}>
+                  <span style={{ color: "#56629A" }}>
                     <TargetIcon />
                   </span>
                   Raspodela ocena
@@ -682,7 +682,7 @@ export default function MySubmissionsPage() {
                         <div style={{ 
                           fontSize: 14, 
                           fontWeight: 700, 
-                          color: "#2c2b28",
+                          color: "#63628B",
                           minWidth: 30,
                           display: "flex",
                           alignItems: "center",
@@ -696,7 +696,7 @@ export default function MySubmissionsPage() {
                         <div style={{ flex: 1 }}>
                           <div style={{
                             height: 8,
-                            background: "#f0f0f0",
+                            background: "#F3F2FB",
                             borderRadius: 10,
                             overflow: "hidden",
                           }}>
@@ -715,7 +715,7 @@ export default function MySubmissionsPage() {
                         <div style={{ 
                           fontSize: 13, 
                           fontWeight: 600, 
-                          color: "#8b7762",
+                          color: "#8B7762",
                           minWidth: 30,
                           textAlign: "right",
                         }}>

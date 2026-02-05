@@ -60,7 +60,7 @@ export default function PreviewModal({
             <UserIcon />
             {req.professorName}
           </span>
-          <span style={{ color: "#d6bca3" }}>•</span>
+          <span style={{ color: "#56629A" }}>•</span>
           <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
             <ClockIcon />
             {new Date(req.createdAt).toLocaleString("sr-RS")}
@@ -97,10 +97,10 @@ const overlay: React.CSSProperties = {
 const modal: React.CSSProperties = {
   width: "100%",
   maxWidth: 720,
-  background: "#fff",
+  background: "#FFFFFF",
   padding: 24,
   borderRadius: 16,
-  boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
+  boxShadow: "0 20px 40px rgba(99,98,139,0.15)",
 };
 
 const modalHeader: React.CSSProperties = {
@@ -109,12 +109,12 @@ const modalHeader: React.CSSProperties = {
   alignItems: "flex-start",
   marginBottom: 12,
   paddingBottom: 16,
-  borderBottom: "2px solid #f5f0ea",
+  borderBottom: "2px solid #F3F2FB",
 };
 
 const modalTitle: React.CSSProperties = {
   margin: 0,
-  color: "#2c2b28",
+  color: "#63628B",
   fontSize: 22,
   fontWeight: 700,
 };
@@ -122,7 +122,7 @@ const modalTitle: React.CSSProperties = {
 const closeButton: React.CSSProperties = {
   background: "none",
   border: "none",
-  color: "#8b7762",
+  color: "#8B7762",
   cursor: "pointer",
   padding: 4,
   lineHeight: 1,
@@ -133,7 +133,7 @@ const closeButton: React.CSSProperties = {
 };
 
 const modalMeta: React.CSSProperties = {
-  color: "#8b7762",
+  color: "#8B7762",
   fontSize: 14,
   marginBottom: 20,
   display: "flex",
@@ -147,7 +147,7 @@ const modalBody: React.CSSProperties = {
 
 const sectionTitle: React.CSSProperties = {
   fontSize: 13,
-  color: "#8b7762",
+  color: "#56629A",
   fontWeight: 600,
   textTransform: "uppercase",
   letterSpacing: "0.5px",
@@ -155,30 +155,30 @@ const sectionTitle: React.CSSProperties = {
 };
 
 const description: React.CSSProperties = {
-  color: "#2c2b28",
+  color: "#63628B",
   fontSize: 14,
   lineHeight: 1.6,
   padding: 16,
-  background: "#fffaf6",
+  background: "#F3F2FB",
   borderRadius: 10,
-  border: "1px solid rgba(44,43,40,0.06)",
+  border: "1px solid rgba(86,98,154,0.1)",
 };
 
 const modalFooter: React.CSSProperties = {
   display: "flex",
   justifyContent: "flex-end",
   paddingTop: 16,
-  borderTop: "1px solid rgba(44,43,40,0.06)",
+  borderTop: "1px solid rgba(86,98,154,0.1)",
 };
 
 const actionButton: React.CSSProperties = {
   padding: "10px 20px",
   borderRadius: 10,
-  border: "1px solid rgba(44,43,40,0.12)",
-  background: "#fff",
+  border: "1px solid rgba(86,98,154,0.15)",
+  background: "#FFFFFF",
   fontWeight: 600,
   fontSize: 14,
-  color: "#2c2b28",
+  color: "#63628B",
   cursor: "pointer",
   transition: "all 0.2s",
 };

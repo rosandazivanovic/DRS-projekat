@@ -26,12 +26,12 @@ export default function TopStats({ total = 0, pending = 0, lastCreated }: { tota
           alignItems: "center", 
           gap: 8, 
           marginBottom: 8,
-          color: "#8b7762",
+          color: "#56629A",
         }}>
           <FileTextIcon />
           <div style={{ fontSize: 13, fontWeight: 600 }}>Ukupno zahteva</div>
         </div>
-        <div style={{ fontSize: 20, fontWeight: 700, color: "#2c2b28" }}>{total}</div>
+        <div style={{ fontSize: 20, fontWeight: 700, color: "#63628B" }}>{total}</div>
       </div>
 
       <div style={card}>
@@ -45,14 +45,14 @@ export default function TopStats({ total = 0, pending = 0, lastCreated }: { tota
             display: "flex", 
             alignItems: "center", 
             gap: 8,
-            color: "#8b7762",
+            color: "#56629A",
           }}>
             <ClockIcon />
             <div style={{ fontSize: 13, fontWeight: 600 }}>Na čekanju</div>
           </div>
-          <div style={{ fontWeight: 700, color: "#2c2b28" }}>{pending}</div>
+          <div style={{ fontWeight: 700, color: "#63628B" }}>{pending}</div>
         </div>
-        <div style={{ fontSize: 12, color: "#8b7762" }}>
+        <div style={{ fontSize: 12, color: "#8B7762" }}>
           Poslednji: {lastCreated ? new Date(lastCreated).toLocaleString("sr-RS") : "—"}
         </div>
       </div>
@@ -61,9 +61,9 @@ export default function TopStats({ total = 0, pending = 0, lastCreated }: { tota
 }
 
 const card: React.CSSProperties = { 
-  background: "white", 
+  background: "#FFFFFF", 
   padding: 12, 
   borderRadius: 12, 
-  boxShadow: "0 8px 20px rgba(39,35,30,0.04)", 
-  border: "1px solid rgba(44,43,40,0.03)" 
+  boxShadow: "0 8px 20px rgba(99,98,139,0.06)", 
+  border: "1px solid rgba(86,98,154,0.08)" 
 };

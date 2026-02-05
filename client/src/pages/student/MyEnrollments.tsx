@@ -38,19 +38,19 @@ export default function MyEnrollmentsPage() {
         <div style={header}>
           <h2 style={{ 
             margin: 0, 
-            color: "#2c2b28", 
+            color: "#63628B", 
             fontSize: 26, 
             fontWeight: 700,
             display: "flex",
             alignItems: "center",
             gap: 12,
           }}>
-            <span style={{ color: "#9a7556" }}>
+            <span style={{ color: "#56629A" }}>
               <ClipboardIcon />
             </span>
             Moji upisi
           </h2>
-          <p style={{ margin: "6px 0 0", color: "#8b7762", fontSize: 15 }}>
+          <p style={{ margin: "6px 0 0", color: "#8B7762", fontSize: 15 }}>
             Pregled svih zahteva za upis na kurseve
           </p>
         </div>
@@ -75,7 +75,7 @@ export default function MyEnrollmentsPage() {
 
           {items.length === 0 && (
             <div style={emptyState}>
-              <div style={{ marginBottom: 12, color: "#9a7556" }}>
+              <div style={{ marginBottom: 12, color: "#56629A" }}>
                 <InboxIcon />
               </div>
               Još nema upisa.
@@ -114,9 +114,9 @@ const getStatusBadge = (status: string): React.CSSProperties => {
   } else {
     return {
       ...baseStyle,
-      background: "#fff7e8",
-      color: "#7a5b32",
-      border: "1px solid rgba(122,91,50,0.12)",
+      background: "#FBF7F2",
+      color: "#9A7556",
+      border: "1px solid rgba(154,117,86,0.15)",
     };
   }
 };
@@ -124,31 +124,31 @@ const getStatusBadge = (status: string): React.CSSProperties => {
 /* ----------------- Styles ----------------- */
 const pageWrap: React.CSSProperties = {
   minHeight: "100vh",
-  background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)",
+  background: "linear-gradient(180deg, #F3F2FB 0%, #FBF7F2 100%)",
   padding: 24,
 };
 
 const container: React.CSSProperties = {
   maxWidth: 900,
   margin: "0 auto",
-  background: "#fff",
+  background: "#FFFFFF",
   borderRadius: 20,
   padding: 28,
-  boxShadow: "0 20px 40px rgba(39,35,30,0.04)",
+  boxShadow: "0 20px 40px rgba(99,98,139,0.08)",
 };
 
 const header: React.CSSProperties = {
   marginBottom: 24,
   paddingBottom: 20,
-  borderBottom: "2px solid #f5f0ea",
+  borderBottom: "2px solid #F3F2FB",
 };
 
 const enrollmentCard: React.CSSProperties = {
-  border: "1px solid rgba(44,43,40,0.06)",
+  border: "1px solid rgba(86,98,154,0.1)",
   borderRadius: 14,
   padding: 18,
-  background: "#fffaf6",
-  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+  background: "#F3F2FB",
+  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
   transition: "all 0.2s",
 };
 
@@ -161,12 +161,12 @@ const cardHeader: React.CSSProperties = {
 
 const courseIdBadge: React.CSSProperties = {
   fontWeight: 700,
-  color: "#2c2b28",
+  color: "#63628B",
   fontSize: 16,
 };
 
 const dateInfo: React.CSSProperties = {
-  color: "#8b7762",
+  color: "#8B7762",
   fontSize: 13,
   display: "flex",
   alignItems: "center",
@@ -176,9 +176,9 @@ const dateInfo: React.CSSProperties = {
 const emptyState: React.CSSProperties = {
   textAlign: "center",
   padding: 60,
-  color: "#8b7762",
+  color: "#8B7762",
   fontStyle: "italic",
-  background: "#fffaf6",
+  background: "#F3F2FB",
   borderRadius: 16,
-  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
 };

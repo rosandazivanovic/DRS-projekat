@@ -31,10 +31,10 @@ export function CourseCard({ course, onEnroll, isEnrolling, isEnrolled = false }
     <div
       style={{
         ...card,
-        background: isEnrolled ? "#f0fdf4" : "#fff",
+        background: isEnrolled ? "#f0fdf4" : "#FFFFFF",
         border: isEnrolled 
           ? "2px solid rgba(6,95,70,0.15)" 
-          : "1px solid rgba(44,43,40,0.06)",
+          : "1px solid rgba(86,98,154,0.1)",
       }}
     >
       <div style={cardContent}>
@@ -80,15 +80,15 @@ export function CourseCard({ course, onEnroll, isEnrolling, isEnrolled = false }
               ...enrollButton,
               cursor: isEnrolling || isEnrolled ? "not-allowed" : "pointer",
               opacity: isEnrolled ? 0.8 : isEnrolling ? 0.7 : 1,
-              color: isEnrolled ? "#065f46" : "#fff",
+              color: isEnrolled ? "#065f46" : "#FFFFFF",
               background: isEnrolled
                 ? "#dcfce7"
                 : isEnrolling
-                ? "linear-gradient(135deg, #d6bca3, #b99a7f)"
-                : "linear-gradient(135deg, #d6bca3, #b99a7f)",
+                ? "#8B7762"
+                : "linear-gradient(135deg, #56629A, #63628B)",
               boxShadow: isEnrolling || isEnrolled
                 ? "none"
-                : "0 4px 12px rgba(121,86,61,0.15)",
+                : "0 4px 12px rgba(86,98,154,0.2)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -116,7 +116,7 @@ export function CourseCard({ course, onEnroll, isEnrolling, isEnrolled = false }
 const card: React.CSSProperties = {
   borderRadius: 16,
   padding: 20,
-  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
   transition: "all 0.2s",
 };
 
@@ -138,7 +138,7 @@ const titleRow: React.CSSProperties = {
 const title: React.CSSProperties = {
   fontWeight: 700,
   fontSize: 17,
-  color: "#2c2b28",
+  color: "#63628B",
 };
 
 const enrolledBadge: React.CSSProperties = {
@@ -155,7 +155,7 @@ const enrolledBadge: React.CSSProperties = {
 };
 
 const professor: React.CSSProperties = {
-  color: "#8b7762",
+  color: "#8B7762",
   fontSize: 13,
   marginBottom: 12,
   display: "flex",
@@ -164,7 +164,7 @@ const professor: React.CSSProperties = {
 };
 
 const description: React.CSSProperties = {
-  color: "rgba(44,43,40,0.75)",
+  color: "rgba(99,98,139,0.75)",
   fontSize: 14,
   lineHeight: 1.6,
 };
@@ -176,7 +176,7 @@ const metadata: React.CSSProperties = {
 
 const metadataLabel: React.CSSProperties = {
   fontSize: 11,
-  color: "#8b7762",
+  color: "#8B7762",
   marginBottom: 4,
   fontWeight: 600,
   textTransform: "uppercase",
@@ -185,7 +185,7 @@ const metadataLabel: React.CSSProperties = {
 
 const metadataValue: React.CSSProperties = {
   fontSize: 13,
-  color: "#2c2b28",
+  color: "#63628B",
   fontWeight: 600,
 };
 
@@ -195,7 +195,7 @@ const actionsRow: React.CSSProperties = {
   justifyContent: "flex-end",
   marginTop: 16,
   paddingTop: 16,
-  borderTop: "1px solid rgba(44,43,40,0.06)",
+  borderTop: "1px solid rgba(86,98,154,0.1)",
 };
 
 const enrollButton: React.CSSProperties = {

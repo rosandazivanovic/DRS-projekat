@@ -83,10 +83,10 @@ export default function Layout() {
               to="/profile"
               style={profileLink}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#e8dfd5";
+                e.currentTarget.style.background = "#E8E7F5";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#f5f0ea";
+                e.currentTarget.style.background = "#F3F2FB";
               }}
             >
               <span style={{ display: "flex", alignItems: "center" }}>
@@ -117,14 +117,14 @@ export default function Layout() {
 /* ----------------- Styles ----------------- */
 const pageWrap: React.CSSProperties = {
   minHeight: "100vh",
-  background: "#f6f2ec",
+  background: "linear-gradient(180deg, #F3F2FB 0%, #FBF7F2 100%)",
 };
 
 const header: React.CSSProperties = {
-  background: "#fffaf6",
+  background: "#FFFFFF",
   padding: "18px 24px",
-  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
-  borderBottom: "1px solid rgba(44,43,40,0.03)",
+  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
+  borderBottom: "1px solid rgba(86,98,154,0.08)",
 };
 
 const headerContent: React.CSSProperties = {
@@ -145,7 +145,7 @@ const leftSection: React.CSSProperties = {
 const logo: React.CSSProperties = {
   fontSize: 20,
   fontWeight: 700,
-  color: "#2c2b28",
+  color: "#63628B",
   textDecoration: "none",
   display: "flex",
   alignItems: "center",
@@ -157,7 +157,7 @@ const nav: React.CSSProperties = {
 };
 
 const navLink: React.CSSProperties = {
-  color: "#8b7762",
+  color: "#8B7762",
   textDecoration: "none",
   fontWeight: 600,
   fontSize: 14,
@@ -171,7 +171,7 @@ const rightSection: React.CSSProperties = {
 };
 
 const profileLink: React.CSSProperties = {
-  color: "#2c2b28",
+  color: "#63628B",
   fontSize: 14,
   textDecoration: "none",
   display: "flex",
@@ -179,26 +179,26 @@ const profileLink: React.CSSProperties = {
   gap: 8,
   padding: "8px 14px",
   borderRadius: 10,
-  background: "#f5f0ea",
+  background: "#F3F2FB",
   transition: "all 0.2s",
   fontWeight: 600,
 };
 
 const roleBadge: React.CSSProperties = {
   fontSize: 11,
-  color: "#8b7762",
+  color: "#8B7762",
   fontWeight: 600,
 };
 
 const logoutButton: React.CSSProperties = {
   padding: "8px 16px",
   borderRadius: 10,
-  border: "1px solid rgba(44,43,40,0.12)",
+  border: "1px solid rgba(86,98,154,0.15)",
   cursor: "pointer",
   fontWeight: 600,
   fontSize: 14,
-  color: "#8b7762",
-  background: "#fff",
-  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+  color: "#8B7762",
+  background: "#FFFFFF",
+  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
   transition: "all 0.2s",
 };

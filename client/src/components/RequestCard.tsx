@@ -111,11 +111,11 @@ function initials(name?: string) {
 
 /* ----------------- Styles ----------------- */
 const card: React.CSSProperties = {
-  background: "white",
+  background: "#FFFFFF",
   padding: 18,
   borderRadius: 14,
-  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
-  border: "1px solid rgba(44,43,40,0.06)",
+  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
+  border: "1px solid rgba(86,98,154,0.1)",
   transition: "all 0.2s",
 };
 
@@ -126,10 +126,10 @@ const avatar: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  background: "linear-gradient(135deg,#f4efe8,#efe6dd)",
+  background: "linear-gradient(135deg, #E8E7F5, #D9D8EB)",
   fontWeight: 700,
   fontSize: 16,
-  color: "#2c2b28",
+  color: "#63628B",
 };
 
 const headerRow: React.CSSProperties = {
@@ -142,14 +142,14 @@ const headerRow: React.CSSProperties = {
 
 const courseName: React.CSSProperties = {
   fontWeight: 700,
-  color: "#2c2b28",
+  color: "#63628B",
   fontSize: 17,
   marginBottom: 4,
 };
 
 const professorName: React.CSSProperties = {
   fontSize: 13,
-  color: "#8b7762",
+  color: "#8B7762",
   display: "flex",
   alignItems: "center",
   gap: 4,
@@ -159,9 +159,9 @@ const statusTag: React.CSSProperties = {
   fontSize: 12,
   padding: "6px 12px",
   borderRadius: 20,
-  background: "#fff7e8",
-  color: "#7a5b32",
-  border: "1px solid rgba(122,91,50,0.2)",
+  background: "#FBF7F2",
+  color: "#9A7556",
+  border: "1px solid rgba(154,117,86,0.2)",
   fontWeight: 600,
   whiteSpace: "nowrap",
   display: "flex",
@@ -171,7 +171,7 @@ const statusTag: React.CSSProperties = {
 
 const description: React.CSSProperties = {
   marginTop: 12,
-  color: "rgba(44,43,40,0.75)",
+  color: "rgba(99,98,139,0.75)",
   fontSize: 14,
   lineHeight: 1.6,
 };
@@ -187,11 +187,11 @@ const actionsRow: React.CSSProperties = {
 const ghostBtn: React.CSSProperties = {
   padding: "8px 14px",
   borderRadius: 10,
-  border: "1px solid rgba(44,43,40,0.12)",
-  background: "#fff",
+  border: "1px solid rgba(86,98,154,0.15)",
+  background: "#FFFFFF",
   fontSize: 13,
   fontWeight: 600,
-  color: "#2c2b28",
+  color: "#63628B",
   cursor: "pointer",
   transition: "all 0.2s",
   display: "flex",
@@ -203,8 +203,8 @@ const approveBtn: React.CSSProperties = {
   padding: "8px 14px",
   borderRadius: 10,
   border: "none",
-  background: "linear-gradient(135deg,#a2d9b0,#87c88f)",
-  color: "#fff",
+  background: "linear-gradient(135deg, #a2d9b0, #87c88f)",
+  color: "#FFFFFF",
   fontWeight: 600,
   fontSize: 13,
   cursor: "pointer",
@@ -231,7 +231,7 @@ const rejectBtn: React.CSSProperties = {
 };
 
 const processingText: React.CSSProperties = {
-  color: "#8b7762",
+  color: "#8B7762",
   fontSize: 13,
   fontStyle: "italic",
 };

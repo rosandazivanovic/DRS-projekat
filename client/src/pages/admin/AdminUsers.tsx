@@ -128,8 +128,8 @@ export default function AdminUsersPage() {
   const visible = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   return (
-    <div style={{ minHeight: "100vh", background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)", padding: 24 }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", background: "#fffaf6", borderRadius: 20, padding: 28, boxShadow: "0 20px 40px rgba(39,35,30,0.04)" }}>
+    <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #F3F2FB 0%, #FBF7F2 100%)", padding: 24 }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", background: "#FFFFFF", borderRadius: 20, padding: 28, boxShadow: "0 20px 40px rgba(99,98,139,0.08)" }}>
         <Header
           onCreate={() => setShowCreate((s) => !s)}
           createOpen={showCreate}
@@ -155,7 +155,7 @@ export default function AdminUsersPage() {
               placeholder="Pretraga (ime, email, role)..."
               value={query}
               onChange={(e) => { setQuery(e.target.value); setPage(1); }}
-              style={{ width: "100%", padding: 12, borderRadius: 10, border: "1px solid rgba(44,43,40,0.06)", background: "#fff" }}
+              style={{ width: "100%", padding: 12, borderRadius: 10, border: "1px solid rgba(86,98,154,0.12)", background: "#FFFFFF", color: "#63628B" }}
             />
           </div>
 
@@ -184,7 +184,7 @@ export default function AdminUsersPage() {
 
         {/* empty state */}
         {!loading && filtered.length === 0 && (
-          <div style={{ textAlign: "center", padding: 28, color: "#777", fontStyle: "italic" }}>
+          <div style={{ textAlign: "center", padding: 28, color: "#8B7762", fontStyle: "italic" }}>
             Nema korisnika koji odgovaraju pretrazi.
           </div>
         )}
@@ -213,13 +213,13 @@ function Header({ onCreate, createOpen }: { onCreate: ()=>void; createOpen: bool
   return (
     <div style={{ marginBottom: 18, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
       <div>
-        <h2 style={{ margin: 0, color: "#2c2b28", display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ color: "#9a7556" }}>
+        <h2 style={{ margin: 0, color: "#63628B", display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ color: "#56629A" }}>
             <UsersIcon />
           </span>
           Korisnici
         </h2>
-        <p style={{ margin: "6px 0 0", color: "#8b7762" }}>Upravljanje korisnicima platforme</p>
+        <p style={{ margin: "6px 0 0", color: "#8B7762" }}>Upravljanje korisnicima platforme</p>
       </div>
 
       <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
@@ -243,12 +243,12 @@ function Header({ onCreate, createOpen }: { onCreate: ()=>void; createOpen: bool
 
 function UserCard({ user, onDelete }: { user: User; onDelete: () => void }) {
   return (
-    <div style={{ padding: 14, border: "1px solid rgba(44,43,40,0.06)", borderRadius: 12, background: "#fff", display: "flex", gap: 12, alignItems: "center", justifyContent: "space-between" }}>
+    <div style={{ padding: 14, border: "1px solid rgba(86,98,154,0.1)", borderRadius: 12, background: "#FFFFFF", display: "flex", gap: 12, alignItems: "center", justifyContent: "space-between" }}>
       <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
         <div style={avatarStyle}>{getInitials(user.firstName, user.lastName)}</div>
         <div>
-          <div style={{ fontWeight: 700, color: "#2c2b28" }}>{user.firstName} {user.lastName}</div>
-          <div style={{ color: "#8b7762", fontSize: 13 }}>{user.email}</div>
+          <div style={{ fontWeight: 700, color: "#63628B" }}>{user.firstName} {user.lastName}</div>
+          <div style={{ color: "#8B7762", fontSize: 13 }}>{user.email}</div>
           <div style={{ marginTop: 6 }}>
             <RoleBadge role={user.role} />
           </div>
@@ -267,8 +267,8 @@ function UserCard({ user, onDelete }: { user: User; onDelete: () => void }) {
 function RoleBadge({ role }: { role?: string }) {
   const text = role ?? "STUDENT";
   const isProf = text === "PROFESOR";
-  const bg = isProf ? "linear-gradient(135deg,#efe6ff,#ddd6ff)" : "linear-gradient(135deg,#f0fdf4,#e6fff0)";
-  const color = isProf ? "#5b3ed9" : "#065f46";
+  const bg = isProf ? "linear-gradient(135deg, #E8E7F5, #D9D8EB)" : "linear-gradient(135deg, #f0fdf4, #e6fff0)";
+  const color = isProf ? "#56629A" : "#065f46";
   return <div style={{ padding: "6px 10px", borderRadius: 999, background: bg, color, fontWeight: 700, fontSize: 12 }}>{text}</div>;
 }
 
@@ -280,13 +280,13 @@ function getInitials(first?: string, last?: string) {
 
 function SkeletonUser() {
   return (
-    <div style={{ padding: 14, borderRadius: 12, background: "#fff", boxShadow: "0 8px 20px rgba(39,35,30,0.02)" }}>
+    <div style={{ padding: 14, borderRadius: 12, background: "#FFFFFF", boxShadow: "0 8px 20px rgba(99,98,139,0.04)" }}>
       <div style={{ display: "flex", gap: 12 }}>
-        <div style={{ width: 52, height: 52, borderRadius: 10, background: "#eee" }} />
+        <div style={{ width: 52, height: 52, borderRadius: 10, background: "#F3F2FB" }} />
         <div style={{ flex: 1 }}>
-          <div style={{ height: 14, width: "40%", background: "#eee", marginBottom: 8 }} />
-          <div style={{ height: 12, width: "60%", background: "#f3f3f3", marginBottom: 8 }} />
-          <div style={{ height: 10, width: "30%", background: "#f7f7f7" }} />
+          <div style={{ height: 14, width: "40%", background: "#F3F2FB", marginBottom: 8 }} />
+          <div style={{ height: 12, width: "60%", background: "#FAFAFA", marginBottom: 8 }} />
+          <div style={{ height: 10, width: "30%", background: "#FCFCFC" }} />
         </div>
       </div>
     </div>
@@ -304,11 +304,11 @@ function Pagination({ page, totalPages, onChange }: { page: number; totalPages: 
     <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 18 }}>
       <button onClick={() => onChange(Math.max(1, page - 1))} style={ghostBtn} disabled={page===1}>{"<"}</button>
       {start > 1 && <button onClick={() => onChange(1)} style={ghostBtn}>1</button>}
-      {start > 2 && <div style={{ padding: "8px 10px", color: "#999" }}>…</div>}
+      {start > 2 && <div style={{ padding: "8px 10px", color: "#8B7762" }}>…</div>}
       {pages.map((p) => (
         <button key={p} onClick={() => onChange(p)} style={p === page ? pageBtn : ghostBtn}>{p}</button>
       ))}
-      {end < totalPages - 1 && <div style={{ padding: "8px 10px", color: "#999" }}>…</div>}
+      {end < totalPages - 1 && <div style={{ padding: "8px 10px", color: "#8B7762" }}>…</div>}
       {end < totalPages && <button onClick={() => onChange(totalPages)} style={ghostBtn}>{totalPages}</button>}
       <button onClick={() => onChange(Math.min(totalPages, page + 1))} style={ghostBtn} disabled={page===totalPages}>{">"}</button>
     </div>
@@ -341,7 +341,7 @@ function CreateUserModal({ onClose, onCreate }: { onClose: ()=>void; onCreate: (
   return (
     <div style={overlay} role="dialog" aria-modal="true">
       <div style={{ ...modal, width: 720 }}>
-        <h3 style={{ marginTop: 0 }}>Novi korisnik</h3>
+        <h3 style={{ marginTop: 0, color: "#63628B" }}>Novi korisnik</h3>
         <form onSubmit={submit} style={{ display: "grid", gap: 10, gridTemplateColumns: "1fr 1fr" }}>
           <input placeholder="Ime" value={firstName} onChange={(e)=>setFirstName(e.target.value)} style={inputStyle} required />
           <input placeholder="Prezime" value={lastName} onChange={(e)=>setLastName(e.target.value)} style={inputStyle} required />
@@ -361,8 +361,8 @@ function CreateUserModal({ onClose, onCreate }: { onClose: ()=>void; onCreate: (
           </select>
 
           <div style={{ gridColumn: "1 / -1", display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 6 }}>
-            <button type="button" onClick={onClose} style={{ padding: "8px 12px", borderRadius: 8 }}>Otkaži</button>
-            <button type="submit" style={{ padding: "8px 12px", borderRadius: 8, background: "linear-gradient(135deg,#d6bca3,#b99a7f)", color: "#fff" }}>Kreiraj korisnika</button>
+            <button type="button" onClick={onClose} style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid rgba(86,98,154,0.15)", background: "#FFFFFF", color: "#63628B" }}>Otkaži</button>
+            <button type="submit" style={{ padding: "8px 12px", borderRadius: 8, background: "linear-gradient(135deg, #56629A, #63628B)", color: "#FFFFFF", border: "none", fontWeight: 600 }}>Kreiraj korisnika</button>
           </div>
         </form>
       </div>
@@ -375,11 +375,11 @@ function ConfirmModal({ title, description, onCancel, onConfirm }: { title: stri
   return (
     <div style={overlay} role="dialog" aria-modal="true">
       <div style={modal}>
-        <h3 style={{ marginTop: 0 }}>{title}</h3>
-        <div style={{ marginTop: 6, color: "var(--muted)" }}>{description}</div>
+        <h3 style={{ marginTop: 0, color: "#63628B" }}>{title}</h3>
+        <div style={{ marginTop: 6, color: "#8B7762" }}>{description}</div>
         <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 12 }}>
-          <button onClick={onCancel} style={{ padding: 8, borderRadius: 8 }}>Otkaži</button>
-          <button onClick={onConfirm} style={{ padding: 8, borderRadius: 8, background: "#fda4a4", color: "#7a1f1f" }}>Obriši</button>
+          <button onClick={onCancel} style={{ padding: 8, borderRadius: 8, border: "1px solid rgba(86,98,154,0.15)", background: "#FFFFFF", color: "#63628B" }}>Otkaži</button>
+          <button onClick={onConfirm} style={{ padding: 8, borderRadius: 8, background: "#fda4a4", color: "#7a1f1f", border: "none" }}>Obriši</button>
         </div>
       </div>
     </div>
@@ -388,19 +388,19 @@ function ConfirmModal({ title, description, onCancel, onConfirm }: { title: stri
 
 /* ----------------------- Styles & utils ----------------------- */
 
-const avatarStyle: React.CSSProperties = { width: 52, height: 52, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg,#f4efe8,#efe6dd)", color: "var(--text)", fontWeight: 700 };
+const avatarStyle: React.CSSProperties = { width: 52, height: 52, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, #E8E7F5, #D9D8EB)", color: "#63628B", fontWeight: 700 };
 
 const overlay: React.CSSProperties = { position: "fixed", inset: 0, background: "rgba(0,0,0,0.25)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999 };
-const modal: React.CSSProperties = { width: 720, background: "var(--glass)", padding: 18, borderRadius: 12, boxShadow: "0 20px 40px rgba(0,0,0,0.2)" };
+const modal: React.CSSProperties = { width: 720, background: "#FFFFFF", padding: 18, borderRadius: 12, boxShadow: "0 20px 40px rgba(99,98,139,0.15)" };
 
-const inputStyle: React.CSSProperties = { padding: 10, borderRadius: 10, border: "1px solid rgba(44,43,40,0.06)", background: "#fff" };
+const inputStyle: React.CSSProperties = { padding: 10, borderRadius: 10, border: "1px solid rgba(86,98,154,0.12)", background: "#FFFFFF", color: "#63628B" };
 
-const ghostBtn: React.CSSProperties = { padding: "8px 12px", borderRadius: 8, border: "1px solid rgba(44,43,40,0.06)", background: "#fff" };
-const primaryBtn: React.CSSProperties = { padding: "10px 14px", borderRadius: 10, border: "none", background: "linear-gradient(135deg,#d6bca3,#b99a7f)", color: "#fff", fontWeight: 700 };
-const cancelBtn: React.CSSProperties = { padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(44,43,40,0.06)", background: "#fff", fontWeight: 700 };
-const refreshBtn: React.CSSProperties = { padding: "8px 12px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#e6eef7,#d6e3ff)", color: "#234", fontWeight: 700 };
+const ghostBtn: React.CSSProperties = { padding: "8px 12px", borderRadius: 8, border: "1px solid rgba(86,98,154,0.12)", background: "#FFFFFF", color: "#63628B" };
+const primaryBtn: React.CSSProperties = { padding: "10px 14px", borderRadius: 10, border: "none", background: "linear-gradient(135deg, #56629A, #63628B)", color: "#FFFFFF", fontWeight: 700 };
+const cancelBtn: React.CSSProperties = { padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(86,98,154,0.15)", background: "#FFFFFF", fontWeight: 700, color: "#63628B" };
+const refreshBtn: React.CSSProperties = { padding: "8px 12px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #E8E7F5, #D9D8EB)", color: "#56629A", fontWeight: 700 };
 const dangerOutline: React.CSSProperties = { padding: "6px 10px", borderRadius: 8, border: "1px solid rgba(220,38,38,0.12)", background: "#fff5f5", color: "#7a2a2a" };
-const pageBtn: React.CSSProperties = { padding: "8px 10px", borderRadius: 8, border: "none", background: "linear-gradient(135deg,#b99a7f,#a27f5f)", color: "#fff", fontWeight: 700 };
+const pageBtn: React.CSSProperties = { padding: "8px 10px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #56629A, #63628B)", color: "#FFFFFF", fontWeight: 700 };
 
 const successBanner: React.CSSProperties = {
   padding: 14, marginBottom: 16, background: "linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%)",

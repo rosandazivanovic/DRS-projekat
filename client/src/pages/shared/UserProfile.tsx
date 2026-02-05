@@ -306,7 +306,7 @@ export default function UserProfile() {
       <div
         style={{
           minHeight: "100vh",
-          background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)",
+          background: "linear-gradient(180deg, #F3F2FB 0%, #FBF7F2 100%)",
           padding: 24,
           display: "flex",
           alignItems: "center",
@@ -316,20 +316,20 @@ export default function UserProfile() {
         <div
           style={{
             maxWidth: 500,
-            background: "#fffaf6",
+            background: "#FFFFFF",
             borderRadius: 20,
             padding: 40,
             textAlign: "center",
-            boxShadow: "0 20px 40px rgba(39,35,30,0.04)",
+            boxShadow: "0 20px 40px rgba(99,98,139,0.06)",
           }}
         >
-          <div style={{ marginBottom: 16, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+          <div style={{ marginBottom: 16, color: "#56629A", display: "flex", justifyContent: "center" }}>
             <LockIcon />
           </div>
-          <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 24 }}>
+          <h2 style={{ margin: 0, color: "#63628B", fontSize: 24 }}>
             Admin pristup
           </h2>
-          <p style={{ margin: "12px 0 0", color: "#8b7762", lineHeight: 1.6 }}>
+          <p style={{ margin: "12px 0 0", color: "#8B7762", lineHeight: 1.6 }}>
             Administratori ne mogu pristupiti profil stranici. 
             Koristite admin panel za upravljanje sistemom.
           </p>
@@ -343,14 +343,14 @@ export default function UserProfile() {
       <div
         style={{
           minHeight: "100vh",
-          background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)",
+          background: "linear-gradient(180deg, #F3F2FB 0%, #FBF7F2 100%)",
           padding: 24,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <div style={{ color: "#8b7762", fontSize: 16 }}>Učitavanje profila...</div>
+        <div style={{ color: "#8B7762", fontSize: 16 }}>Učitavanje profila...</div>
       </div>
     );
   }
@@ -359,7 +359,7 @@ export default function UserProfile() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)",
+        background: "linear-gradient(180deg, #F3F2FB 0%, #FBF7F2 100%)",
         padding: 24,
       }}
     >
@@ -367,20 +367,20 @@ export default function UserProfile() {
         style={{
           maxWidth: 900,
           margin: "0 auto",
-          background: "#fffaf6",
+          background: "#FFFFFF",
           borderRadius: 20,
           padding: 28,
-          boxShadow: "0 20px 40px rgba(39,35,30,0.04)",
+          boxShadow: "0 20px 40px rgba(99,98,139,0.06)",
         }}
       >
         <div style={{ marginBottom: 32 }}>
-          <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 24, display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ color: "#9a7556" }}>
+          <h2 style={{ margin: 0, color: "#63628B", fontSize: 24, display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ color: "#56629A" }}>
               <UserIcon />
             </span>
             Moj profil
           </h2>
-          <p style={{ margin: "6px 0 0", color: "#8b7762" }}>
+          <p style={{ margin: "6px 0 0", color: "#8B7762" }}>
             Upravljaj svojim podacima i postavkama
           </p>
         </div>
@@ -391,9 +391,9 @@ export default function UserProfile() {
               marginBottom: 20,
               padding: 14,
               background: "#fff5f5",
-              border: "1px solid rgba(180,130,130,0.12)",
+              border: "1px solid rgba(220,38,38,0.12)",
               borderRadius: 12,
-              color: "#7a2a2a",
+              color: "#991b1b",
               fontSize: 14,
             }}
           >
@@ -421,13 +421,13 @@ export default function UserProfile() {
           style={{
             marginBottom: 32,
             padding: 24,
-            border: "1px solid rgba(44,43,40,0.06)",
+            border: "1px solid rgba(86,98,154,0.1)",
             borderRadius: 16,
-            background: "#fff",
+            background: "#FFFFFF",
           }}
         >
-          <h3 style={{ margin: "0 0 16px", color: "#2c2b28", fontSize: 18, display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ color: "#9a7556" }}>
+          <h3 style={{ margin: "0 0 16px", color: "#63628B", fontSize: 18, display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ color: "#56629A" }}>
               <CameraIcon />
             </span>
             Slika profila
@@ -447,14 +447,14 @@ export default function UserProfile() {
                 borderRadius: "50%",
                 background: profileImage
                   ? `url(${profileImage}) center/cover`
-                  : "linear-gradient(135deg, #d6bca3, #b99a7f)",
+                  : "linear-gradient(135deg, #56629A, #63628B)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 color: "#fff",
                 fontSize: 48,
                 fontWeight: 700,
-                boxShadow: "0 8px 20px rgba(39,35,30,0.08)",
+                boxShadow: "0 8px 20px rgba(99,98,139,0.08)",
                 border: "3px solid #fff",
                 position: "relative" as const,
                 overflow: "hidden",
@@ -490,11 +490,11 @@ export default function UserProfile() {
                   gap: 8,
                   padding: "10px 20px",
                   borderRadius: 10,
-                  border: "1px solid rgba(44,43,40,0.12)",
+                  border: "1px solid rgba(86,98,154,0.15)",
                   cursor: uploadingImage ? "not-allowed" : "pointer",
                   fontWeight: 600,
-                  color: uploadingImage ? "#999" : "#2c2b28",
-                  background: uploadingImage ? "#f5f5f5" : "#fff",
+                  color: uploadingImage ? "#999" : "#63628B",
+                  background: uploadingImage ? "#F3F2FB" : "#FFFFFF",
                   transition: "all 0.2s",
                 }}
               >
@@ -522,7 +522,7 @@ export default function UserProfile() {
                 style={{
                   marginTop: 10,
                   fontSize: 13,
-                  color: "#8b7762",
+                  color: "#8B7762",
                 }}
               >
                 Podržani formati: JPG, PNG, GIF (max 5MB)
@@ -535,12 +535,12 @@ export default function UserProfile() {
                     marginTop: 10,
                     padding: "6px 12px",
                     borderRadius: 8,
-                    border: "1px solid rgba(180,130,130,0.12)",
+                    border: "1px solid rgba(220,38,38,0.12)",
                     cursor: uploadingImage ? "not-allowed" : "pointer",
                     fontWeight: 600,
                     fontSize: 13,
-                    color: uploadingImage ? "#999" : "#7a2a2a",
-                    background: uploadingImage ? "#f5f5f5" : "#fff5f5",
+                    color: uploadingImage ? "#999" : "#991b1b",
+                    background: uploadingImage ? "#F3F2FB" : "#fff5f5",
                     display: "inline-flex",
                     alignItems: "center",
                     gap: 6,
@@ -558,13 +558,13 @@ export default function UserProfile() {
           <div
             style={{
               padding: 24,
-              border: "1px solid rgba(44,43,40,0.06)",
+              border: "1px solid rgba(86,98,154,0.1)",
               borderRadius: 16,
-              background: "#fff",
+              background: "#FFFFFF",
             }}
           >
-            <h3 style={{ margin: "0 0 20px", color: "#2c2b28", fontSize: 18, display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ color: "#9a7556" }}>
+            <h3 style={{ margin: "0 0 20px", color: "#63628B", fontSize: 18, display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ color: "#56629A" }}>
                 <InfoIcon />
               </span>
               Osnovni podaci
@@ -582,7 +582,7 @@ export default function UserProfile() {
                   style={{
                     display: "block",
                     marginBottom: 6,
-                    color: "#2c2b28",
+                    color: "#63628B",
                     fontSize: 14,
                     fontWeight: 600,
                   }}
@@ -598,10 +598,10 @@ export default function UserProfile() {
                     width: "100%",
                     padding: 12,
                     borderRadius: 10,
-                    border: "1px solid rgba(44,43,40,0.08)",
+                    border: "1px solid rgba(86,98,154,0.12)",
                     fontSize: 14,
-                    background: "#fff",
-                    color: "#2c2b28",
+                    background: "#FFFFFF",
+                    color: "#63628B",
                   }}
                 />
               </div>
@@ -611,7 +611,7 @@ export default function UserProfile() {
                   style={{
                     display: "block",
                     marginBottom: 6,
-                    color: "#2c2b28",
+                    color: "#63628B",
                     fontSize: 14,
                     fontWeight: 600,
                   }}
@@ -627,10 +627,10 @@ export default function UserProfile() {
                     width: "100%",
                     padding: 12,
                     borderRadius: 10,
-                    border: "1px solid rgba(44,43,40,0.08)",
+                    border: "1px solid rgba(86,98,154,0.12)",
                     fontSize: 14,
-                    background: "#fff",
-                    color: "#2c2b28",
+                    background: "#FFFFFF",
+                    color: "#63628B",
                   }}
                 />
               </div>
@@ -640,7 +640,7 @@ export default function UserProfile() {
                   style={{
                     display: "block",
                     marginBottom: 6,
-                    color: "#2c2b28",
+                    color: "#63628B",
                     fontSize: 14,
                     fontWeight: 600,
                   }}
@@ -656,13 +656,13 @@ export default function UserProfile() {
                     width: "100%",
                     padding: 12,
                     borderRadius: 10,
-                    border: "1px solid rgba(44,43,40,0.08)",
+                    border: "1px solid rgba(86,98,154,0.12)",
                     fontSize: 14,
-                    background: "#fff",
-                    color: "#2c2b28",
+                    background: "#FFFFFF",
+                    color: "#63628B",
                   }}
                 />
-                <div style={{ marginTop: 4, fontSize: 12, color: "#8b7762", display: "flex", alignItems: "center", gap: 4 }}>
+                <div style={{ marginTop: 4, fontSize: 12, color: "#8B7762", display: "flex", alignItems: "center", gap: 4 }}>
                   <LightbulbIcon />
                   Email adresa se može menjati
                 </div>
@@ -673,7 +673,7 @@ export default function UserProfile() {
                   style={{
                     display: "block",
                     marginBottom: 6,
-                    color: "#2c2b28",
+                    color: "#63628B",
                     fontSize: 14,
                     fontWeight: 600,
                   }}
@@ -688,10 +688,10 @@ export default function UserProfile() {
                     width: "100%",
                     padding: 12,
                     borderRadius: 10,
-                    border: "1px solid rgba(44,43,40,0.08)",
+                    border: "1px solid rgba(86,98,154,0.12)",
                     fontSize: 14,
-                    background: "#fff",
-                    color: "#2c2b28",
+                    background: "#FFFFFF",
+                    color: "#63628B",
                   }}
                 />
               </div>
@@ -701,7 +701,7 @@ export default function UserProfile() {
                   style={{
                     display: "block",
                     marginBottom: 6,
-                    color: "#2c2b28",
+                    color: "#63628B",
                     fontSize: 14,
                     fontWeight: 600,
                   }}
@@ -715,10 +715,10 @@ export default function UserProfile() {
                     width: "100%",
                     padding: 12,
                     borderRadius: 10,
-                    border: "1px solid rgba(44,43,40,0.08)",
+                    border: "1px solid rgba(86,98,154,0.12)",
                     fontSize: 14,
-                    background: "#fff",
-                    color: "#2c2b28",
+                    background: "#FFFFFF",
+                    color: "#63628B",
                   }}
                 >
                   <option value="M">Muški</option>
@@ -732,7 +732,7 @@ export default function UserProfile() {
                   style={{
                     display: "block",
                     marginBottom: 6,
-                    color: "#2c2b28",
+                    color: "#63628B",
                     fontSize: 14,
                     fontWeight: 600,
                   }}
@@ -748,10 +748,10 @@ export default function UserProfile() {
                     width: "100%",
                     padding: 12,
                     borderRadius: 10,
-                    border: "1px solid rgba(44,43,40,0.08)",
+                    border: "1px solid rgba(86,98,154,0.12)",
                     fontSize: 14,
-                    background: "#fff",
-                    color: "#2c2b28",
+                    background: "#FFFFFF",
+                    color: "#63628B",
                   }}
                 />
               </div>
@@ -761,7 +761,7 @@ export default function UserProfile() {
                   style={{
                     display: "block",
                     marginBottom: 6,
-                    color: "#2c2b28",
+                    color: "#63628B",
                     fontSize: 14,
                     fontWeight: 600,
                   }}
@@ -777,10 +777,10 @@ export default function UserProfile() {
                     width: "100%",
                     padding: 12,
                     borderRadius: 10,
-                    border: "1px solid rgba(44,43,40,0.08)",
+                    border: "1px solid rgba(86,98,154,0.12)",
                     fontSize: 14,
-                    background: "#fff",
-                    color: "#2c2b28",
+                    background: "#FFFFFF",
+                    color: "#63628B",
                   }}
                 />
               </div>
@@ -790,7 +790,7 @@ export default function UserProfile() {
                   style={{
                     display: "block",
                     marginBottom: 6,
-                    color: "#2c2b28",
+                    color: "#63628B",
                     fontSize: 14,
                     fontWeight: 600,
                   }}
@@ -806,10 +806,10 @@ export default function UserProfile() {
                     width: "100%",
                     padding: 12,
                     borderRadius: 10,
-                    border: "1px solid rgba(44,43,40,0.08)",
+                    border: "1px solid rgba(86,98,154,0.12)",
                     fontSize: 14,
-                    background: "#fff",
-                    color: "#2c2b28",
+                    background: "#FFFFFF",
+                    color: "#63628B",
                   }}
                 />
               </div>
@@ -828,9 +828,9 @@ export default function UserProfile() {
                   fontSize: 15,
                   color: "#fff",
                   background: saving
-                    ? "#b99a7f"
-                    : "linear-gradient(135deg,#d6bca3,#b99a7f)",
-                  boxShadow: saving ? "none" : "0 6px 18px rgba(121,86,61,0.12)",
+                    ? "#63628B"
+                    : "linear-gradient(135deg, #56629A, #63628B)",
+                  boxShadow: saving ? "none" : "0 6px 18px rgba(86,98,154,0.15)",
                   transition: "all 0.2s",
                   display: "inline-flex",
                   alignItems: "center",
@@ -848,12 +848,12 @@ export default function UserProfile() {
           style={{
             marginTop: 24,
             padding: 18,
-            background: "#fbf6f1",
+            background: "#F3F2FB",
             borderRadius: 12,
-            border: "1px solid rgba(44,43,40,0.04)",
+            border: "1px solid rgba(86,98,154,0.06)",
           }}
         >
-          <div style={{ fontSize: 13, color: "#8b7762", lineHeight: 1.6, display: "flex", alignItems: "flex-start", gap: 6 }}>
+          <div style={{ fontSize: 13, color: "#8B7762", lineHeight: 1.6, display: "flex", alignItems: "flex-start", gap: 6 }}>
             <span style={{ marginTop: 2 }}>
               <PinIcon />
             </span>

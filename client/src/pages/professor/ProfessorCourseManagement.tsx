@@ -1,42 +1,21 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useEffect, useState} from "react";
+import type { FormEvent } from "react";
+import { useParams } from "react-router-dom";
 import { http } from "../../api/https";
 import { endpoints } from "../../api/endpoints";
 import type { Course } from "../../types/courses";
+import type { Task, TaskSubmission } from "../../types/tasks";
 import { useAuth } from "../../auth/AuthContext";
 
-type Student = {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: "STUDENT" | "PROFESOR" | "ADMIN";
-};
-
-type Enrollment = {
-  id: number;
-  studentId: number;
-  studentName: string;
-  enrolledAt: string;
-};
-
-// SVG Icons
-const BookIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-  </svg>
-);
-
-const EditIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+const UserIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+    <circle cx="12" cy="7" r="4"/>
   </svg>
 );
 
 const FileTextIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
     <polyline points="14 2 14 8 20 8"/>
     <line x1="16" y1="13" x2="8" y2="13"/>
@@ -45,59 +24,44 @@ const FileTextIcon = () => (
   </svg>
 );
 
-const UsersIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-    <circle cx="9" cy="7" r="4"/>
-    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+const DownloadIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    <polyline points="7 10 12 15 17 10"/>
+    <line x1="12" y1="15" x2="12" y2="3"/>
   </svg>
 );
 
-const LinkIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-  </svg>
-);
-
-const BarChartIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="12" y1="20" x2="12" y2="10"/>
-    <line x1="18" y1="20" x2="18" y2="4"/>
-    <line x1="6" y1="20" x2="6" y2="16"/>
-  </svg>
-);
-
-const TrashIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="3 6 5 6 21 6"/>
-    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-    <line x1="10" y1="11" x2="10" y2="17"/>
-    <line x1="14" y1="11" x2="14" y2="17"/>
-  </svg>
-);
-
-const CheckCircleIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-    <polyline points="22 4 12 14.01 9 11.01"/>
-  </svg>
-);
-
-const XCircleIcon = () => (
+const PlusCircleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10"/>
-    <line x1="15" y1="9" x2="9" y2="15"/>
-    <line x1="9" y1="9" x2="15" y2="15"/>
+    <line x1="12" y1="8" x2="12" y2="16"/>
+    <line x1="8" y1="12" x2="16" y2="12"/>
   </svg>
 );
 
-const SaveIcon = () => (
+const ClipboardIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-    <polyline points="17 21 17 13 7 13 7 21"/>
-    <polyline points="7 3 7 8 15 8"/>
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+  </svg>
+);
+
+const ListIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="8" y1="6" x2="21" y2="6"/>
+    <line x1="8" y1="12" x2="21" y2="12"/>
+    <line x1="8" y1="18" x2="21" y2="18"/>
+    <line x1="3" y1="6" x2="3.01" y2="6"/>
+    <line x1="3" y1="12" x2="3.01" y2="12"/>
+    <line x1="3" y1="18" x2="3.01" y2="18"/>
+  </svg>
+);
+
+const ClockIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <polyline points="12 6 12 12 16 14"/>
   </svg>
 );
 
@@ -109,1090 +73,610 @@ const UploadIcon = () => (
   </svg>
 );
 
-const RefreshIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="23 4 23 10 17 10"/>
-    <polyline points="1 20 1 14 7 14"/>
-    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-  </svg>
-);
-
-const AlertIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-    <line x1="12" y1="9" x2="12" y2="13"/>
-    <line x1="12" y1="17" x2="12.01" y2="17"/>
-  </svg>
-);
-
-const UserPlusIcon = () => (
+const CheckCircleIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-    <circle cx="8.5" cy="7" r="4"/>
-    <line x1="20" y1="8" x2="20" y2="14"/>
-    <line x1="23" y1="11" x2="17" y2="11"/>
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
   </svg>
 );
 
-const CalendarIcon = () => (
+const XCircleIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="15" y1="9" x2="9" y2="15"/>
+    <line x1="9" y1="9" x2="15" y2="15"/>
+  </svg>
+);
+
+const MessageSquareIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-    <line x1="16" y1="2" x2="16" y2="6"/>
-    <line x1="8" y1="2" x2="8" y2="6"/>
-    <line x1="3" y1="10" x2="21" y2="10"/>
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
   </svg>
 );
 
-const ClipboardIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
-  </svg>
-);
-
-const ArrowLeftIcon = () => (
+const StarIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="19" y1="12" x2="5" y2="12"/>
-    <polyline points="12 19 5 12 12 5"/>
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
   </svg>
 );
 
-export default function ProfessorCourseManagementPage() {
+const InboxIcon = () => (
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/>
+    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
+  </svg>
+);
+
+const LoaderIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="2" x2="12" y2="6"/>
+    <line x1="12" y1="18" x2="12" y2="22"/>
+    <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/>
+    <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/>
+    <line x1="2" y1="12" x2="6" y2="12"/>
+    <line x1="18" y1="12" x2="22" y2="12"/>
+    <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/>
+    <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/>
+  </svg>
+);
+
+const BookOpenIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+  </svg>
+);
+
+export default function CourseDetailsPage() {
   const { id } = useParams<{ id?: string }>();
   const courseId = id ? Number(id) : null;
-  const navigate = useNavigate();
+
   const { user, hasRole } = useAuth();
-
   const [course, setCourse] = useState<Course | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [submissions, setSubmissions] = useState<TaskSubmission[]>([]);
   const [loading, setLoading] = useState(false);
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [editName, setEditName] = useState("");
-  const [editDescription, setEditDescription] = useState("");
-
-  const [materialFile, setMaterialFile] = useState<File | null>(null);
-  const [uploadingMaterial, setUploadingMaterial] = useState(false);
-
-  const [showAddStudents, setShowAddStudents] = useState(false);
-  const [availableStudents, setAvailableStudents] = useState<Student[]>([]);
-  const [enrolledStudents, setEnrolledStudents] = useState<Enrollment[]>([]);
-  const [selectedStudentId, setSelectedStudentId] = useState<number | "">("");
-  const [addingStudent, setAddingStudent] = useState(false);
-
+  const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [newTaskDesc, setNewTaskDesc] = useState("");
+  const [newTaskDeadline, setNewTaskDeadline] = useState("");
+  const [selectedTaskId, setSelectedTaskId] = useState<number | "">("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [gradingSubmission, setGradingSubmission] = useState<TaskSubmission | null>(null);
+  const [gradeValue, setGradeValue] = useState("");
+  const [gradeComment, setGradeComment] = useState("");
 
   useEffect(() => {
     if (courseId === null) return;
-    fetchCourse(courseId);
-    fetchEnrolledStudents(courseId);
-  }, [courseId]);
+
+    (async () => {
+      await fetchCourse(courseId);
+      const fetchedTasks = await fetchTasks(courseId);
+      if (hasRole && hasRole(["PROFESOR"])) {
+        await fetchAllSubmissions(fetchedTasks);
+      }
+    })();
+  }, [courseId, user]);
 
   const fetchCourse = async (cid: number) => {
     setLoading(true);
     try {
       const res = await http.get(endpoints.courses.byId(cid));
-      const data = res.data;
-      setCourse(data);
-      setEditName(data.name);
-      setEditDescription(data.description);
-    } catch (err: any) {
+      setCourse(res.data);
+    } catch (err) {
       console.error("fetchCourse error:", err);
-      setError("Greška pri učitavanju kursa");
-      setTimeout(() => setError(null), 3000);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchEnrolledStudents = async (cid: number) => {
+  const fetchTasks = async (cid: number) => {
     try {
-      const res = await http.get(endpoints.courses.students(cid));
-      setEnrolledStudents(res.data || []);
+      const res = await http.get(endpoints.tasks.listByCourse(cid));
+      setTasks(res.data ?? []);
+      return res.data ?? [];
     } catch (err) {
-      console.error("fetchEnrolledStudents error:", err);
+      console.error("fetchTasks error:", err);
+      setTasks([]);
+      return [];
     }
   };
 
-  const fetchAvailableStudents = async () => {
+  const fetchAllSubmissions = async (tasksToFetch: Task[] = tasks) => {
     try {
-      const res = await http.get(endpoints.courses.availableStudents);
-      const allStudents = res.data;
-
-      const enrolledIds = new Set(enrolledStudents.map(e => e.studentId));
-      const students = allStudents.filter(
-        (s: Student) => !enrolledIds.has(s.id)
-      );
-
-      setAvailableStudents(students);
+      const allSubs: TaskSubmission[] = [];
+      for (const task of tasksToFetch) {
+        if (typeof task.id !== "undefined" && task.id !== null) {
+          const res = await http.get(endpoints.tasks.submissions(task.id));
+          if (Array.isArray(res.data)) allSubs.push(...res.data);
+        }
+      }
+      setSubmissions(allSubs);
     } catch (err) {
-      console.error("fetchAvailableStudents error:", err);
-      setError("Greška pri učitavanju studenata");
-      setTimeout(() => setError(null), 3000);
+      console.error("fetchAllSubmissions error:", err);
+      setSubmissions([]);
     }
   };
 
-  const handleUpdateCourse = async (e: React.FormEvent) => {
+  const createTask = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!editName.trim() || !editDescription.trim()) {
-      setError("Naziv i opis ne mogu biti prazni!");
+    if (!newTaskTitle || !newTaskDesc || !newTaskDeadline) {
+      setError("Popuni sva polja!");
+      setTimeout(() => setError(null), 3000);
+      return;
+    }
+    if (courseId === null) {
+      setError("Nevažeći ID kursa.");
       setTimeout(() => setError(null), 3000);
       return;
     }
 
-    if (courseId === null) return;
-
     try {
-      await http.patch(endpoints.courses.update(courseId), {
-        name: editName.trim(),
-        description: editDescription.trim(),
+      await http.post(endpoints.tasks.create, {
+        courseId: courseId,
+        title: newTaskTitle,
+        description: newTaskDesc,
+        deadline: new Date(newTaskDeadline).toISOString(),
       });
-
-      setSuccessMessage("Kurs uspešno ažuriran!");
+      setSuccessMessage("Zadatak kreiran");
       setTimeout(() => setSuccessMessage(null), 3000);
-      setIsEditing(false);
-      fetchCourse(courseId);
+      setNewTaskTitle("");
+      setNewTaskDesc("");
+      setNewTaskDeadline("");
+      await fetchTasks(courseId);
     } catch (err: any) {
-      setError(err?.response?.data?.error ?? "Greška pri ažuriranju kursa.");
+      setError(err?.response?.data?.error ?? "Greška pri kreiranju zadatka.");
       setTimeout(() => setError(null), 3000);
     }
   };
 
-  const handleDeleteCourse = async () => {
-    if (!confirm("Da li ste sigurni da želite da obrišete ovaj kurs?\n\nOvo će obrisati sve zadatke i rešenja!")) {
-      return;
-    }
-
-    if (courseId === null) return;
-
-    try {
-      await http.delete(endpoints.courses.delete(courseId));
-      setSuccessMessage("Kurs uspešno obrisan!");
-      setTimeout(() => setSuccessMessage(null), 3000);
-      navigate("/professor/courses");
-    } catch (err: any) {
-      setError(err?.response?.data?.error ?? "Greška pri brisanju kursa.");
-      setTimeout(() => setError(null), 3000);
-    }
-  };
-
-  const handleMaterialUpload = async (e: React.FormEvent) => {
+  const submitTask = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!materialFile) {
-      setError("Molimo izaberite PDF fajl!");
+    
+    if (typeof selectedTaskId !== "number" || selectedTaskId === 0) {
+      setError("Izaberi zadatak!");
+      setTimeout(() => setError(null), 3000);
+      return;
+    }
+    
+    if (!selectedFile) {
+      setError("Molimo odaberite .py fajl!");
       setTimeout(() => setError(null), 3000);
       return;
     }
 
-    if (!materialFile.name.toLowerCase().endsWith('.pdf')) {
-      setError("Fajl mora biti u PDF formatu!");
+    if (!selectedFile.name.toLowerCase().endsWith('.py')) {
+      setError("Fajl mora biti Python skripta (.py)!");
       setTimeout(() => setError(null), 3000);
       return;
     }
 
-    const maxSize = 10 * 1024 * 1024;
-    if (materialFile.size > maxSize) {
-      setError("Fajl je prevelik! Maksimalna veličina je 10MB.");
+    const maxSize = 5 * 1024 * 1024;
+    if (selectedFile.size > maxSize) {
+      setError("Fajl je prevelik! Maksimalna veličina je 5MB.");
       setTimeout(() => setError(null), 3000);
       return;
     }
 
-    if (courseId === null) return;
-
-    setUploadingMaterial(true);
+    setSubmitting(true);
 
     try {
       const reader = new FileReader();
-
+      
       reader.onload = async (event) => {
         const base64Data = event.target?.result as string;
+        
+        try {
+          await http.post(endpoints.tasks.submit(selectedTaskId), {
+            filePath: base64Data,
+            fileName: selectedFile!.name,
+          });
 
-        await http.post(endpoints.courses.material(courseId), {
-          materialPath: base64Data,
-          fileName: materialFile.name,
-        });
-
-        setSuccessMessage("Materijal uspešno okačen!");
-        setTimeout(() => setSuccessMessage(null), 3000);
-        setMaterialFile(null);
-        fetchCourse(courseId);
-        setUploadingMaterial(false);
+          setSuccessMessage("Zadatak uspešno predat!");
+          setTimeout(() => setSuccessMessage(null), 3000);
+          setSelectedTaskId("");
+          setSelectedFile(null);
+          
+          const fileInput = document.getElementById('file-upload') as HTMLInputElement;
+          if (fileInput) fileInput.value = '';
+          
+        } catch (err: any) {
+          if (err?.response?.status === 409) {
+            setError("Već ste predali rešenje za ovaj zadatak.");
+          } else {
+            setError(err?.response?.data?.error ?? "Greška pri predaji.");
+          }
+          setTimeout(() => setError(null), 3000);
+        } finally {
+          setSubmitting(false);
+        }
       };
-
+      
       reader.onerror = () => {
         setError("Greška pri čitanju fajla");
         setTimeout(() => setError(null), 3000);
-        setUploadingMaterial(false);
+        setSubmitting(false);
       };
-
-      reader.readAsDataURL(materialFile);
-
+      
+      reader.readAsDataURL(selectedFile);
+      
     } catch (err: any) {
-      setError(err?.response?.data?.error ?? "Greška pri upload-u materijala.");
+      setError(err?.response?.data?.error ?? "Greška pri predaji.");
       setTimeout(() => setError(null), 3000);
-      setUploadingMaterial(false);
+      setSubmitting(false);
     }
   };
 
-  const handleAddStudent = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleDownloadSubmission = async (taskId: number, submissionId: number) => {
+    try {
+      const res = await http.get(`/api/tasks/${taskId}/submissions/${submissionId}/download`);
+      const data = res.data;
+      
+      const base64Data = data.fileData.split(',')[1];
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'text/x-python' });
+      
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = data.fileName;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      
+      setSuccessMessage(`Fajl preuzet: ${data.fileName}`);
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err: any) {
+      setError(err?.response?.data?.error ?? "Greška pri preuzimanju fajla");
+      setTimeout(() => setError(null), 3000);
+    }
+  };
 
-    if (selectedStudentId === "") {
-      setError("Molimo izaberite studenta!");
+  const openGradingModal = (submission: TaskSubmission) => {
+    setGradingSubmission(submission);
+    setGradeValue("");
+    setGradeComment("");
+  };
+
+  const closeGradingModal = () => {
+    setGradingSubmission(null);
+    setGradeValue("");
+    setGradeComment("");
+  };
+
+  const submitGrade = async () => {
+    if (!gradingSubmission) return;
+
+    const grade = parseInt(gradeValue, 10);
+    if (Number.isNaN(grade) || grade < 1 || grade > 5) {
+      setError("Ocena mora biti između 1 i 5.");
       setTimeout(() => setError(null), 3000);
       return;
     }
 
-    if (courseId === null) return;
-
-    setAddingStudent(true);
-
     try {
-      await http.post(`/api/courses/${courseId}/enroll-student`, {
-        studentId: selectedStudentId,
+      await http.post(endpoints.tasks.grade(gradingSubmission.id), {
+        grade,
+        comment: gradeComment,
       });
-
-      setSuccessMessage("Student uspešno dodat na kurs!");
+      setSuccessMessage("Ocena postavljena");
       setTimeout(() => setSuccessMessage(null), 3000);
-      setSelectedStudentId("");
-      setShowAddStudents(false);
-      fetchEnrolledStudents(courseId);
+      closeGradingModal();
+      await fetchAllSubmissions();
     } catch (err: any) {
-      setError(err?.response?.data?.error ?? "Greška pri dodavanju studenta.");
+      setError(err?.response?.data?.error ?? "Greška pri ocenjivanju.");
       setTimeout(() => setError(null), 3000);
-    } finally {
-      setAddingStudent(false);
     }
   };
 
-  if (!user || !hasRole(["PROFESOR"])) {
-    return <div style={{ padding: 16 }}>Nemate pristup ovoj stranici.</div>;
-  }
-
   if (loading || !course) {
     return (
-      <div style={{ padding: 24, textAlign: "center", color: "#8b7762" }}>
-        Učitavanje...
+      <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #F3F2FB 0%, #FBF7F2 100%)", padding: 24, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ background: "#FFFFFF", borderRadius: 16, padding: 60, textAlign: "center", color: "#8B7762", boxShadow: "0 2px 8px rgba(99,98,139,0.06)" }}>
+          <div style={{ marginBottom: 12, color: "#56629A", display: "flex", justifyContent: "center" }}>
+            <LoaderIcon />
+          </div>
+          Učitavanje kursa...
+        </div>
       </div>
     );
   }
 
-  if (course.professorId !== user.id) {
-    return (
-      <div style={{ padding: 24, textAlign: "center", color: "#7a2a2a" }}>
-        Nemate dozvolu za upravljanje ovim kursom.
-      </div>
-    );
-  }
+  const isProfessor = hasRole && hasRole(["PROFESOR"]) && course.professorId === user?.id;
+  const isStudent = hasRole && hasRole(["STUDENT"]);
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)",
-        padding: 24,
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1200,
-          margin: "0 auto",
-        }}
-      >
-        {/* Header sa breadcrumb i delete button */}
-        <div style={{ 
-          marginBottom: 24, 
-          display: "flex", 
-          justifyContent: "space-between", 
-          alignItems: "center",
-          background: "#fff",
-          padding: 20,
-          borderRadius: 16,
-          boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
-        }}>
-          <div>
-            <Link
-              to="/professor/courses"
-              style={{ 
-                color: "#9a7556", 
-                textDecoration: "none", 
-                fontSize: 14, 
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                marginBottom: 8,
-                fontWeight: 500,
-              }}
-            >
-              <ArrowLeftIcon />
-              Nazad na moje kurseve
-            </Link>
-            <h2 style={{ 
-              margin: 0, 
-              color: "#2c2b28", 
-              fontSize: 24,
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-            }}>
-              <span style={{ color: "#9a7556" }}>
-                <BookIcon />
-              </span>
-              {course.name}
-            </h2>
-            <p style={{ margin: "4px 0 0", color: "#8b7762", fontSize: 14 }}>
-              Upravljanje kursom
-            </p>
-          </div>
-
-          <button
-            onClick={handleDeleteCourse}
-            style={{
-              padding: "10px 18px",
-              borderRadius: 10,
-              border: "1px solid rgba(180,130,130,0.2)",
-              cursor: "pointer",
-              fontWeight: 600,
-              color: "#7a2a2a",
-              background: "#fff5f5",
-              fontSize: 14,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              transition: "all 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#ffe5e5";
-              e.currentTarget.style.borderColor = "rgba(180,130,130,0.3)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "#fff5f5";
-              e.currentTarget.style.borderColor = "rgba(180,130,130,0.2)";
-            }}
-          >
-            <TrashIcon />
-            Obriši kurs
-          </button>
+    <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #F3F2FB 0%, #FBF7F2 100%)", padding: 24 }}>
+      <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+        
+        {/* Header - Informacije o kursu */}
+        <div style={{ background: "#FFFFFF", borderRadius: 16, padding: 24, marginBottom: 20, boxShadow: "0 2px 8px rgba(99,98,139,0.06)" }}>
+          <h2 style={{ margin: 0, color: "#63628B", fontSize: 24, display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ color: "#56629A" }}>
+              <BookOpenIcon />
+            </span>
+            {course.name}
+          </h2>
+          <p style={{ margin: "8px 0 0", color: "#8B7762", fontSize: 14, display: "flex", alignItems: "center", gap: 6 }}>
+            <UserIcon />
+            {course.professorName}
+          </p>
+          <p style={{ margin: "12px 0 0", color: "rgba(99,98,139,0.75)", fontSize: 14, lineHeight: 1.6 }}>{course.description}</p>
+          {course.materialPath && (
+            <div style={{ marginTop: 16, padding: 12, borderRadius: 10, background: "#F3F2FB", border: "1px solid rgba(86,98,154,0.1)" }}>
+              {course.materialPath.startsWith("data:") ? (
+                <a href={course.materialPath} download={`${course.name.replace(/\s+/g, '_')}_materijal.pdf`} style={{ color: "#56629A", textDecoration: "none", cursor: "pointer", fontWeight: 600, fontSize: 14, display: "flex", alignItems: "center", gap: 8 }}>
+                  <DownloadIcon />
+                  Preuzmi materijal (PDF)
+                </a>
+              ) : (
+                <a href={course.materialPath} target="_blank" rel="noopener noreferrer" style={{ color: "#56629A", textDecoration: "none", fontWeight: 600, fontSize: 14, display: "flex", alignItems: "center", gap: 8 }}>
+                  <DownloadIcon />
+                  Preuzmi materijal
+                </a>
+              )}
+            </div>
+          )}
         </div>
 
         {successMessage && (
-          <div
-            style={{
-              padding: 14,
-              marginBottom: 16,
-              background: "linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%)",
-              border: "1px solid rgba(6,95,70,0.12)",
-              borderRadius: 12,
-              color: "#065f46",
-              fontWeight: 600,
-              fontSize: 14,
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              boxShadow: "0 2px 8px rgba(6,95,70,0.08)",
-            }}
-          >
+          <div style={{ padding: 14, marginBottom: 16, background: "linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%)", border: "1px solid rgba(6,95,70,0.12)", borderRadius: 12, color: "#065f46", fontWeight: 600, fontSize: 14, display: "flex", alignItems: "center", gap: 10, boxShadow: "0 2px 8px rgba(6,95,70,0.08)" }}>
             <CheckCircleIcon />
             {successMessage}
           </div>
         )}
 
         {error && (
-          <div
-            style={{
-              padding: 14,
-              marginBottom: 16,
-              background: "#fff5f5",
-              border: "1px solid rgba(220,38,38,0.12)",
-              borderRadius: 12,
-              color: "#991b1b",
-              fontWeight: 600,
-              fontSize: 14,
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              boxShadow: "0 2px 8px rgba(220,38,38,0.08)",
-            }}
-          >
+          <div style={{ padding: 14, marginBottom: 16, background: "#fff5f5", border: "1px solid rgba(220,38,38,0.12)", borderRadius: 12, color: "#991b1b", fontWeight: 600, fontSize: 14, display: "flex", alignItems: "center", gap: 10, boxShadow: "0 2px 8px rgba(220,38,38,0.08)" }}>
             <XCircleIcon />
             {error}
           </div>
         )}
 
-        {/* Grid layout sa 2 kolone */}
-        <div style={{ 
-          display: "grid", 
-          gridTemplateColumns: "2fr 1fr",
-          gap: 24,
-        }}>
-          {/* Leva kolona - Glavni sadržaj */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+        {isProfessor && (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
             
-            {/* Informacije o kursu */}
-            <div
-              style={{
-                padding: 24,
-                border: "1px solid rgba(44,43,40,0.06)",
-                borderRadius: 16,
-                background: "#fff",
-                boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
-              }}
-            >
-              <div style={{ 
-                display: "flex", 
-                justifyContent: "space-between", 
-                alignItems: "center", 
-                marginBottom: 20,
-                paddingBottom: 16,
-                borderBottom: "2px solid #f5f0ea",
-              }}>
-                <h3 style={{ 
-                  margin: 0, 
-                  color: "#2c2b28", 
-                  fontSize: 18, 
-                  display: "flex", 
-                  alignItems: "center", 
-                  gap: 10 
-                }}>
-                  <span style={{ color: "#9a7556" }}>
-                    <EditIcon />
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              
+              <div style={{ padding: 20, border: "1px solid rgba(86,98,154,0.1)", borderRadius: 16, background: "#FFFFFF", boxShadow: "0 2px 8px rgba(99,98,139,0.06)" }}>
+                <h3 style={{ margin: "0 0 16px", color: "#63628B", fontSize: 17, display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ color: "#56629A" }}>
+                    <PlusCircleIcon />
                   </span>
-                  Informacije o kursu
+                  Kreiraj novi zadatak
                 </h3>
-                {!isEditing && (
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    style={{
-                      padding: "8px 16px",
-                      borderRadius: 8,
-                      border: "none",
-                      cursor: "pointer",
-                      fontWeight: 600,
-                      color: "#fff",
-                      background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-                      fontSize: 13,
-                      transition: "all 0.2s",
-                    }}
-                  >
-                    Izmeni
-                  </button>
-                )}
+                <form onSubmit={createTask} style={{ display: "grid", gap: 12 }}>
+                  <input placeholder="Naziv zadatka" value={newTaskTitle} onChange={(e) => setNewTaskTitle(e.target.value)} style={{ padding: 12, borderRadius: 10, border: "1px solid rgba(86,98,154,0.15)", background: "#FFFFFF", fontSize: 14, color: "#63628B" }} />
+                  <textarea placeholder="Opis zadatka" value={newTaskDesc} onChange={(e) => setNewTaskDesc(e.target.value)} style={{ padding: 12, borderRadius: 10, border: "1px solid rgba(86,98,154,0.15)", minHeight: 100, background: "#FFFFFF", fontSize: 14, color: "#63628B", fontFamily: "inherit", resize: "vertical" }} />
+                  <div>
+                    <label style={{ display: "block", marginBottom: 6, color: "#8B7762", fontSize: 13, fontWeight: 600 }}>Rok isporuke:</label>
+                    <input type="datetime-local" value={newTaskDeadline} onChange={(e) => setNewTaskDeadline(e.target.value)} style={{ padding: 12, borderRadius: 10, border: "1px solid rgba(86,98,154,0.15)", background: "#FFFFFF", fontSize: 14, color: "#63628B", width: "100%" }} />
+                  </div>
+                  <button type="submit" style={{ padding: 12, borderRadius: 10, border: "none", cursor: "pointer", fontWeight: 600, fontSize: 14, color: "#fff", background: "linear-gradient(135deg, #56629A, #63628B)", boxShadow: "0 4px 12px rgba(86,98,154,0.2)", transition: "all 0.2s" }}>Kreiraj zadatak</button>
+                </form>
               </div>
 
-              {isEditing ? (
-                <form onSubmit={handleUpdateCourse} style={{ display: "grid", gap: 16 }}>
-                  <div>
-                    <label style={{ 
-                      display: "block", 
-                      marginBottom: 8, 
-                      color: "#2c2b28", 
-                      fontSize: 14,
-                      fontWeight: 600,
-                    }}>
-                      Naziv kursa
-                    </label>
-                    <input
-                      placeholder="Naziv kursa"
-                      value={editName}
-                      onChange={(e) => setEditName(e.target.value)}
-                      style={{
-                        width: "100%",
-                        padding: 12,
-                        borderRadius: 10,
-                        border: "1px solid rgba(44,43,40,0.12)",
-                        background: "#fff",
-                        fontSize: 14,
-                      }}
-                    />
-                  </div>
-                  
-                  <div>
-                    <label style={{ 
-                      display: "block", 
-                      marginBottom: 8, 
-                      color: "#2c2b28", 
-                      fontSize: 14,
-                      fontWeight: 600,
-                    }}>
-                      Opis kursa
-                    </label>
-                    <textarea
-                      placeholder="Opis kursa"
-                      value={editDescription}
-                      onChange={(e) => setEditDescription(e.target.value)}
-                      style={{
-                        width: "100%",
-                        padding: 12,
-                        borderRadius: 10,
-                        border: "1px solid rgba(44,43,40,0.12)",
-                        minHeight: 120,
-                        background: "#fff",
-                        fontSize: 14,
-                        resize: "vertical",
-                      }}
-                    />
-                  </div>
-                  
-                  <div style={{ display: "flex", gap: 12 }}>
-                    <button
-                      type="submit"
-                      style={{
-                        padding: "10px 20px",
-                        borderRadius: 10,
-                        border: "none",
-                        cursor: "pointer",
-                        fontWeight: 600,
-                        color: "#fff",
-                        background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-                        fontSize: 14,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                      }}
-                    >
-                      <SaveIcon />
-                      Sačuvaj izmene
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsEditing(false);
-                        setEditName(course.name);
-                        setEditDescription(course.description);
-                      }}
-                      style={{
-                        padding: "10px 20px",
-                        borderRadius: 10,
-                        border: "1px solid rgba(44,43,40,0.12)",
-                        cursor: "pointer",
-                        fontWeight: 600,
-                        color: "#2c2b28",
-                        background: "#fff",
-                        fontSize: 14,
-                      }}
-                    >
-                      Otkaži
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <div>
-                  <div style={{ 
-                    fontWeight: 600, 
-                    color: "#2c2b28", 
-                    marginBottom: 4,
-                    fontSize: 15,
-                  }}>
-                    Naziv
-                  </div>
-                  <div style={{ 
-                    color: "rgba(44,43,40,0.9)", 
-                    fontSize: 14, 
-                    marginBottom: 16,
-                    padding: 12,
-                    background: "#f9f6f2",
-                    borderRadius: 8,
-                  }}>
-                    {course.name}
-                  </div>
-                  
-                  <div style={{ 
-                    fontWeight: 600, 
-                    color: "#2c2b28", 
-                    marginBottom: 4,
-                    fontSize: 15,
-                  }}>
-                    Opis
-                  </div>
-                  <div style={{ 
-                    color: "rgba(44,43,40,0.9)", 
-                    fontSize: 14,
-                    lineHeight: 1.6,
-                    padding: 12,
-                    background: "#f9f6f2",
-                    borderRadius: 8,
-                  }}>
-                    {course.description}
-                  </div>
+              <div style={{ padding: 20, border: "1px solid rgba(86,98,154,0.1)", borderRadius: 16, background: "#FFFFFF", boxShadow: "0 2px 8px rgba(99,98,139,0.06)", flex: 1 }}>
+                <h3 style={{ margin: "0 0 16px", color: "#63628B", fontSize: 17, display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ color: "#56629A" }}>
+                    <ClipboardIcon />
+                  </span>
+                  Zadaci ({tasks.length})
+                </h3>
+                <div style={{ display: "grid", gap: 12, maxHeight: 500, overflowY: "auto", paddingRight: 8 }}>
+                  {tasks.map((t) => (
+                    <div key={t.id} style={{ padding: 14, border: "1px solid rgba(86,98,154,0.1)", borderRadius: 12, background: "#F3F2FB" }}>
+                      <div style={{ fontWeight: 700, color: "#63628B", fontSize: 15, marginBottom: 4 }}>{t.title}</div>
+                      <div style={{ color: "rgba(99,98,139,0.75)", fontSize: 14, marginBottom: 8, lineHeight: 1.5 }}>{t.description}</div>
+                      <div style={{ fontSize: 12, color: "#8B7762", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                        <ClockIcon />
+                        Rok: {t.deadline ? new Date(t.deadline).toLocaleString('sr-RS') : "-"}
+                      </div>
+                    </div>
+                  ))}
+                  {tasks.length === 0 && (
+                    <div style={{ textAlign: "center", padding: 40, color: "#8B7762", fontStyle: "italic", background: "#F3F2FB", borderRadius: 12, border: "1px solid rgba(86,98,154,0.1)" }}>
+                      <div style={{ marginBottom: 12, color: "#56629A", display: "flex", justifyContent: "center" }}>
+                        <InboxIcon />
+                      </div>
+                      Nema zadataka još.
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
 
-            {/* Materijal za učenje */}
-            <div
-              style={{
-                padding: 24,
-                border: "1px solid rgba(44,43,40,0.06)",
-                borderRadius: 16,
-                background: "#fff",
-                boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
-              }}
-            >
-              <h3 style={{ 
-                margin: "0 0 20px", 
-                color: "#2c2b28", 
-                fontSize: 18,
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                paddingBottom: 16,
-                borderBottom: "2px solid #f5f0ea",
-              }}>
-                <span style={{ color: "#9a7556" }}>
-                  <FileTextIcon />
+            <div style={{ padding: 20, border: "1px solid rgba(86,98,154,0.1)", borderRadius: 16, background: "#FFFFFF", boxShadow: "0 2px 8px rgba(99,98,139,0.06)" }}>
+              <h3 style={{ margin: "0 0 16px", color: "#63628B", fontSize: 17, display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ color: "#56629A" }}>
+                  <ListIcon />
                 </span>
-                Materijal za učenje
+                Predata rešenja ({submissions.length})
               </h3>
-              
-              {course.materialPath ? (
-                <div
-                  style={{
-                    padding: 16,
-                    borderRadius: 10,
-                    background: "#e9fbf4",
-                    border: "1px solid rgba(6,95,70,0.12)",
-                    marginBottom: 16,
-                  }}
-                >
-                  <div style={{ 
-                    display: "flex", 
-                    alignItems: "center", 
-                    gap: 12,
-                  }}>
-                    <div style={{ color: "#065f46" }}>
-                      <CheckCircleIcon />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 600, color: "#065f46", marginBottom: 2 }}>
-                        Materijal okačen
+              <div style={{ display: "grid", gap: 14, maxHeight: 800, overflowY: "auto", paddingRight: 8 }}>
+                {submissions.map((s) => (
+                  <div key={s.id} style={{ padding: 18, border: "1px solid rgba(86,98,154,0.1)", borderRadius: 12, background: s.grade ? "#f0fdf4" : "#F3F2FB", transition: "all 0.2s" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 700, color: "#63628B", fontSize: 16, marginBottom: 6 }}>{s.taskTitle}</div>
+                        <div style={{ color: "#8B7762", fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}>
+                          <UserIcon />
+                          {s.studentName}
+                        </div>
                       </div>
-                      <div style={{ fontSize: 13, color: "#047857" }}>
-                        {course.materialPath.startsWith("data:") ? (
-                          <>PDF fajl ({Math.round(course.materialPath.length / 1024)} KB)</>
+                      <div style={{ padding: "6px 14px", borderRadius: 20, fontSize: 12, fontWeight: 600, background: s.grade ? "#dcfce7" : "#fff7e8", color: s.grade ? "#065f46" : "#7a5b32", border: `1px solid ${s.grade ? "rgba(6,95,70,0.12)" : "rgba(122,91,50,0.12)"}`, whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 6 }}>
+                        {s.grade ? (
+                          <>
+                            <CheckCircleIcon />
+                            Ocenjeno
+                          </>
                         ) : (
-                          <>Fajl: {course.materialPath.split('/').pop()}</>
+                          <>
+                            <ClockIcon />
+                            Na čekanju
+                          </>
                         )}
                       </div>
                     </div>
+                    <div style={{ fontSize: 14, color: "rgba(99,98,139,0.8)", marginBottom: s.grade ? 12 : 0, padding: 10, background: "#FFFFFF", borderRadius: 8, border: "1px solid rgba(86,98,154,0.1)", display: "flex", alignItems: "center", gap: 6 }}>
+                      <FileTextIcon />
+                      Fajl: <code style={{ background: "#F3F2FB", padding: "3px 8px", borderRadius: 6, fontWeight: 600, color: "#63628B" }}>{s.filePath.startsWith('data:') ? 'Python rešenje (.py)' : s.filePath}</code>
+                    </div>
+                    {s.grade ? (
+                      <div style={{ padding: 14, borderRadius: 10, background: "#FFFFFF", border: "1px solid rgba(6,95,70,0.12)", display: "flex", gap: 14, alignItems: "flex-start" }}>
+                        <div style={{ flex: 1 }}>
+                          {s.comment ? (
+                            <div>
+                              <div style={{ fontSize: 11, color: "#047857", marginBottom: 6, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", display: "flex", alignItems: "center", gap: 4 }}>
+                                <MessageSquareIcon />
+                                Komentar profesora
+                              </div>
+                              <div style={{ fontSize: 13, color: "#065f46", lineHeight: 1.6 }}>{s.comment}</div>
+                            </div>
+                          ) : (
+                            <div style={{ fontSize: 13, color: "#8B7762", fontStyle: "italic" }}>Nema komentara</div>
+                          )}
+                        </div>
+                        <div style={{ padding: "8px 14px", borderRadius: 8, background: "linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%)", border: "1px solid rgba(6,95,70,0.15)", boxShadow: "0 1px 3px rgba(6,95,70,0.08)", textAlign: "center", minWidth: 80 }}>
+                          <div style={{ fontSize: 10, color: "#047857", marginBottom: 2, fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>Ocena</div>
+                          <div style={{ fontSize: 22, fontWeight: 700, color: "#065f46", letterSpacing: "-0.5px", lineHeight: 1 }}>{s.grade}/5</div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
+                        <button onClick={() => handleDownloadSubmission(s.taskId, s.id)} style={{ flex: 1, padding: "10px 16px", borderRadius: 10, border: "1px solid rgba(86,98,154,0.15)", cursor: "pointer", fontWeight: 600, fontSize: 14, color: "#63628B", background: "#FFFFFF", boxShadow: "0 1px 3px rgba(99,98,139,0.06)", transition: "all 0.2s", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }} onMouseEnter={(e) => { e.currentTarget.style.background = "#F3F2FB"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 2px 6px rgba(99,98,139,0.1)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "#FFFFFF"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 3px rgba(99,98,139,0.06)"; }}>
+                          <DownloadIcon />
+                          Preuzmi
+                        </button>
+                        <button onClick={() => openGradingModal(s)} style={{ flex: 1, padding: "10px 16px", borderRadius: 10, border: "none", cursor: "pointer", fontWeight: 600, fontSize: 14, color: "#fff", background: "linear-gradient(135deg, #56629A, #63628B)", boxShadow: "0 4px 12px rgba(86,98,154,0.2)", transition: "all 0.2s", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }} onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 6px 16px rgba(86,98,154,0.25)"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(86,98,154,0.2)"; }}>
+                          <StarIcon />
+                          Oceni
+                        </button>
+                      </div>
+                    )}
                   </div>
-                </div>
-              ) : (
-                <div
-                  style={{
-                    padding: 16,
-                    borderRadius: 10,
-                    background: "#fff7e8",
-                    border: "1px solid rgba(122,91,50,0.12)",
-                    marginBottom: 16,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                  }}
-                >
-                  <div style={{ color: "#7a5b32" }}>
-                    <AlertIcon />
+                ))}
+                {submissions.length === 0 && (
+                  <div style={{ textAlign: "center", padding: 60, color: "#8B7762", fontStyle: "italic", background: "#F3F2FB", borderRadius: 12, border: "1px solid rgba(86,98,154,0.1)" }}>
+                    <div style={{ marginBottom: 16, color: "#56629A", display: "flex", justifyContent: "center" }}>
+                      <InboxIcon />
+                    </div>
+                    <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>Nema predatih rešenja</div>
+                    <div style={{ fontSize: 13 }}>Kada studenti predaju zadatke, ovde će se pojaviti.</div>
                   </div>
-                  <div style={{ color: "#7a5b32", fontSize: 14 }}>
-                    Materijal još nije okačen
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
-              <form onSubmit={handleMaterialUpload} style={{ display: "grid", gap: 14 }}>
+        {isStudent && (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+            
+            {/* Leva kolona - Predaja zadataka */}
+            <div style={{ padding: 20, border: "1px solid rgba(86,98,154,0.1)", borderRadius: 16, background: "#FFFFFF", boxShadow: "0 2px 8px rgba(99,98,139,0.06)" }}>
+              <h3 style={{ margin: "0 0 16px", color: "#63628B", fontSize: 17, display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ color: "#56629A" }}>
+                  <UploadIcon />
+                </span>
+                Predaj zadatak
+              </h3>
+              <form onSubmit={submitTask} style={{ display: "grid", gap: 14 }}>
                 <div>
-                  <label
-                    style={{
-                      display: "block",
-                      marginBottom: 8,
-                      color: "#2c2b28",
-                      fontSize: 14,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {course.materialPath ? "Zameni materijal:" : "Izaberite PDF fajl (max 10MB):"}
-                  </label>
-                  <input
-                    type="file"
-                    accept=".pdf,application/pdf"
-                    onChange={(e) => setMaterialFile(e.target.files?.[0] || null)}
-                    style={{
-                      padding: 10,
-                      borderRadius: 10,
-                      border: "1px solid rgba(44,43,40,0.12)",
-                      background: "#fff",
-                      width: "100%",
-                      fontSize: 14,
-                    }}
-                  />
+                  <label style={{ display: "block", marginBottom: 6, color: "#8B7762", fontSize: 13, fontWeight: 600 }}>Izaberi zadatak:</label>
+                  <select value={selectedTaskId} onChange={(e) => setSelectedTaskId(e.target.value === "" ? "" : Number(e.target.value))} style={{ padding: 12, borderRadius: 10, border: "1px solid rgba(86,98,154,0.15)", background: "#FFFFFF", color: "#63628B", fontSize: 14, width: "100%" }}>
+                    <option value="">-- Izaberi zadatak --</option>
+                    {tasks.map((t) => (
+                      <option key={t.id} value={t.id}>{t.title}</option>
+                    ))}
+                  </select>
                 </div>
-                <button
-                  type="submit"
-                  disabled={uploadingMaterial || !materialFile}
-                  style={{
-                    padding: 12,
-                    borderRadius: 10,
-                    border: "none",
-                    cursor: uploadingMaterial || !materialFile ? "not-allowed" : "pointer",
-                    opacity: uploadingMaterial || !materialFile ? 0.6 : 1,
-                    fontWeight: 600,
-                    color: "#fff",
-                    background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-                    fontSize: 14,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 8,
-                  }}
-                >
-                  {uploadingMaterial ? (
-                    "Upload..."
-                  ) : course.materialPath ? (
-                    <>
-                      <RefreshIcon />
-                      Zameni materijal
-                    </>
-                  ) : (
-                    <>
-                      <UploadIcon />
-                      Okači materijal
-                    </>
+                <div>
+                  <label style={{ display: "block", marginBottom: 6, color: "#8B7762", fontSize: 13, fontWeight: 600 }}>Python fajl (.py):</label>
+                  <input id="file-upload" type="file" accept=".py,text/x-python" onChange={(e) => setSelectedFile(e.target.files?.[0] || null)} style={{ padding: 10, borderRadius: 10, border: "1px solid rgba(86,98,154,0.15)", background: "#FFFFFF", width: "100%", cursor: "pointer", fontSize: 14 }} />
+                  {selectedFile && (
+                    <div style={{ marginTop: 10, padding: 12, borderRadius: 10, background: "linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%)", border: "1px solid rgba(6,95,70,0.12)" }}>
+                      <div style={{ fontSize: 12, color: "#047857", fontWeight: 600, marginBottom: 4, display: "flex", alignItems: "center", gap: 4 }}>
+                        <CheckCircleIcon />
+                        Odabran fajl:
+                      </div>
+                      <div style={{ fontSize: 13, color: "#065f46", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                        <FileTextIcon />
+                        {selectedFile.name}
+                      </div>
+                      <div style={{ fontSize: 12, color: "#8B7762", marginTop: 2 }}>Veličina: {(selectedFile.size / 1024).toFixed(2)} KB</div>
+                    </div>
                   )}
+                </div>
+                <button type="submit" disabled={submitting} style={{ padding: 12, borderRadius: 10, border: "none", cursor: submitting ? "not-allowed" : "pointer", opacity: submitting ? 0.6 : 1, fontWeight: 600, fontSize: 14, color: "#fff", background: "linear-gradient(135deg, #56629A, #63628B)", boxShadow: submitting ? "none" : "0 4px 12px rgba(86,98,154,0.2)", transition: "all 0.2s", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                  <UploadIcon />
+                  {submitting ? "Predaja u toku..." : "Predaj rešenje"}
                 </button>
               </form>
             </div>
-          </div>
 
-          {/* Desna kolona - Sidebar */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-            
-            {/* Studenti */}
-            <div
-              style={{
-                padding: 20,
-                border: "1px solid rgba(44,43,40,0.06)",
-                borderRadius: 16,
-                background: "#fff",
-                boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
-              }}
-            >
-              <div style={{ 
-                display: "flex", 
-                justifyContent: "space-between", 
-                alignItems: "center", 
-                marginBottom: 16,
-                paddingBottom: 14,
-                borderBottom: "2px solid #f5f0ea",
-              }}>
-                <h3 style={{ 
-                  margin: 0, 
-                  color: "#2c2b28", 
-                  fontSize: 17,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                }}>
-                  <span style={{ color: "#9a7556" }}>
-                    <UsersIcon />
-                  </span>
-                  Studenti
-                  <span style={{
-                    fontSize: 13,
-                    fontWeight: 600,
-                    padding: "2px 8px",
-                    borderRadius: 12,
-                    background: "#f0fdf4",
-                    color: "#065f46",
-                  }}>
-                    {enrolledStudents.length}
-                  </span>
-                </h3>
-                {!showAddStudents && (
-                  <button
-                    onClick={() => {
-                      setShowAddStudents(true);
-                      fetchAvailableStudents();
-                    }}
-                    style={{
-                      padding: "6px 12px",
-                      borderRadius: 8,
-                      border: "none",
-                      cursor: "pointer",
-                      fontWeight: 600,
-                      color: "#fff",
-                      background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-                      fontSize: 12,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6,
-                    }}
-                  >
-                    <UserPlusIcon />
-                    Dodaj
-                  </button>
-                )}
-              </div>
-
-              {showAddStudents && (
-                <div
-                  style={{
-                    marginBottom: 16,
-                    padding: 14,
-                    borderRadius: 10,
-                    background: "#f9f6f2",
-                    border: "1px solid rgba(44,43,40,0.08)",
-                  }}
-                >
-                  <form onSubmit={handleAddStudent} style={{ display: "grid", gap: 10 }}>
-                    <select
-                      value={selectedStudentId}
-                      onChange={(e) => setSelectedStudentId(e.target.value === "" ? "" : Number(e.target.value))}
-                      style={{
-                        padding: 10,
-                        borderRadius: 8,
-                        border: "1px solid rgba(44,43,40,0.12)",
-                        background: "#fff",
-                        fontSize: 13,
-                      }}
-                    >
-                      <option value="">Izaberi studenta</option>
-                      {availableStudents.map((s) => (
-                        <option key={s.id} value={s.id}>
-                          {s.firstName} {s.lastName}
-                        </option>
-                      ))}
-                    </select>
-                    <div style={{ display: "flex", gap: 8 }}>
-                      <button
-                        type="submit"
-                        disabled={addingStudent}
-                        style={{
-                          flex: 1,
-                          padding: 8,
-                          borderRadius: 8,
-                          border: "none",
-                          cursor: addingStudent ? "not-allowed" : "pointer",
-                          opacity: addingStudent ? 0.6 : 1,
-                          fontWeight: 600,
-                          color: "#fff",
-                          background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-                          fontSize: 13,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: 6,
-                        }}
-                      >
-                        {addingStudent ? "..." : (
-                          <>
-                            <CheckCircleIcon />
-                            Dodaj
-                          </>
-                        )}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowAddStudents(false);
-                          setSelectedStudentId("");
-                        }}
-                        style={{
-                          padding: 8,
-                          borderRadius: 8,
-                          border: "1px solid rgba(44,43,40,0.12)",
-                          cursor: "pointer",
-                          fontWeight: 600,
-                          color: "#2c2b28",
-                          background: "#fff",
-                          fontSize: 13,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <XCircleIcon />
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              )}
-
-              <div style={{ display: "grid", gap: 10, maxHeight: 240, overflowY: "auto", paddingRight: 4 }}>
-                {enrolledStudents.map((e) => (
-                  <div
-                    key={e.id}
-                    style={{
-                      padding: 12,
-                      borderRadius: 10,
-                      background: "#fafafa",
-                      border: "1px solid rgba(44,43,40,0.06)",
-                    }}
-                  >
-                    <div style={{ fontWeight: 600, color: "#2c2b28", fontSize: 14 }}>
-                      {e.studentName}
-                    </div>
-                    <div style={{ 
-                      fontSize: 11, 
-                      color: "#8b7762", 
-                      marginTop: 4,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 4,
-                    }}>
-                      <CalendarIcon />
-                      {new Date(e.enrolledAt).toLocaleDateString()}
+            {/* Desna kolona - Lista zadataka */}
+            <div style={{ padding: 20, border: "1px solid rgba(86,98,154,0.1)", borderRadius: 16, background: "#FFFFFF", boxShadow: "0 2px 8px rgba(99,98,139,0.06)" }}>
+              <h3 style={{ margin: "0 0 16px", color: "#63628B", fontSize: 17, display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ color: "#56629A" }}>
+                  <ClipboardIcon />
+                </span>
+                Zadaci ({tasks.length})
+              </h3>
+              <div style={{ display: "grid", gap: 12, maxHeight: 600, overflowY: "auto", paddingRight: 8 }}>
+                {tasks.map((t) => (
+                  <div key={t.id} style={{ padding: 14, border: "1px solid rgba(86,98,154,0.1)", borderRadius: 12, background: "#F3F2FB" }}>
+                    <div style={{ fontWeight: 700, color: "#63628B", fontSize: 15, marginBottom: 4 }}>{t.title}</div>
+                    <div style={{ color: "rgba(99,98,139,0.75)", fontSize: 14, marginBottom: 8, lineHeight: 1.5 }}>{t.description}</div>
+                    <div style={{ fontSize: 12, color: "#8B7762", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                      <ClockIcon />
+                      Rok: {t.deadline ? new Date(t.deadline).toLocaleString('sr-RS') : "-"}
                     </div>
                   </div>
                 ))}
-                {enrolledStudents.length === 0 && (
-                  <div
-                    style={{
-                      textAlign: "center",
-                      padding: 24,
-                      color: "#8b7762",
-                      fontStyle: "italic",
-                      fontSize: 13,
-                    }}
-                  >
-                    Nema upisanih studenata.
+                {tasks.length === 0 && (
+                  <div style={{ textAlign: "center", padding: 40, color: "#8B7762", fontStyle: "italic", background: "#F3F2FB", borderRadius: 12, border: "1px solid rgba(86,98,154,0.1)" }}>
+                    <div style={{ marginBottom: 12, color: "#56629A", display: "flex", justifyContent: "center" }}>
+                      <InboxIcon />
+                    </div>
+                    Nema zadataka još.
                   </div>
                 )}
               </div>
             </div>
+          </div>
+        )}
+      </div>
 
-            {/* Brzi linkovi */}
-            <div
-              style={{
-                padding: 20,
-                border: "1px solid rgba(44,43,40,0.06)",
-                borderRadius: 16,
-                background: "#fff",
-                boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
-              }}
-            >
-              <h3 style={{ 
-                margin: "0 0 16px", 
-                color: "#2c2b28", 
-                fontSize: 17,
-                paddingBottom: 14,
-                borderBottom: "2px solid #f5f0ea",
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-              }}>
-                <span style={{ color: "#9a7556" }}>
-                  <LinkIcon />
-                </span>
-                Brzi linkovi
-              </h3>
-              
-              <div style={{ display: "grid", gap: 10 }}>
-                <Link
-                  to={`/courses/${courseId}`}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    padding: "12px 14px",
-                    borderRadius: 10,
-                    border: "1px solid rgba(44,43,40,0.08)",
-                    fontWeight: 600,
-                    color: "#2c2b28",
-                    background: "#fafafa",
-                    textDecoration: "none",
-                    fontSize: 14,
-                    transition: "all 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#f0f0f0";
-                    e.currentTarget.style.transform = "translateX(4px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "#fafafa";
-                    e.currentTarget.style.transform = "translateX(0)";
-                  }}
-                >
-                  <ClipboardIcon />
-                  Upravljaj zadacima
-                </Link>
-
-                <Link
-                  to="/professor/courses"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    padding: "12px 14px",
-                    borderRadius: 10,
-                    border: "1px solid rgba(44,43,40,0.08)",
-                    fontWeight: 600,
-                    color: "#2c2b28",
-                    background: "#fafafa",
-                    textDecoration: "none",
-                    fontSize: 14,
-                    transition: "all 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#f0f0f0";
-                    e.currentTarget.style.transform = "translateX(4px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "#fafafa";
-                    e.currentTarget.style.transform = "translateX(0)";
-                  }}
-                >
-                  <BookIcon />
-                  Moji kursevi
-                </Link>
-              </div>
+      {gradingSubmission && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 24 }} onClick={closeGradingModal}>
+          <div style={{ background: "#FFFFFF", borderRadius: 16, padding: 24, maxWidth: 500, width: "100%", boxShadow: "0 20px 40px rgba(0,0,0,0.2)" }} onClick={(e) => e.stopPropagation()}>
+            <h3 style={{ margin: "0 0 16px", color: "#63628B", fontSize: 20 }}>Oceni rešenje</h3>
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 14, color: "#8B7762", marginBottom: 4 }}><strong>Zadatak:</strong> {gradingSubmission.taskTitle}</div>
+              <div style={{ fontSize: 14, color: "#8B7762" }}><strong>Student:</strong> {gradingSubmission.studentName}</div>
             </div>
-
-            {/* Statistika */}
-            <div
-              style={{
-                padding: 20,
-                border: "1px solid rgba(44,43,40,0.06)",
-                borderRadius: 16,
-                background: "linear-gradient(135deg, #fff 0%, #fafafa 100%)",
-                boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
-              }}
-            >
-              <h3 style={{ 
-                margin: "0 0 16px", 
-                color: "#2c2b28", 
-                fontSize: 17,
-                paddingBottom: 14,
-                borderBottom: "2px solid #f5f0ea",
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-              }}>
-                <span style={{ color: "#9a7556" }}>
-                  <BarChartIcon />
-                </span>
-                Statistika
-              </h3>
-              
-              <div style={{ display: "grid", gap: 12 }}>
-                <div style={{ 
-                  padding: 12,
-                  borderRadius: 10,
-                  background: "#fff",
-                  border: "1px solid rgba(44,43,40,0.06)",
-                }}>
-                  <div style={{ fontSize: 12, color: "#8b7762", marginBottom: 4 }}>
-                    Upisani studenti
-                  </div>
-                  <div style={{ fontSize: 24, fontWeight: 700, color: "#2c2b28" }}>
-                    {enrolledStudents.length}
-                  </div>
-                </div>
-              </div>
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ display: "block", marginBottom: 6, color: "#8B7762", fontSize: 13, fontWeight: 600 }}>Ocena (1-5):</label>
+              <input type="number" min="1" max="5" value={gradeValue} onChange={(e) => setGradeValue(e.target.value)} placeholder="Unesi ocenu" style={{ padding: 12, borderRadius: 10, border: "1px solid rgba(86,98,154,0.15)", background: "#FFFFFF", fontSize: 14, color: "#63628B", width: "100%" }} />
+            </div>
+            <div style={{ marginBottom: 20 }}>
+              <label style={{ display: "block", marginBottom: 6, color: "#8B7762", fontSize: 13, fontWeight: 600 }}>Komentar (opciono):</label>
+              <textarea value={gradeComment} onChange={(e) => setGradeComment(e.target.value)} placeholder="Napišite komentar..." style={{ padding: 12, borderRadius: 10, border: "1px solid rgba(86,98,154,0.15)", background: "#FFFFFF", fontSize: 14, color: "#63628B", width: "100%", minHeight: 100, fontFamily: "inherit", resize: "vertical" }} />
+            </div>
+            <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
+              <button onClick={closeGradingModal} style={{ padding: "10px 20px", borderRadius: 10, border: "1px solid rgba(86,98,154,0.15)", cursor: "pointer", fontWeight: 600, fontSize: 14, color: "#63628B", background: "#FFFFFF", transition: "all 0.2s" }}>Otkaži</button>
+              <button onClick={submitGrade} style={{ padding: "10px 20px", borderRadius: 10, border: "none", cursor: "pointer", fontWeight: 600, fontSize: 14, color: "#fff", background: "linear-gradient(135deg, #56629A, #63628B)", boxShadow: "0 4px 12px rgba(86,98,154,0.2)", transition: "all 0.2s" }}>Postavi ocenu</button>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

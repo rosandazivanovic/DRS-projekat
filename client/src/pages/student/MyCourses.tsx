@@ -79,7 +79,7 @@ export default function MyCoursesPage() {
     return (
       <div style={pageWrap}>
         <div style={errorContainer}>
-          <div style={{ marginBottom: 16, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+          <div style={{ marginBottom: 16, color: "#56629A", display: "flex", justifyContent: "center" }}>
             <AlertCircleIcon />
           </div>
           Nemaš pristup ovoj stranici.
@@ -92,20 +92,20 @@ export default function MyCoursesPage() {
     <div style={pageWrap}>
       <div style={container}>
         <div style={header}>
-          <h2 style={{ margin: 0, color: "#2c2b28", fontSize: 26, fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ color: "#9a7556" }}>
+          <h2 style={{ margin: 0, color: "#63628B", fontSize: 26, fontWeight: 700, display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ color: "#56629A" }}>
               <BookOpenIcon />
             </span>
             Moji kursevi
           </h2>
-          <p style={{ margin: "6px 0 0", color: "#8b7762", fontSize: 15 }}>
+          <p style={{ margin: "6px 0 0", color: "#8B7762", fontSize: 15 }}>
             Kursevi na koje si upisan
           </p>
         </div>
 
         {loading ? (
           <div style={loadingState}>
-            <div style={{ marginBottom: 16, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+            <div style={{ marginBottom: 16, color: "#56629A", display: "flex", justifyContent: "center" }}>
               <LoaderIcon />
             </div>
             Učitavanje...
@@ -118,11 +118,11 @@ export default function MyCoursesPage() {
                 to={`/courses/${c.id}`}
                 style={courseLink}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 6px 18px rgba(39,35,30,0.08)";
+                  (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 6px 18px rgba(99,98,139,0.12)";
                   (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px)";
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 2px 8px rgba(39,35,30,0.04)";
+                  (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 2px 8px rgba(99,98,139,0.06)";
                   (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)";
                 }}
               >
@@ -142,7 +142,7 @@ export default function MyCoursesPage() {
 
             {courses.length === 0 && (
               <div style={emptyState}>
-                <div style={{ marginBottom: 16, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+                <div style={{ marginBottom: 16, color: "#56629A", display: "flex", justifyContent: "center" }}>
                   <BookmarkIcon />
                 </div>
                 Još nisi upisan ni na jedan kurs.
@@ -158,58 +158,58 @@ export default function MyCoursesPage() {
 /* ----------------- Styles ----------------- */
 const pageWrap: React.CSSProperties = {
   minHeight: "100vh",
-  background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)",
+  background: "linear-gradient(180deg, #F3F2FB 0%, #FBF7F2 100%)",
   padding: 24,
 };
 
 const container: React.CSSProperties = {
   maxWidth: 900,
   margin: "0 auto",
-  background: "#fff",
+  background: "#FFFFFF",
   borderRadius: 20,
   padding: 28,
-  boxShadow: "0 20px 40px rgba(39,35,30,0.04)",
+  boxShadow: "0 20px 40px rgba(99,98,139,0.08)",
 };
 
 const errorContainer: React.CSSProperties = {
   maxWidth: 600,
   margin: "0 auto",
-  background: "#fff",
+  background: "#FFFFFF",
   borderRadius: 20,
   padding: 60,
   textAlign: "center",
-  color: "#8b7762",
-  boxShadow: "0 20px 40px rgba(39,35,30,0.04)",
+  color: "#8B7762",
+  boxShadow: "0 20px 40px rgba(99,98,139,0.08)",
 };
 
 const header: React.CSSProperties = {
   marginBottom: 24,
   paddingBottom: 20,
-  borderBottom: "2px solid #f5f0ea",
+  borderBottom: "2px solid #F3F2FB",
 };
 
 const loadingState: React.CSSProperties = {
   textAlign: "center",
-  color: "#8b7762",
+  color: "#8B7762",
   padding: 40,
 };
 
 const courseLink: React.CSSProperties = {
   textDecoration: "none",
   color: "inherit",
-  border: "1px solid rgba(44,43,40,0.06)",
+  border: "1px solid rgba(86,98,154,0.1)",
   borderRadius: 16,
   padding: 20,
-  background: "#fffaf6",
+  background: "#F3F2FB",
   display: "block",
   transition: "all 0.2s",
-  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
 };
 
 const courseName: React.CSSProperties = {
   fontWeight: 700,
   fontSize: 17,
-  color: "#2c2b28",
+  color: "#63628B",
   marginBottom: 8,
   display: "flex",
   alignItems: "center",
@@ -217,7 +217,7 @@ const courseName: React.CSSProperties = {
 };
 
 const professorInfo: React.CSSProperties = {
-  color: "#8b7762",
+  color: "#8B7762",
   fontSize: 14,
   marginBottom: 10,
   display: "flex",
@@ -226,7 +226,7 @@ const professorInfo: React.CSSProperties = {
 };
 
 const courseDescription: React.CSSProperties = {
-  color: "rgba(44,43,40,0.8)",
+  color: "rgba(99,98,139,0.8)",
   fontSize: 14,
   lineHeight: 1.6,
 };
@@ -234,9 +234,9 @@ const courseDescription: React.CSSProperties = {
 const emptyState: React.CSSProperties = {
   textAlign: "center",
   padding: 60,
-  color: "#8b7762",
+  color: "#8B7762",
   fontStyle: "italic",
-  background: "#fffaf6",
+  background: "#F3F2FB",
   borderRadius: 16,
-  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
 };

@@ -65,10 +65,10 @@ export default function RejectModal({
                 onClick={() => setReason(t)} 
                 style={{
                   ...templateButton,
-                  background: reason === t ? "#f5f0ea" : "#fff",
+                  background: reason === t ? "#E8E7F5" : "#FFFFFF",
                   border: reason === t 
-                    ? "2px solid rgba(185,154,127,0.3)" 
-                    : "1px solid rgba(44,43,40,0.1)",
+                    ? "2px solid rgba(86,98,154,0.3)" 
+                    : "1px solid rgba(86,98,154,0.15)",
                 }}
               >
                 {truncate(t, 80)}
@@ -117,10 +117,10 @@ const overlay: React.CSSProperties = {
 const modal: React.CSSProperties = {
   width: "100%",
   maxWidth: 720,
-  background: "#fff",
+  background: "#FFFFFF",
   padding: 24,
   borderRadius: 16,
-  boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
+  boxShadow: "0 20px 40px rgba(99,98,139,0.15)",
 };
 
 const modalHeader: React.CSSProperties = {
@@ -129,12 +129,12 @@ const modalHeader: React.CSSProperties = {
   alignItems: "flex-start",
   marginBottom: 20,
   paddingBottom: 16,
-  borderBottom: "2px solid #f5f0ea",
+  borderBottom: "2px solid #F3F2FB",
 };
 
 const modalTitle: React.CSSProperties = {
   margin: 0,
-  color: "#2c2b28",
+  color: "#63628B",
   fontSize: 22,
   fontWeight: 700,
 };
@@ -142,7 +142,7 @@ const modalTitle: React.CSSProperties = {
 const closeButton: React.CSSProperties = {
   background: "none",
   border: "none",
-  color: "#8b7762",
+  color: "#8B7762",
   cursor: "pointer",
   padding: 4,
   lineHeight: 1,
@@ -158,7 +158,7 @@ const modalBody: React.CSSProperties = {
 
 const sectionTitle: React.CSSProperties = {
   fontSize: 13,
-  color: "#8b7762",
+  color: "#8B7762",
   fontWeight: 600,
   marginBottom: 12,
 };
@@ -176,7 +176,7 @@ const templateButton: React.CSSProperties = {
   cursor: "pointer",
   fontSize: 13,
   fontWeight: 500,
-  color: "#2c2b28",
+  color: "#63628B",
   transition: "all 0.2s",
 };
 
@@ -185,9 +185,9 @@ const textareaStyle: React.CSSProperties = {
   minHeight: 100,
   padding: 12,
   borderRadius: 10,
-  border: "1px solid rgba(44,43,40,0.1)",
+  border: "1px solid rgba(86,98,154,0.15)",
   fontSize: 14,
-  color: "#2c2b28",
+  color: "#63628B",
   fontFamily: "inherit",
   resize: "vertical",
   boxShadow: "inset 0 1px 0 rgba(0,0,0,0.02)",
@@ -198,17 +198,17 @@ const modalFooter: React.CSSProperties = {
   gap: 10,
   justifyContent: "flex-end",
   paddingTop: 16,
-  borderTop: "1px solid rgba(44,43,40,0.06)",
+  borderTop: "1px solid rgba(86,98,154,0.1)",
 };
 
 const cancelButton: React.CSSProperties = {
   padding: "10px 20px",
   borderRadius: 10,
-  border: "1px solid rgba(44,43,40,0.12)",
-  background: "#fff",
+  border: "1px solid rgba(86,98,154,0.15)",
+  background: "#FFFFFF",
   fontWeight: 600,
   fontSize: 14,
-  color: "#2c2b28",
+  color: "#63628B",
   cursor: "pointer",
   transition: "all 0.2s",
 };
@@ -217,11 +217,11 @@ const confirmButton: React.CSSProperties = {
   padding: "10px 20px",
   borderRadius: 10,
   border: "none",
-  background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
-  color: "#fff",
+  background: "linear-gradient(135deg, #56629A, #63628B)",
+  color: "#FFFFFF",
   fontWeight: 600,
   fontSize: 14,
   cursor: "pointer",
-  boxShadow: "0 4px 12px rgba(121,86,61,0.15)",
+  boxShadow: "0 4px 12px rgba(86,98,154,0.2)",
   transition: "all 0.2s",
 };

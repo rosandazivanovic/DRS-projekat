@@ -7,58 +7,52 @@ import { useAuth } from "../../auth/AuthContext";
 
 const BookIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
   </svg>
 );
 
 const CheckCircleIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-    <polyline points="22 4 12 14.01 9 11.01"/>
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+    <polyline points="22 4 12 14.01 9 11.01" />
   </svg>
 );
 
 const ClockIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10"/>
-    <polyline points="12 6 12 12 16 14"/>
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
   </svg>
 );
 
 const XCircleIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10"/>
-    <line x1="15" y1="9" x2="9" y2="15"/>
-    <line x1="9" y1="9" x2="15" y2="15"/>
+    <circle cx="12" cy="12" r="10" />
+    <line x1="15" y1="9" x2="9" y2="15" />
+    <line x1="9" y1="9" x2="15" y2="15" />
   </svg>
 );
 
 const MessageIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
   </svg>
 );
 
-const SettingsIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="3"/>
-    <path d="M12 1v6m0 6v6m5.196-14.196l-4.242 4.242m0 5.908l-4.242 4.242M23 12h-6m-6 0H5m14.196 5.196l-4.242-4.242m0-5.908l-4.242-4.242"/>
-  </svg>
-);
 
 const BarChartIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="12" y1="20" x2="12" y2="10"/>
-    <line x1="18" y1="20" x2="18" y2="4"/>
-    <line x1="6" y1="20" x2="6" y2="16"/>
+    <line x1="12" y1="20" x2="12" y2="10" />
+    <line x1="18" y1="20" x2="18" y2="4" />
+    <line x1="6" y1="20" x2="6" y2="16" />
   </svg>
 );
 
 const LibraryIcon = () => (
   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
   </svg>
 );
 
@@ -90,7 +84,7 @@ export default function ProfessorMyCoursesPage() {
     try {
       const res = await http.get(endpoints.courses.list);
       const allCourses = res.data as Course[];
-      
+
       const myCourses = allCourses.filter(c => c.professorId === user?.id);
       setApprovedCourses(myCourses);
     } catch (err) {
@@ -109,7 +103,7 @@ export default function ProfessorMyCoursesPage() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(180deg,#fbf7f2 0%,#f6f1ea 100%)",
+        background: "linear-gradient(180deg, #F3F2FB 0%, #FBF7F2 100%)",
         padding: 24,
       }}
     >
@@ -122,68 +116,68 @@ export default function ProfessorMyCoursesPage() {
         {/* Header */}
         <div
           style={{
-            background: "#fff",
+            background: "#FFFFFF",
             borderRadius: 16,
             padding: 24,
             marginBottom: 24,
-            boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+            boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
           }}
         >
-          <h2 style={{ 
-            margin: 0, 
-            color: "#2c2b28", 
-            fontSize: 26, 
+          <h2 style={{
+            margin: 0,
+            color: "#63628B",
+            fontSize: 26,
             fontWeight: 700,
             display: "flex",
             alignItems: "center",
             gap: 12,
           }}>
-            <span style={{ color: "#9a7556" }}>
+            <span style={{ color: "#56629A" }}>
               <LibraryIcon />
             </span>
             Moji kursevi
           </h2>
-          <p style={{ margin: "6px 0 0", color: "#8b7762", fontSize: 15 }}>
+          <p style={{ margin: "6px 0 0", color: "#8B7762", fontSize: 15 }}>
             Upravljanje i status tvojih kurseva
           </p>
         </div>
 
         {loading ? (
-          <div style={{ 
-            textAlign: "center", 
+          <div style={{
+            textAlign: "center",
             padding: 60,
-            color: "#8b7762",
+            color: "#8B7762",
             fontSize: 16,
           }}>
-            <div style={{ marginBottom: 12, color: "#9a7556", display: "flex", justifyContent: "center" }}>
+            <div style={{ marginBottom: 12, color: "#56629A", display: "flex", justifyContent: "center" }}>
               <ClockIcon />
             </div>
             Učitavanje...
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 24 }}>
-            
+
             {/* Leva kolona - Aktivni kursevi */}
             <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-              
+
               {/* Aktivni kursevi */}
               <div
                 style={{
-                  background: "#fff",
+                  background: "#FFFFFF",
                   borderRadius: 16,
                   padding: 24,
-                  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+                  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
                   border: "2px solid rgba(6,95,70,0.1)",
                 }}
               >
-                <div style={{ 
+                <div style={{
                   marginBottom: 20,
                   paddingBottom: 16,
                   borderBottom: "2px solid #f0fdf4",
                 }}>
-                  <h3 style={{ 
-                    margin: 0, 
-                    color: "#2c2b28", 
+                  <h3 style={{
+                    margin: 0,
+                    color: "#63628B",
                     fontSize: 20,
                     fontWeight: 700,
                     display: "flex",
@@ -205,7 +199,7 @@ export default function ProfessorMyCoursesPage() {
                       {approvedCourses.length}
                     </span>
                   </h3>
-                  <p style={{ margin: "4px 0 0", color: "#8b7762", fontSize: 14 }}>
+                  <p style={{ margin: "4px 0 0", color: "#8B7762", fontSize: 14 }}>
                     Kursevi koji su odobreni i aktivni
                   </p>
                 </div>
@@ -219,17 +213,17 @@ export default function ProfessorMyCoursesPage() {
                           border: "2px solid rgba(6,95,70,0.15)",
                           borderRadius: 14,
                           padding: 18,
-                          background: "linear-gradient(135deg, #f0fdf4 0%, #fff 100%)",
+                          background: "linear-gradient(135deg, #f0fdf4 0%, #FFFFFF 100%)",
                           transition: "all 0.2s",
-                          boxShadow: "0 2px 6px rgba(39,35,30,0.04)",
+                          boxShadow: "0 2px 6px rgba(99,98,139,0.06)",
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.transform = "translateY(-2px)";
-                          e.currentTarget.style.boxShadow = "0 4px 12px rgba(39,35,30,0.08)";
+                          e.currentTarget.style.boxShadow = "0 4px 12px rgba(99,98,139,0.1)";
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.transform = "translateY(0)";
-                          e.currentTarget.style.boxShadow = "0 2px 6px rgba(39,35,30,0.04)";
+                          e.currentTarget.style.boxShadow = "0 2px 6px rgba(99,98,139,0.06)";
                         }}
                       >
                         <div
@@ -245,7 +239,7 @@ export default function ProfessorMyCoursesPage() {
                               style={{
                                 fontWeight: 700,
                                 fontSize: 17,
-                                color: "#2c2b28",
+                                color: "#63628B",
                                 marginBottom: 6,
                                 display: "flex",
                                 alignItems: "center",
@@ -259,7 +253,7 @@ export default function ProfessorMyCoursesPage() {
                             </div>
                             <div
                               style={{
-                                color: "rgba(44,43,40,0.75)",
+                                color: "rgba(99,98,139,0.75)",
                                 fontSize: 14,
                                 lineHeight: 1.5,
                               }}
@@ -275,12 +269,12 @@ export default function ProfessorMyCoursesPage() {
                               borderRadius: 10,
                               border: "none",
                               fontWeight: 600,
-                              color: "#fff",
-                              background: "linear-gradient(135deg,#d6bca3,#b99a7f)",
+                              color: "#FFFFFF",
+                              background: "linear-gradient(135deg, #56629A, #63628B)",
                               textDecoration: "none",
                               fontSize: 14,
                               whiteSpace: "nowrap",
-                              boxShadow: "0 2px 8px rgba(121,86,61,0.2)",
+                              boxShadow: "0 2px 8px rgba(86,98,154,0.2)",
                               transition: "all 0.2s",
                               display: "inline-flex",
                               alignItems: "center",
@@ -288,14 +282,13 @@ export default function ProfessorMyCoursesPage() {
                             }}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.transform = "translateY(-1px)";
-                              e.currentTarget.style.boxShadow = "0 4px 12px rgba(121,86,61,0.3)";
+                              e.currentTarget.style.boxShadow = "0 4px 12px rgba(86,98,154,0.3)";
                             }}
                             onMouseLeave={(e) => {
                               e.currentTarget.style.transform = "translateY(0)";
-                              e.currentTarget.style.boxShadow = "0 2px 8px rgba(121,86,61,0.2)";
+                              e.currentTarget.style.boxShadow = "0 2px 8px rgba(86,98,154,0.2)";
                             }}
                           >
-                            <SettingsIcon />
                             Upravljaj
                           </Link>
                         </div>
@@ -306,7 +299,7 @@ export default function ProfessorMyCoursesPage() {
                       style={{
                         textAlign: "center",
                         padding: 40,
-                        color: "#8b7762",
+                        color: "#8B7762",
                         fontStyle: "italic",
                         fontSize: 14,
                       }}
@@ -321,21 +314,21 @@ export default function ProfessorMyCoursesPage() {
               {rejectedRequests.length > 0 && (
                 <div
                   style={{
-                    background: "#fff",
+                    background: "#FFFFFF",
                     borderRadius: 16,
                     padding: 24,
-                    boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
+                    boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
                     border: "2px solid rgba(180,130,130,0.15)",
                   }}
                 >
-                  <div style={{ 
+                  <div style={{
                     marginBottom: 20,
                     paddingBottom: 16,
                     borderBottom: "2px solid #fff5f5",
                   }}>
-                    <h3 style={{ 
-                      margin: 0, 
-                      color: "#2c2b28", 
+                    <h3 style={{
+                      margin: 0,
+                      color: "#63628B",
                       fontSize: 20,
                       fontWeight: 700,
                       display: "flex",
@@ -374,7 +367,7 @@ export default function ProfessorMyCoursesPage() {
                           style={{
                             fontWeight: 700,
                             fontSize: 16,
-                            color: "#2c2b28",
+                            color: "#63628B",
                             marginBottom: 4,
                           }}
                         >
@@ -382,14 +375,14 @@ export default function ProfessorMyCoursesPage() {
                         </div>
                         <div
                           style={{
-                            color: "#8b7762",
+                            color: "#8B7762",
                             fontSize: 14,
                             marginBottom: 12,
                           }}
                         >
                           {c.description}
                         </div>
-                        
+
                         {c.rejectionReason && (
                           <div
                             style={{
@@ -399,9 +392,9 @@ export default function ProfessorMyCoursesPage() {
                               border: "1px solid rgba(122,42,42,0.15)",
                             }}
                           >
-                            <div style={{ 
-                              fontWeight: 600, 
-                              color: "#7a2a2a", 
+                            <div style={{
+                              fontWeight: 600,
+                              color: "#7a2a2a",
                               fontSize: 13,
                               marginBottom: 4,
                               display: "flex",
@@ -427,21 +420,21 @@ export default function ProfessorMyCoursesPage() {
             <div>
               <div
                 style={{
-                  background: "#fff",
+                  background: "#FFFFFF",
                   borderRadius: 16,
                   padding: 20,
-                  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
-                  border: "2px solid rgba(214,188,163,0.2)",
+                  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
+                  border: "2px solid rgba(122,91,50,0.2)",
                 }}
               >
-                <div style={{ 
+                <div style={{
                   marginBottom: 18,
                   paddingBottom: 14,
                   borderBottom: "2px solid #fff7e8",
                 }}>
-                  <h3 style={{ 
-                    margin: 0, 
-                    color: "#2c2b28", 
+                  <h3 style={{
+                    margin: 0,
+                    color: "#63628B",
                     fontSize: 18,
                     fontWeight: 700,
                     display: "flex",
@@ -466,13 +459,13 @@ export default function ProfessorMyCoursesPage() {
                       </span>
                     )}
                   </h3>
-                  <p style={{ margin: "4px 0 0", color: "#8b7762", fontSize: 13 }}>
+                  <p style={{ margin: "4px 0 0", color: "#8B7762", fontSize: 13 }}>
                     Zahtevi na pregledu
                   </p>
                 </div>
 
-                <div 
-                  style={{ 
+                <div
+                  style={{
                     display: "flex",
                     flexDirection: "column",
                     gap: 12,
@@ -497,7 +490,7 @@ export default function ProfessorMyCoursesPage() {
                           style={{
                             fontWeight: 700,
                             fontSize: 15,
-                            color: "#2c2b28",
+                            color: "#63628B",
                             marginBottom: 4,
                           }}
                         >
@@ -505,7 +498,7 @@ export default function ProfessorMyCoursesPage() {
                         </div>
                         <div
                           style={{
-                            color: "rgba(44,43,40,0.7)",
+                            color: "rgba(99,98,139,0.7)",
                             fontSize: 13,
                             lineHeight: 1.4,
                           }}
@@ -530,8 +523,8 @@ export default function ProfessorMyCoursesPage() {
                         >
                           <span style={{ display: "flex", alignItems: "center", width: 13, height: 13 }}>
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <circle cx="12" cy="12" r="10"/>
-                              <polyline points="12 6 12 12 16 14"/>
+                              <circle cx="12" cy="12" r="10" />
+                              <polyline points="12 6 12 12 16 14" />
                             </svg>
                           </span>
                           Na čekanju
@@ -543,7 +536,7 @@ export default function ProfessorMyCoursesPage() {
                       style={{
                         textAlign: "center",
                         padding: 32,
-                        color: "#8b7762",
+                        color: "#8B7762",
                         fontStyle: "italic",
                         fontSize: 13,
                       }}
@@ -558,32 +551,32 @@ export default function ProfessorMyCoursesPage() {
               <div
                 style={{
                   marginTop: 24,
-                  background: "linear-gradient(135deg, #fff 0%, #fafafa 100%)",
+                  background: "linear-gradient(135deg, #FFFFFF 0%, #F3F2FB 100%)",
                   borderRadius: 16,
                   padding: 20,
-                  boxShadow: "0 2px 8px rgba(39,35,30,0.04)",
-                  border: "1px solid rgba(44,43,40,0.06)",
+                  boxShadow: "0 2px 8px rgba(99,98,139,0.06)",
+                  border: "1px solid rgba(86,98,154,0.1)",
                 }}
               >
-                <h3 style={{ 
-                  margin: "0 0 16px", 
-                  color: "#2c2b28", 
+                <h3 style={{
+                  margin: "0 0 16px",
+                  color: "#63628B",
                   fontSize: 17,
                   fontWeight: 700,
                   paddingBottom: 14,
-                  borderBottom: "2px solid #f5f0ea",
+                  borderBottom: "2px solid #F3F2FB",
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
                 }}>
-                  <span style={{ color: "#9a7556" }}>
+                  <span style={{ color: "#56629A" }}>
                     <BarChartIcon />
                   </span>
                   Pregled
                 </h3>
-                
+
                 <div style={{ display: "grid", gap: 12 }}>
-                  <div style={{ 
+                  <div style={{
                     padding: 14,
                     borderRadius: 10,
                     background: "#f0fdf4",
@@ -597,7 +590,7 @@ export default function ProfessorMyCoursesPage() {
                     </div>
                   </div>
 
-                  <div style={{ 
+                  <div style={{
                     padding: 14,
                     borderRadius: 10,
                     background: "#fffcf5",
@@ -611,7 +604,7 @@ export default function ProfessorMyCoursesPage() {
                     </div>
                   </div>
 
-                  <div style={{ 
+                  <div style={{
                     padding: 14,
                     borderRadius: 10,
                     background: "#fff5f5",
